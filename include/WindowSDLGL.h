@@ -1,12 +1,14 @@
 #ifndef WINDOW_SDLGL_H
 #define WINDOW_SDLGL_H
 
+// clang-format off
 #include <iostream>
 #include <string>
 
-#include <SDL3/SDL.h>
 #include <glad/glad.h>
+#include <SDL3/SDL.h>
 
+// clang-format on
 class WindowSDLGL {
 
 public:
