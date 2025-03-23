@@ -1,6 +1,9 @@
 build/
-bin/
-
 
 .idea/
 .vscode/
+
+/bin/*
+!/bin/Information.txt
+
+/bin/libs/
