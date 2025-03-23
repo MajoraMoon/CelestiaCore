@@ -37,13 +37,19 @@ target_include_directories(CelestiaCore PRIVATE
 
 target_link_libraries(CelestiaCore PRIVATE SDL3_image::SDL3_image SDL3::SDL3)
 
-# set library and if not there create libs folder
-set(LIB_DEST ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libs)
-file(MAKE_DIRECTORY ${LIB_DEST})
+
 
 # find libraries
 get_target_property(SDL3_LIB SDL3::SDL3 IMPORTED_LOCATION)
 get_target_property(SDL3_IMAGE_LIB SDL3_image::SDL3_image IMPORTED_LOCATION)
+
+
+# put lib data into a libs folder to make everything cleaner on linux builds. Windows gets the standard treatment
+if(UNIX)
+
+# set library and if not there create libs folder
+set(LIB_DEST ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libs)
+file(MAKE_DIRECTORY ${LIB_DEST})
 
 # copy lib data into the libs folder
 if(SDL3_LIB AND SDL3_IMAGE_LIB)
@@ -53,9 +59,10 @@ if(SDL3_LIB AND SDL3_IMAGE_LIB)
     )
 endif()
 
-
-
 # set RPATH, so the binary file can actually find the libraries in the libs folder
 set_target_properties(CelestiaCore PROPERTIES
     INSTALL_RPATH "$ORIGIN/libs"
 )
+
+endif(UNIX)
+
