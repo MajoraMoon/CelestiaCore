@@ -53,6 +53,8 @@ if(SDL3_LIB AND SDL3_IMAGE_LIB)
     )
 endif()
 
+
+
 # set RPATH, so the binary file can actually find the libraries in the libs folder
 set_target_properties(CelestiaCore PROPERTIES
     INSTALL_RPATH "$ORIGIN/libs"
