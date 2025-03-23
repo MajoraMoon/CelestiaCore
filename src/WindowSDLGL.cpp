@@ -7,7 +7,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);
 
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO) == false) {
     std::cerr << "Could not initialize SDL: " << SDL_GetError() << std::endl;
     window = nullptr;
     glContext = nullptr;
