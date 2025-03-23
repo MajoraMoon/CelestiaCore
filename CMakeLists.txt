@@ -19,12 +19,20 @@ set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 add_subdirectory(lib/sdl3 EXCLUDE_FROM_ALL)
 add_subdirectory(lib/sdl3_image EXCLUDE_FROM_ALL)
 
+file(GLOB IMGUI_SOURCES 
+    ${CMAKE_SOURCE_DIR}/lib/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_sdl3.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
+)
 
-add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC})
+
+add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC} ${IMGUI_SOURCES})
 
 target_include_directories(CelestiaCore PRIVATE 
     ${CMAKE_SOURCE_DIR}/lib/glad/include
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/lib/imgui
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends
 )
 
 target_link_libraries(CelestiaCore PRIVATE SDL3_image::SDL3_image SDL3::SDL3)

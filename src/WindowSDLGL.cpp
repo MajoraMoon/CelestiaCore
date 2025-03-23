@@ -61,6 +61,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
 
   // init glad
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    std::cerr << "Could not load glad." << std::endl;
     SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -68,10 +69,27 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     window = nullptr;
     return;
   }
+
+  // Dear ImGui set up
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+
+  ImGuiIO &io = ImGui::GetIO();
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplSDL3_InitForOpenGL(window, glContext);
+  ImGui_ImplOpenGL3_Init("#version 460");
 }
 
 WindowSDLGL::~WindowSDLGL() {
 
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplSDL3_Shutdown();
+  ImGui::DestroyContext();
   SDL_GL_DestroyContext(glContext);
   SDL_DestroyWindow(window);
   SDL_Quit();

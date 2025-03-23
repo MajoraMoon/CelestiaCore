@@ -32,6 +32,8 @@ int main(int argc, char *argv[]) {
   // main loop
   while (running) {
     while (SDL_PollEvent(&event)) {
+      ImGui_ImplSDL3_ProcessEvent(&event);
+
       if (event.type == SDL_EVENT_QUIT) {
         running = false;
       }
@@ -43,7 +45,18 @@ int main(int argc, char *argv[]) {
     }
 
     frameTimer.update();
+    std::cout << "FPS: " << frameTimer.getFPS() << std::endl;
     renderer.renderFrame(SCR_WIDTH, SCR_HEIGHT);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::ShowDemoWindow();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     SDL_GL_SwapWindow(window.getSDLGLWindow());
   }
 
