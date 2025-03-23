@@ -1,0 +1,29 @@
+# CelestiaCore - Build Instructions
+
+## Requirements:
+- CMake 3.15+
+- Compiler (gcc, clang, MSVC)
+- Make oder Ninja
+
+## Steps:
+
+1. Clone the repo:
+   git clone https://github.com/MajoraMoon/CelestiaCore.git
+   cd CelestiaCore
+
+2. Create build folder:
+   mkdir build
+   cd build
+
+3. Run CMake:
+   cmake ..
+
+4. Build (choose one):
+   make   # or
+   ninja
+
+5. Run:
+   ./bin/CelestiaCore
+
+## Notes:
+- All libraries are included in the `lib/` folder.
