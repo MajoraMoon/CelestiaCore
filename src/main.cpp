@@ -13,6 +13,35 @@
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
+// Vsync stuff
+typedef enum { VSyncOFF = 0, VSyncON = 1 } VsyncMode;
+static VsyncMode currentVsyncMode = VSyncOFF;
+
+static void activateVsync(VsyncMode mode) {
+
+  if (SDL_GL_SetSwapInterval(static_cast<int>(mode)) != 0) {
+    SDL_Log("Could not set Swap-Interval (VSync) correctly: %s\n",
+            SDL_GetError());
+  } else {
+    currentVsyncMode = mode;
+  }
+}
+
+// Dear ImGui window with some information
+void ShowInformationWindow(FrameTimer &frameTimer) {
+  ImGui::Begin("some Information");
+  ImGui::Text("Delta Time: %.5f", frameTimer.getDeltaTime());
+  ImGui::Text("FPS (per second): %.1f", frameTimer.getFPS());
+  const char *vsyncOptions[] = {"VSync Off", "VSync On"};
+  int currentVSyncIndex = static_cast<int>(currentVsyncMode);
+  if (ImGui::Combo("VSync Mode", &currentVSyncIndex, vsyncOptions,
+                   IM_ARRAYSIZE(vsyncOptions))) {
+    currentVsyncMode = static_cast<VsyncMode>(currentVSyncIndex);
+    activateVsync(currentVsyncMode);
+  }
+  ImGui::End();
+}
+
 int main(int argc, char *argv[]) {
 
   WindowSDLGL window("LunaCore", "0.1", SCR_WIDTH, SCR_HEIGHT, true);
@@ -52,8 +81,7 @@ int main(int argc, char *argv[]) {
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow();
-
+    ShowInformationWindow(frameTimer);
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
