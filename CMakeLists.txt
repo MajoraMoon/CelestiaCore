@@ -64,5 +64,6 @@ set_target_properties(CelestiaCore PROPERTIES
     INSTALL_RPATH "$ORIGIN/libs"
 )
 
+
 endif(UNIX)
 
