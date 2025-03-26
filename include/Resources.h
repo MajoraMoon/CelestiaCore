@@ -11,6 +11,8 @@
 #include <SDL3_image/SDL_image.h>
 
 // clang-format on
-unsigned char *loadImage(const char *filePath, int *width, int *height);
+unsigned char *loadImage(const char *filePath, int *width, int *height,
+                         bool flipHorizontally = false,
+                         bool flipVertically = false);
 
 #endif

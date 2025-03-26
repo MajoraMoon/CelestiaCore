@@ -1,8 +1,8 @@
 #include <WindowSDLGL.h>
 
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
-                         unsigned int width, unsigned int height,
-                         bool resizable) {
+                         unsigned int width, unsigned int height)
+    : width(width), height(height) {
 
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);
@@ -31,8 +31,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
 
   SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
                         title.c_str());
-  SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN,
-                         resizable);
+  SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
   SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);

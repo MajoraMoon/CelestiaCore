@@ -22,8 +22,9 @@ public:
 
 private:
   GLuint vao, vbo, ebo;
-  GLuint texture;
   Shader shader;
+  GLuint texture1;
+  GLuint texture2;
 };
 
 #endif

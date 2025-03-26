@@ -1,11 +1,28 @@
 #include <Resources.h>
 
-unsigned char *loadImage(const char *filePath, int *width, int *height) {
+unsigned char *loadImage(const char *filePath, int *width, int *height,
+                         bool flipHorizontally, bool flipVertically) {
 
   SDL_Surface *surface = IMG_Load(filePath);
   if (!surface) {
     fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
     return nullptr;
+  }
+
+  if (flipHorizontally) {
+
+    if (!SDL_FlipSurface(surface, SDL_FLIP_HORIZONTAL)) {
+      fprintf(stderr, "Failed to flip texure horizontally: %s\n",
+              SDL_GetError());
+    }
+    return nullptr;
+  }
+
+  if (flipVertically) {
+    if (!SDL_FlipSurface(surface, SDL_FLIP_VERTICAL)) {
+      fprintf(stderr, "Failed to flip texure vertically: %s\n", SDL_GetError());
+      return nullptr;
+    }
   }
 
   *width = surface->w;
