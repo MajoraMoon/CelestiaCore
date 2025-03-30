@@ -33,6 +33,7 @@ target_include_directories(CelestiaCore PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/lib/imgui
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
+    ${CMAKE_SOURCE_DIR}/lib/glm
 )
 
 target_link_libraries(CelestiaCore PRIVATE SDL3_image::SDL3_image SDL3::SDL3)
