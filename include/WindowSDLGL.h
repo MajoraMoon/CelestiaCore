@@ -22,10 +22,10 @@ public:
   SDL_Window *getSDLGLWindow() const { return window; }
   SDL_GLContext getGLContext() const { return glContext; }
 
-  uint getSDLGLWindowHeight() const { return height; }
-  uint getSDLGLWindowWidth() const { return width; }
+  unsigned int getSDLGLWindowHeight() const { return height; }
+  unsigned int getSDLGLWindowWidth() const { return width; }
 
-  void setSDLGLWindowSize(uint newWidth, uint newHeight) {
+  void setSDLGLWindowSize(unsigned int newWidth, unsigned int newHeight) {
     width = newWidth;
     height = newHeight;
   }
@@ -34,8 +34,8 @@ private:
   SDL_Window *window;
   SDL_GLContext glContext;
   // standard values
-  uint width = 800;
-  uint height = 600;
+  unsigned int width = 800;
+  unsigned int height = 600;
 };
 
 #endif
