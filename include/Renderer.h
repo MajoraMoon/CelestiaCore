@@ -14,13 +14,14 @@
 
 #include "Shader.h"
 #include "Resources.h"
+#include "FrameTimer.h"
 
 // clang-format on
 
 class Renderer {
 
 public:
-  Renderer();
+  Renderer(FrameTimer &frameTimer);
   ~Renderer();
   void renderFrame(unsigned int width, unsigned int height);
 
@@ -29,6 +30,7 @@ private:
   Shader shader;
   GLuint texture1;
   GLuint texture2;
+  FrameTimer &frameTimer;
 };
 
 #endif

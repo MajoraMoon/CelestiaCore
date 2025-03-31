@@ -10,6 +10,7 @@ public:
   void update();
   float getDeltaTime() const { return deltaTime; }
   float getFPS() const { return stableFPS; }
+  float getCurrentTime() const { return lastFrame; }
 
 private:
   float deltaTime;

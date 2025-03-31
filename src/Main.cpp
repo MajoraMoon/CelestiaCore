@@ -27,7 +27,6 @@ static void activateVsync(VsyncMode mode) {
 // Dear ImGui window with some information
 void ShowInformationWindow(FrameTimer &frameTimer) {
   ImGui::Begin("some Information");
-  ImGui::Text("Delta Time: %.5f", frameTimer.getDeltaTime());
   ImGui::Text("FPS (per second): %.1f", frameTimer.getFPS());
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};
   int currentVSyncIndex = static_cast<int>(currentVsyncMode);
@@ -52,11 +51,14 @@ int main(int argc, char *argv[]) {
   bool running = true;
   SDL_Event event;
 
-  Renderer renderer;
   FrameTimer frameTimer;
+  Renderer renderer(frameTimer);
 
   // main loop
   while (running) {
+
+    frameTimer.update();
+
     while (SDL_PollEvent(&event)) {
       ImGui_ImplSDL3_ProcessEvent(&event);
 
@@ -78,7 +80,6 @@ int main(int argc, char *argv[]) {
 
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
-    frameTimer.update();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
