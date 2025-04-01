@@ -108,8 +108,15 @@ void Renderer::renderFrame(unsigned int width, unsigned int height) {
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, texture2);
 
+  static float translation = 0;
+  float speed = 0.4;
+
+  translation += speed * frameTimer.getDeltaTime();
+
   glm::mat4 model = glm::mat4(1.0f);
-  model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f) * translation);
+  model = glm::rotate(model, glm::radians(-55.0f) * translation,
+                      glm::vec3(1.0f, 0.0f, 0.0f));
 
   glm::mat4 view = glm::mat4(1.0f);
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
