@@ -4,6 +4,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 
 #include <glad/glad.h>
 #include <SDL3/SDL.h>
@@ -31,6 +32,8 @@ private:
   GLuint texture1;
   GLuint texture2;
   FrameTimer &frameTimer;
+
+  std::vector<glm::vec3> cubePositions;
 };
 
 #endif

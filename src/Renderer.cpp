@@ -5,14 +5,67 @@ Renderer::Renderer(FrameTimer &frameTimer)
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag") {
   // Turn off VSync
   SDL_GL_SetSwapInterval(0);
+  glEnable(GL_DEPTH_TEST);
 
-  // Vertex-Data: position, color, coordinates
-  GLfloat vertexData[] = {-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                          0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 2.0f, 0.0f,
-                          -0.5f, 0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 2.0f,
-                          0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 2.0f};
-  GLuint elementBufferData[] = {0, 1, 2, 1, 3, 2};
+  // clang-format off
+  // Vertex-Data: position, texture position (6 times a single plain for representing a cube)
+  GLfloat vertexData[] = {   
+   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+   -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f};
+
+  cubePositions = {
+    glm::vec3( 0.0f,  0.0f,  0.0f), 
+    glm::vec3( 2.0f,  5.0f, -15.0f), 
+    glm::vec3(-1.5f, -2.2f, -2.5f),  
+    glm::vec3(-3.8f, -2.0f, -12.3f),  
+    glm::vec3( 2.4f, -0.4f, -3.5f),  
+    glm::vec3(-1.7f,  3.0f, -7.5f),  
+    glm::vec3( 1.3f, -2.0f, -2.5f),  
+    glm::vec3( 1.5f,  2.0f, -2.5f), 
+    glm::vec3( 1.5f,  0.2f, -1.5f), 
+    glm::vec3(-1.3f,  1.0f, -1.5f)  
+};
+
+  // clang-format on
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
@@ -20,24 +73,18 @@ Renderer::Renderer(FrameTimer &frameTimer)
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &ebo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elementBufferData),
-               elementBufferData, GL_STATIC_DRAW);
-
   // Attribute-Pointer
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
                         (GLvoid *)0);
 
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
                         (GLvoid *)(3 * sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
 
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
-                        (GLvoid *)(6 * sizeof(GLfloat)));
-  glEnableVertexAttribArray(2);
+  // the glEnableVertexAttribArray(x) points to the shader location
+  // "layout(location = x) in vec3 aPos;
 
   // load Texture 1
   int widthImg, heightImg;
@@ -92,30 +139,21 @@ Renderer::Renderer(FrameTimer &frameTimer)
   free(imgData);
 
   shader.use();
-  glUniform1i(glGetUniformLocation(shader.getID(), "texture1"),
-              0); // Texture-Unit 0
-  glUniform1i(glGetUniformLocation(shader.getID(), "texture2"),
-              1); // Texture-Unit 1
+  shader.setInt("texture1", 0);
+  shader.setInt("texture2", 1);
 }
 
 void Renderer::renderFrame(unsigned int width, unsigned int height) {
   glViewport(0, 0, width, height);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture1);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, texture2);
 
-  static float translation = 0;
-  float speed = 0.8;
-
-  translation += speed * frameTimer.getDeltaTime();
-
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::rotate(model, glm::radians(-180.0f) * translation,
-                      glm::vec3(1.0f, 0.0f, 0.0f));
+  shader.use();
 
   glm::mat4 view = glm::mat4(1.0f);
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -124,13 +162,22 @@ void Renderer::renderFrame(unsigned int width, unsigned int height) {
   projection = glm::perspective(glm::radians(45.0f),
                                 (float)width / (float)height, 0.1f, 100.0f);
 
-  shader.setMat4("model", model);
   shader.setMat4("view", view);
   shader.setMat4("projection", projection);
 
-  shader.use();
   glBindVertexArray(vao);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  for (unsigned int i = 0; i < 10; i++) {
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, cubePositions[i]);
+    float angle = 20.0f * i;
+    model =
+        glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+    shader.setMat4("model", model);
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+  }
 }
 
 Renderer::~Renderer() {

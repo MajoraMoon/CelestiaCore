@@ -25,9 +25,11 @@ static void activateVsync(VsyncMode mode) {
 }
 
 // Dear ImGui window with some information
-void ShowInformationWindow(FrameTimer &frameTimer) {
+void ShowInformationWindow(FrameTimer &frameTimer, WindowSDLGL &window) {
   ImGui::Begin("some Information");
   ImGui::Text("FPS (per second): %.1f", frameTimer.getFPS());
+  ImGui::Text("Resolution: %ix%i", window.getSDLGLWindowWidth(),
+              window.getSDLGLWindowHeight());
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};
   int currentVSyncIndex = static_cast<int>(currentVsyncMode);
   if (ImGui::Combo("VSync Mode", &currentVSyncIndex, vsyncOptions,
@@ -40,7 +42,8 @@ void ShowInformationWindow(FrameTimer &frameTimer) {
 
 int main(int argc, char *argv[]) {
 
-  WindowSDLGL window("LunaCore", "0.1", 1920, 1090);
+  // the dear imgui window can be disabled too
+  WindowSDLGL window("LunaCore", "0.1");
 
   if (!window.getSDLGLWindow() || !window.getGLContext()) {
     std::cerr << "Failed to initialize Window or OpenGL context." << std::endl;
@@ -57,6 +60,8 @@ int main(int argc, char *argv[]) {
   // main loop
   while (running) {
 
+    // the first thing to do in the main while loop is to update the frame
+    // information
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {
@@ -69,6 +74,7 @@ int main(int argc, char *argv[]) {
       }
       // Event when a key is pressed
       if (event.type == SDL_EVENT_KEY_DOWN) {
+
         if (event.key.key == SDLK_ESCAPE) {
           running = false;
         }
@@ -80,18 +86,21 @@ int main(int argc, char *argv[]) {
       }
     }
 
+    // acutal rendering in this single function. (making it more abstact later)
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 
     if (ImGui::GetCurrentContext() != nullptr) {
+
       ImGui_ImplOpenGL3_NewFrame();
       ImGui_ImplSDL3_NewFrame();
       ImGui::NewFrame();
 
-      ShowInformationWindow(frameTimer);
+      ShowInformationWindow(frameTimer, window);
       ImGui::Render();
       ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
+
     SDL_GL_SwapWindow(window.getSDLGLWindow());
   }
 
