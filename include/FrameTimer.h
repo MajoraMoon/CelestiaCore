@@ -9,7 +9,8 @@ public:
   FrameTimer();
   void update();
   float getDeltaTime() const { return deltaTime; }
-  float getFPS() const { return stableFPS; }
+  float getAverageFPS() const { return stableFPS; }
+  float getCurrentFPS() const { return fps; }
   float getCurrentTime() const { return lastFrame; }
 
 private:

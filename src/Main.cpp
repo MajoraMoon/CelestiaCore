@@ -27,16 +27,21 @@ static void activateVsync(VsyncMode mode) {
 // Dear ImGui window with some information
 void ShowInformationWindow(FrameTimer &frameTimer, WindowSDLGL &window) {
   ImGui::Begin("some Information");
-  ImGui::Text("FPS (per second): %.1f", frameTimer.getFPS());
+  ImGui::Text("FPS (average): %.5f", frameTimer.getAverageFPS());
   ImGui::Text("Resolution: %ix%i", window.getSDLGLWindowWidth(),
               window.getSDLGLWindowHeight());
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};
-  int currentVSyncIndex = static_cast<int>(currentVsyncMode);
-  if (ImGui::Combo("VSync Mode", &currentVSyncIndex, vsyncOptions,
+  int selectedVSyncIndex = static_cast<int>(currentVsyncMode);
+
+  if (ImGui::Combo("VSync Mode", &selectedVSyncIndex, vsyncOptions,
                    IM_ARRAYSIZE(vsyncOptions))) {
-    currentVsyncMode = static_cast<VsyncMode>(currentVSyncIndex);
-    activateVsync(currentVsyncMode);
+    VsyncMode newMode = static_cast<VsyncMode>(selectedVSyncIndex);
+
+    if (newMode != currentVsyncMode) {
+      activateVsync(newMode);
+    }
   }
+
   ImGui::End();
 }
 

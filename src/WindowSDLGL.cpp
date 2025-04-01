@@ -36,6 +36,9 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
   SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+  SDL_SetBooleanProperty(
+      props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
+
   window = SDL_CreateWindowWithProperties(props);
   if (window == nullptr) {
     // idk which error log feature is actually better to use
@@ -70,6 +73,9 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   }
 
   if (show_dearImgui_window) {
+
+    float scaleFactor = SDL_GetWindowDisplayScale(window);
+
     // Dear ImGui set up
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -78,6 +84,8 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.FontGlobalScale = scaleFactor;
+    ImGui::GetStyle().ScaleAllSizes(scaleFactor);
 
     ImGui::StyleColorsDark();
 
