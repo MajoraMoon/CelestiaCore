@@ -46,6 +46,7 @@ get_target_property(SDL3_IMAGE_LIB SDL3_image::SDL3_image IMPORTED_LOCATION)
 
 
 # put lib data into a libs folder to make everything cleaner on linux builds. Windows gets the standard treatment
+# That means, all the dll files are at the same directory as the executable
 if(UNIX)
 
 # set library and if not there create libs folder

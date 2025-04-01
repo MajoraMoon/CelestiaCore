@@ -60,7 +60,9 @@ int main(int argc, char *argv[]) {
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {
-      ImGui_ImplSDL3_ProcessEvent(&event);
+      if (ImGui::GetCurrentContext() != nullptr) {
+        ImGui_ImplSDL3_ProcessEvent(&event);
+      }
 
       if (event.type == SDL_EVENT_QUIT) {
         running = false;
@@ -81,14 +83,15 @@ int main(int argc, char *argv[]) {
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL3_NewFrame();
-    ImGui::NewFrame();
+    if (ImGui::GetCurrentContext() != nullptr) {
+      ImGui_ImplOpenGL3_NewFrame();
+      ImGui_ImplSDL3_NewFrame();
+      ImGui::NewFrame();
 
-    ShowInformationWindow(frameTimer);
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+      ShowInformationWindow(frameTimer);
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
     SDL_GL_SwapWindow(window.getSDLGLWindow());
   }
 

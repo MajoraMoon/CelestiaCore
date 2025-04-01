@@ -1,7 +1,8 @@
 #include <WindowSDLGL.h>
 
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
-                         unsigned int width, unsigned int height)
+                         unsigned int width, unsigned int height,
+                         bool show_dearImgui_window)
     : width(width), height(height) {
 
   // Metadata is new in SDL3, why not using it :)
@@ -35,7 +36,6 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
   SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
   SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
-
   window = SDL_CreateWindowWithProperties(props);
   if (window == nullptr) {
     // idk which error log feature is actually better to use
@@ -69,26 +69,31 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     return;
   }
 
-  // Dear ImGui set up
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
+  if (show_dearImgui_window) {
+    // Dear ImGui set up
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
 
-  ImGuiIO &io = ImGui::GetIO();
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ImGuiIO &io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-  ImGui::StyleColorsDark();
+    ImGui::StyleColorsDark();
 
-  ImGui_ImplSDL3_InitForOpenGL(window, glContext);
-  ImGui_ImplOpenGL3_Init("#version 460");
+    ImGui_ImplSDL3_InitForOpenGL(window, glContext);
+    ImGui_ImplOpenGL3_Init("#version 460");
+  }
 }
 
 WindowSDLGL::~WindowSDLGL() {
 
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplSDL3_Shutdown();
-  ImGui::DestroyContext();
+  if (ImGui::GetCurrentContext() != nullptr) {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
+    ImGui::DestroyContext();
+  }
+
   SDL_GL_DestroyContext(glContext);
   SDL_DestroyWindow(window);
   SDL_Quit();

@@ -16,7 +16,8 @@ class WindowSDLGL {
 
 public:
   WindowSDLGL(const std::string &title, const std::string &version,
-              unsigned int width = 800, unsigned int height = 600);
+              unsigned int width = 800, unsigned int height = 600,
+              bool show_dearImgui_window = true);
   ~WindowSDLGL();
 
   SDL_Window *getSDLGLWindow() const { return window; }
