@@ -1,5 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 // clang-format off
 
 #include <cstdio>
@@ -35,5 +34,3 @@ private:
 
   std::vector<glm::vec3> cubePositions;
 };
-
-#endif

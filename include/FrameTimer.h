@@ -1,5 +1,4 @@
-#ifndef FRAMETIMER_H
-#define FRAMETIMER_H
+#pragma once
 
 #include <SDL3/SDL.h>
 
@@ -21,5 +20,3 @@ private:
   float timeAccumulator;
   int frameCount;
 };
-
-#endif

@@ -172,6 +172,11 @@ void Renderer::renderFrame(unsigned int width, unsigned int height) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, cubePositions[i]);
     float angle = 20.0f * i;
+
+    if (i % 3 == 0) {
+      angle = frameTimer.getCurrentTime() * 25.0f;
+    }
+
     model =
         glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
     shader.setMat4("model", model);

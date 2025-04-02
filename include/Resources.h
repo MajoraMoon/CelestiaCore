@@ -1,6 +1,4 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
-
+#pragma once
 // clang-format off
 
 #include <cstdio>
@@ -14,5 +12,3 @@
 unsigned char *loadImage(const char *filePath, int *width, int *height,
                          bool flipHorizontally = false,
                          bool flipVertically = false);
-
-#endif

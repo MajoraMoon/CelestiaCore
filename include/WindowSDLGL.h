@@ -1,5 +1,4 @@
-#ifndef WINDOW_SDLGL_H
-#define WINDOW_SDLGL_H
+#pragma once
 
 // clang-format off
 #include <iostream>
@@ -38,5 +37,3 @@ private:
   unsigned int width = 1920;
   unsigned int height = 1080;
 };
-
-#endif

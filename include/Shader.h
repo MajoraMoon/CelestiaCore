@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 // clang-format off
 
@@ -78,5 +77,3 @@ private:
   std::string readFile(const std::string &filePath);
   void checkCompileErrors(GLuint shader, const std::string &type);
 };
-
-#endif
