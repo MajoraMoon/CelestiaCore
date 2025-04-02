@@ -24,6 +24,9 @@ public:
   void render();
   void toggleVsync(bool vsyncEnabled);
 
+  void toggleVisibility() { m_Visible = !m_Visible; }
+  bool IsVisible() const { return m_Visible; }
+
 private:
   void showInformationWindow();
 
@@ -34,4 +37,5 @@ private:
   // but c++ is something else lol
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
+  bool m_Visible = true;
 };

@@ -11,8 +11,12 @@
 
 // clang-format on
 
-int main(int argc, char *argv[]) {
+// Key bindings for better overview of their actual function
+// (also easier to change if needed)
+const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
+const SDL_Keycode TOGGLE_UI_KEY = SDLK_F1;
 
+int main(int argc, char *argv[]) {
   // the dear imgui window can be disabled too
   WindowSDLGL window("LunaCore", "0.1");
 
@@ -34,10 +38,12 @@ int main(int argc, char *argv[]) {
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {
-      guiManager.processGUIEvent(&event);
+      if (guiManager.IsVisible()) {
+        guiManager.processGUIEvent(&event);
+      }
 
-      if (event.type == SDL_EVENT_QUIT ||
-          (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) {
+      if (event.type == SDL_EVENT_QUIT || (event.type == SDL_EVENT_KEY_DOWN &&
+                                           event.key.key == CLOSE_PROGRAM)) {
         running = false;
       }
       // adjust the resolution to provide openGL correct data
@@ -45,9 +51,16 @@ int main(int argc, char *argv[]) {
 
         window.setSDLGLWindowSize(event.window.data1, event.window.data2);
       }
+      // main if statement for keys pressed down
+      if (event.type == SDL_EVENT_KEY_DOWN) {
+        if (event.key.key == TOGGLE_UI_KEY) {
+          guiManager.toggleVisibility();
+        }
+      }
     }
 
-    // acutal rendering in this single function. (making it more abstact later)
+    // acutal rendering in this single function.
+    // (making it more abstact / efficient later maybe lol)
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 

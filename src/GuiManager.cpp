@@ -41,7 +41,12 @@ void GuiManager::newFrame() {
 
 void GuiManager::render() {
 
-  showInformationWindow();
+  // dear ImGui needs to end the rendering even if nothing is displayed. So only
+  // if Visibility is toggled on, the private functions from imgui are shown
+  if (m_Visible) {
+    showInformationWindow();
+  }
+
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -52,7 +57,6 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
 }
 
 void GuiManager::showInformationWindow() {
-
   ImGui::Begin("Cool Information");
   ImGui::Text("FPS (average): %.3f", m_FrameTimer.getAverageFPS());
   ImGui::Text("Resolution: %ix%i", m_Window.getSDLGLWindowWidth(),
