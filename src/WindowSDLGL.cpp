@@ -1,8 +1,7 @@
 #include <WindowSDLGL.h>
 
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
-                         unsigned int width, unsigned int height,
-                         bool show_dearImgui_window)
+                         unsigned int width, unsigned int height)
     : width(width), height(height) {
 
   // Metadata is new in SDL3, why not using it :)
@@ -71,36 +70,9 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     window = nullptr;
     return;
   }
-
-  if (show_dearImgui_window) {
-
-    float scaleFactor = SDL_GetWindowDisplayScale(window);
-
-    // Dear ImGui set up
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-
-    ImGuiIO &io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.FontGlobalScale = scaleFactor;
-    ImGui::GetStyle().ScaleAllSizes(scaleFactor);
-
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplSDL3_InitForOpenGL(window, glContext);
-    ImGui_ImplOpenGL3_Init("#version 460");
-  }
 }
 
 WindowSDLGL::~WindowSDLGL() {
-
-  if (ImGui::GetCurrentContext() != nullptr) {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL3_Shutdown();
-    ImGui::DestroyContext();
-  }
 
   SDL_GL_DestroyContext(glContext);
   SDL_DestroyWindow(window);
