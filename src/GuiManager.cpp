@@ -56,8 +56,9 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
   SDL_GL_SetSwapInterval(static_cast<int>(m_CurrentVsyncMode));
 }
 
+// actual window to render
 void GuiManager::showInformationWindow() {
-  ImGui::Begin("Cool Information");
+  ImGui::Begin("Cool Information (Press F1 to hide this window)");
   ImGui::Text("FPS (average): %.3f", m_FrameTimer.getAverageFPS());
   ImGui::Text("Resolution: %ix%i", m_Window.getSDLGLWindowWidth(),
               m_Window.getSDLGLWindowHeight());
