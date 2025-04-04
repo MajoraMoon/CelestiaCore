@@ -32,13 +32,13 @@ void Camera::processKeyboard(Camera_Movement direction, float deltaTime) {
   if (direction == BACKWARD)
     position -= front * velocity;
   if (direction == LEFT)
-    position -= front * velocity;
+    position -= right * velocity;
   if (direction == RIGHT)
-    position += front * velocity;
+    position += right * velocity;
 }
 
 void Camera::processMouseMovement(float xoffset, float yoffset,
-                                  bool constrainPitch = true) {
+                                  bool constrainPitch) {
 
   xoffset *= mouseSensitivity;
   yoffset *= mouseSensitivity;

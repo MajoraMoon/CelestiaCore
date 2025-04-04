@@ -1,7 +1,7 @@
 #include <Renderer.h>
 
 Renderer::Renderer(FrameTimer &frameTimer)
-    : frameTimer(frameTimer),
+    : frameTimer(frameTimer), camera(glm::vec3(0.0f, 0.0f, 3.0f)),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag") {
   // Turn off VSync
   SDL_GL_SetSwapInterval(0);
@@ -155,12 +155,10 @@ void Renderer::renderFrame(unsigned int width, unsigned int height) {
 
   shader.use();
 
-  glm::mat4 view = glm::mat4(1.0f);
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-  glm::mat4 projection;
-  projection = glm::perspective(glm::radians(45.0f),
-                                (float)width / (float)height, 0.1f, 100.0f);
+  glm::mat4 view = camera.getViewMatrix();
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera.zoom),
+                       static_cast<float>(width) / height, 0.1f, 100.0f);
 
   shader.setMat4("view", view);
   shader.setMat4("projection", projection);
