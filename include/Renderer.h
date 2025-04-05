@@ -15,25 +15,23 @@
 #include "Shader.h"
 #include "Resources.h"
 #include "Camera.h"
-#include "FrameTimer.h"
+#include "Texture.h"
+#include "Mesh.h"
+#include "Scene.h"
 
 // clang-format on
 
 class Renderer {
 
 public:
-  Renderer(FrameTimer &frameTimer);
+  Renderer(Scene &scene);
   ~Renderer();
   void renderFrame(unsigned int width, unsigned int height);
-  Camera &getCamera() { return camera; }
 
 private:
-  GLuint vao, vbo, ebo;
   Shader shader;
-  Camera camera;
-  GLuint texture1;
-  GLuint texture2;
-  FrameTimer &frameTimer;
-
-  std::vector<glm::vec3> cubePositions;
+  Texture texture1;
+  Texture texture2;
+  Mesh cubeMesh;
+  Scene &scene;
 };
