@@ -10,6 +10,11 @@ Mesh::Mesh(const std::vector<float> &vertexData) {
   glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
                vertexData.data(), GL_STATIC_DRAW);
 
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR) {
+    std::cerr << "OpenGL error in Mesh constructor: " << err << "\n";
+  }
+
   // Attribute-Pointer
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
                         (GLvoid *)0);

@@ -74,16 +74,13 @@ void Renderer::renderFrame(unsigned int width, unsigned int height) {
   glm::mat4 view = scene.camera.getViewMatrix();
   glm::mat4 projection =
       glm::perspective(glm::radians(scene.camera.zoom),
-                       (float)width / (float)height, 0.1f, 100.0f);
+                       static_cast<float>(width) / height, 0.1f, 100.0f);
 
   shader.setMat4("view", view);
   shader.setMat4("projection", projection);
 
-  for (size_t i = 0; i < scene.cubePositions.size(); i++) {
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, scene.cubePositions[i]);
-    float angle = 20.0f * i;
+  // Render using precomputed transforms from Scene
+  for (const auto &model : scene.cubeTransforms) {
     shader.setMat4("model", model);
     cubeMesh.draw();
   }

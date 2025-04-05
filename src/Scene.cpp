@@ -20,4 +20,22 @@ Scene::Scene() : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {
   // clang-format on
 }
 
-void Scene::update(float deltaTime) {}
+void Scene::update(float deltaTime) {
+  currentTime += deltaTime;
+  cubeTransforms.clear();
+
+  for (size_t i = 0; i < cubePositions.size(); ++i) {
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, cubePositions[i]);
+    float angle = 20.0f * i;
+
+    // Add time-based rotation for cubes where i % 3 == 0
+    if (i % 3 == 0) {
+      angle += currentTime * 25.0f; // Keep the rotation over time
+    }
+
+    model =
+        glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+    cubeTransforms.push_back(model);
+  }
+}

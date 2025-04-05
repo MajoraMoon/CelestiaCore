@@ -3,8 +3,7 @@
 Texture::Texture(const std::string &path) {
 
   int widthImg, heightImg;
-  unsigned char *imgData = loadImage(
-      "../assets/textures/rocky_terrain_diff_4k.jpg", &widthImg, &heightImg);
+  unsigned char *imgData = loadImage(path.c_str(), &widthImg, &heightImg);
 
   if (!imgData) {
     fprintf(stderr, "Failed to load texture");
@@ -21,7 +20,13 @@ Texture::Texture(const std::string &path) {
                   GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB,
+  GLenum format = GL_RGB;
+
+  if (std::string(path).find(".png") != std::string::npos) {
+    format = GL_RGBA;
+  }
+
+  glTexImage2D(GL_TEXTURE_2D, 0, format, widthImg, heightImg, 0, format,
                GL_UNSIGNED_BYTE, imgData);
   glGenerateMipmap(GL_TEXTURE_2D);
   free(imgData);

@@ -30,6 +30,7 @@ void CelestiaCore::run() {
 
     inputManger.updateCamera(scene.camera, deltaTime);
 
+    scene.update(deltaTime);
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 
