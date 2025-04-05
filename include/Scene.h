@@ -9,15 +9,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Camera.h"
+#include "FrameTimer.h"
 
 // clang-format on 
 
 class Scene {
 
 public:
-  Scene();
+  Scene(FrameTimer& frameTimer);
   // logic update for rendered objects (e.g. physics)
-  void update(float deltaTime);
+  void update();
 
   std::vector<glm::mat4> cubeTransforms;  
 
@@ -26,6 +27,7 @@ public:
   Camera camera;
 
   private:
+  FrameTimer& frameTimer;
   std::vector<glm::vec3> cubePositions;
   float currentTime = 0.0f;
 

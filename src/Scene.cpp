@@ -1,6 +1,7 @@
 #include <Scene.h>
 
-Scene::Scene() : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {
+Scene::Scene(FrameTimer &frameTimer)
+    : frameTimer(frameTimer), camera(glm::vec3(0.0f, 0.0f, 3.0f)) {
 
   // clang-format off
 
@@ -20,8 +21,7 @@ Scene::Scene() : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {
   // clang-format on
 }
 
-void Scene::update(float deltaTime) {
-  currentTime += deltaTime;
+void Scene::update() {
   cubeTransforms.clear();
 
   for (size_t i = 0; i < cubePositions.size(); ++i) {
@@ -31,7 +31,8 @@ void Scene::update(float deltaTime) {
 
     // Add time-based rotation for cubes where i % 3 == 0
     if (i % 3 == 0) {
-      angle += currentTime * 25.0f; // Keep the rotation over time
+      angle +=
+          frameTimer.getCurrentTime() * 25.0f; // Keep the rotation over time
     }
 
     model =

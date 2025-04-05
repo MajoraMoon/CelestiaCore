@@ -1,8 +1,9 @@
 #include "CelestiaCore.h"
 
 CelestiaCore::CelestiaCore()
-    : window("CelestiaCore", "0.2"), renderer(scene),
-      guiManager(window, frameTimer) {}
+    : window("CelestiaCore", "0.2"), frameTimer(), scene(frameTimer),
+      inputManger(frameTimer), guiManager(window, frameTimer), renderer(scene) {
+}
 
 void CelestiaCore::run() {
 
@@ -28,9 +29,9 @@ void CelestiaCore::run() {
       }
     }
 
-    inputManger.updateCamera(scene.camera, deltaTime);
+    inputManger.updateCamera(scene.camera);
 
-    scene.update(deltaTime);
+    scene.update();
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 

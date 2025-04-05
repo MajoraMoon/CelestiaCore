@@ -1,5 +1,7 @@
 #include "InputManager.h"
 
+InputManager::InputManager(FrameTimer &frameTimer) : frameTimer(frameTimer) {}
+
 // main sdl Events
 void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
@@ -32,16 +34,16 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
   }
 }
 
-void InputManager::updateCamera(Camera &camera, float deltaTime) {
+void InputManager::updateCamera(Camera &camera) {
   // Keyboard
   if (keys[SDL_SCANCODE_W])
-    camera.processKeyboard(FORWARD, deltaTime);
+    camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
   if (keys[SDL_SCANCODE_S])
-    camera.processKeyboard(BACKWARD, deltaTime);
+    camera.processKeyboard(BACKWARD, frameTimer.getDeltaTime());
   if (keys[SDL_SCANCODE_A])
-    camera.processKeyboard(LEFT, deltaTime);
+    camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
   if (keys[SDL_SCANCODE_D])
-    camera.processKeyboard(RIGHT, deltaTime);
+    camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
 
   // Mouse
   if (mouseXRel != 0 || mouseYRel != 0) {

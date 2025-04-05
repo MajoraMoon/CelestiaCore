@@ -5,20 +5,25 @@
 
 #include "Camera.h"
 #include "WindowSDLGL.h"
+#include "FrameTimer.h"
 
 // clang-format on
 
 class InputManager {
 
 public:
+  InputManager(FrameTimer &frameTimer);
+
   void processEvent(const SDL_Event &event, WindowSDLGL &window);
-  void updateCamera(Camera &camera, float deltaTime);
+  void updateCamera(Camera &camera);
 
   // state tracking
   bool quitRequested = false;
   bool uiVisible = true;
 
 private:
+  FrameTimer &frameTimer;
+
   // Camera movement
   bool keys[SDL_SCANCODE_COUNT] = {false};
   float mouseXRel = 0;
