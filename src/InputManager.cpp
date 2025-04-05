@@ -1,6 +1,7 @@
 #include "InputManager.h"
 
-InputManager::InputManager(FrameTimer &frameTimer) : frameTimer(frameTimer) {}
+InputManager::InputManager(FrameTimer &frameTimer, GuiManager &guiManager)
+    : frameTimer(frameTimer), guiManager(guiManager) {}
 
 // main sdl Events
 void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
@@ -9,6 +10,13 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
       (event.type == SDL_EVENT_KEY_DOWN && event.key.key == CLOSE_PROGRAM)) {
 
     quitRequested = true;
+  }
+
+  if (event.type == SDL_EVENT_KEY_DOWN) {
+    if (event.key.key == TOGGLE_GUI) {
+
+      guiManager.toggleVisibility();
+    }
   }
 
   if (event.type == SDL_EVENT_MOUSE_MOTION) {
