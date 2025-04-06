@@ -2,6 +2,13 @@
 
 // clang-format off
 
+
+/**
+ * 
+ * Simple texture class. It combines the Ressources.h/cpp and creates an usable texture
+ * 
+ */
+
 #include <glad/glad.h>
 #include <string>
 

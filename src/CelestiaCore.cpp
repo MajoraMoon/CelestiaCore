@@ -1,5 +1,6 @@
 #include "CelestiaCore.h"
 
+// testtttttttt
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.2"), frameTimer(), scene(frameTimer),
       guiManager(window, frameTimer), inputManger(frameTimer, guiManager),
@@ -12,6 +13,7 @@ void CelestiaCore::run() {
   bool running = true;
   SDL_Event event;
 
+  // main loop
   while (running) {
 
     frameTimer.update();

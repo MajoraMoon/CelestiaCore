@@ -14,6 +14,13 @@
 
 // clang-format on
 
+/**
+ *
+ * Managing the Shader compoment. It can read shaders from files. This class is
+ * managed by the Renderer.
+ *
+ */
+
 class Shader {
 
 public:

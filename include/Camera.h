@@ -10,6 +10,15 @@
 
 // clang-format on
 
+/**
+ *
+ * This is a central Camera Class. At the moment, it is implementing a simple
+ * flying camera which should be enough for this Project.
+ *
+ * A Camera Object is handled by a Scene Class.
+ *
+ */
+
 enum Camera_Movement {
 
   FORWARD,

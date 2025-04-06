@@ -1,6 +1,13 @@
 #pragma once
 // clang-format off
 
+/**
+ * 
+ * Just a single header to load a single function without any class.
+ * It is using SDL3_image to load images and textures
+ * 
+ */
+
 #include <cstdio>
 #include <cstdlib>
 #include <string>

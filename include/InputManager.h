@@ -10,6 +10,12 @@
 
 // clang-format on
 
+/**
+ *
+ * This class is responsible to process the keyboard/mouse input using SDL3.
+ *
+ */
+
 class InputManager {
 
 public:

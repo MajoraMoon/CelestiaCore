@@ -10,6 +10,12 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 
+/**
+ * 
+ * This class is responible for creating a window context, as well the openGL/glad context.
+ * It also stores width/height information. So the dimensions
+ */
+
 // clang-format on
 class WindowSDLGL {
 

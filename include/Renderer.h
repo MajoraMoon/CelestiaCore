@@ -21,6 +21,14 @@
 
 // clang-format on
 
+/**
+ *
+ * The Renderer class is really only responsible to render the graphical part of
+ * this application. It manages the Shader, Texture and mesh classes. Takes a
+ * reference to the Scene class
+ *
+ */
+
 class Renderer {
 
 public:

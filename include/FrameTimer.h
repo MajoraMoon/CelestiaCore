@@ -2,6 +2,17 @@
 
 #include <SDL3/SDL.h>
 
+/**
+ *
+ * FrameTimer delivers useful information such as deltaTime for physics,
+ * Framerates for performance testing and so on.
+ *
+ * Theoretically, this class can be used in any other class. If there are more
+ * dynamic Objects instantiated on the heap, it might be useful to share this
+ * class via a shared smart pointer...
+ *
+ */
+
 class FrameTimer {
 
 public:

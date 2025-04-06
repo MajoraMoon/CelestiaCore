@@ -13,6 +13,12 @@
 
 // clang-format on
 
+/**
+ *
+ * A simple GuiManaging class which uses the dear imgui library.
+ *
+ */
+
 class GuiManager {
 
 public:

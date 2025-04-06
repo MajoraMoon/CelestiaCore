@@ -7,6 +7,10 @@
 
 // clang-format on
 
+/**
+ * Temporary class, createst the mesh of objects, will be improved later
+ */
+
 class Mesh {
 public:
   Mesh(const std::vector<float> &vertexData);
