@@ -24,12 +24,12 @@ void CelestiaCore::run() {
     while (SDL_PollEvent(&event)) {
 
       inputManger.processEvent(event, window);
-      inputManger.updateCamera(scene.camera);
 
       if (guiManager.IsVisible()) {
         guiManager.processGUIEvent(&event);
       }
     }
+    inputManger.updateCamera(scene.camera);
 
     scene.update();
     renderer.renderFrame(window.getSDLGLWindowWidth(),

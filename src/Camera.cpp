@@ -3,6 +3,28 @@
 #include "Camera.h"
 // clang-format on
 
+/**
+ *
+ * Position: Where the camera is in space. The starting point can be set in the
+ * constructor as well.
+ *
+ * Front: This points to the negative z axis. Looking at OpenGL's coordinate
+ * system, it can be seen, that the positive z axis, is showing "out of the
+ * monitor" to the viewer.
+ *
+ * Up: A vector whichs tell the camera where "upwards" is
+ *
+ * Right: A vector which is orthogonal to the front and "worldUp" vectors.
+ *
+ * WorldUp: This is a Vector which indicates where the global "up" state is.
+ * Normally it is the positive y direction.
+ *
+ * Yaw: The angle, which describes the rotation around the y-axis (horizontal)
+ * If the starting value is -90 degrees, it looks into the negative z direction,
+ * where the front is facing too.
+ *
+ * Pitch: The angle, which describes the rotation around the x-axis (vertical)
+ */
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
     : position(position), worldUp(up), yaw(yaw), pitch(pitch),
       front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
@@ -21,6 +43,12 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY,
 glm::mat4 Camera::getViewMatrix() {
   return glm::lookAt(position, position + front, up);
 }
+
+/**
+ * Movements speed is multiplied with deltaTime to garanty a smooth movement
+ * indepented from the framerate. If not multiplied with deltaTime, this camera
+ * would be either hella fast or a diashow, depending on the framerate
+ */
 
 void Camera::processKeyboard(Camera_Movement direction, float deltaTime) {
   float velocity = movementSpeed * deltaTime;
@@ -62,6 +90,7 @@ void Camera::processMouseScroll(float yoffset) {
     zoom = 45.0f;
 }
 
+// magic math to update the cameras view
 void Camera::updateCameraVectors() {
   glm::vec3 Front;
   Front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

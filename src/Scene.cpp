@@ -5,7 +5,7 @@
 
 // The Camera is a part of the scene
 Scene::Scene(FrameTimer &frameTimer)
-    : frameTimer(frameTimer), camera(glm::vec3(0.0f, 0.0f, 3.0f)) {
+    : frameTimer(frameTimer), camera(glm::vec3(0.0f, 0.0f, 6.0f)) {
 
   // clang-format off
 
