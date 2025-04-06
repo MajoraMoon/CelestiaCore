@@ -1,22 +1,12 @@
 #pragma once
 
-// clang-format off
-#include <iostream>
-#include <string>
-
-#include <glad/glad.h>
-#include <SDL3/SDL.h>
-#include <imgui.h>
-#include <imgui_impl_opengl3.h>
-#include <imgui_impl_sdl3.h>
-
 /**
- * 
- * This class is responible for creating a window context, as well the openGL/glad context.
- * It also stores width/height information. So the dimensions
+ *
+ * This class is responible for creating a window context, as well the
+ * openGL/glad context. It also stores width/height information. So the
+ * dimensions
  */
 
-// clang-format on
 class WindowSDLGL {
 
 public:

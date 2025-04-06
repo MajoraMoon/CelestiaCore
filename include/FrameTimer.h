@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SDL3/SDL.h>
-
 /**
  *
  * FrameTimer delivers useful information such as deltaTime for physics,

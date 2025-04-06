@@ -1,4 +1,7 @@
-#include <FrameTimer.h>
+// clang-format off
+#include "pch.h"
+#include "FrameTimer.h"
+// clang-format on
 
 FrameTimer::FrameTimer() {
 

@@ -1,12 +1,5 @@
 #pragma once
 
-// clang-format off
-#include <iostream>
-#include <vector>
-#include <glad/glad.h>
-
-// clang-format on
-
 /**
  * Temporary class, createst the mesh of objects, will be improved later
  */

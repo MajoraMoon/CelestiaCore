@@ -1,4 +1,7 @@
-#include <WindowSDLGL.h>
+// clang-format off
+#include "pch.h"
+#include "WindowSDLGL.h"
+// clang-format on
 
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
                          unsigned int width, unsigned int height)

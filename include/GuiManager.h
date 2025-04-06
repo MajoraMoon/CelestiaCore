@@ -2,12 +2,6 @@
 
 // clang-format off
 
-#include <SDL3/SDL.h>
-
-#include <imgui.h>
-#include <imgui_impl_opengl3.h>
-#include <imgui_impl_sdl3.h>
-
 #include "WindowSDLGL.h"
 #include "FrameTimer.h"
 

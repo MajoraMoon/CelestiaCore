@@ -1,7 +1,6 @@
 #pragma once
 
 // clang-format off
-#include <SDL3/SDL.h>
 
 #include "Camera.h"
 #include "WindowSDLGL.h"

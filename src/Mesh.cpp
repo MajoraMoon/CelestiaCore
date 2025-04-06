@@ -1,4 +1,7 @@
+// clang-format off
+#include "pch.h"
 #include "Mesh.h"
+// clang-format on
 
 Mesh::Mesh(const std::vector<float> &vertexData) {
   glGenVertexArrays(1, &vao);

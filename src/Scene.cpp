@@ -1,4 +1,7 @@
-#include <Scene.h>
+// clang-format off
+#include "pch.h"
+#include "Scene.h"
+// clang-format on
 
 Scene::Scene(FrameTimer &frameTimer)
     : frameTimer(frameTimer), camera(glm::vec3(0.0f, 0.0f, 3.0f)) {

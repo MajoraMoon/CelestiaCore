@@ -1,4 +1,7 @@
-#include <Renderer.h>
+// clang-format off
+#include "pch.h"
+#include "Renderer.h"
+// clang-format on
 
 Renderer::Renderer(Scene &scene)
     : scene(scene),

@@ -1,4 +1,7 @@
+// clang-format off
+#include "pch.h"
 #include "Texture.h"
+// clang-format on
 
 Texture::Texture(const std::string &path) {
 

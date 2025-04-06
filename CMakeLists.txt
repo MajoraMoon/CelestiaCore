@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 # some standard cmake settings
 project(CelestiaCore C CXX)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Binary & Library Output Locations
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -27,6 +27,29 @@ file(GLOB IMGUI_SOURCES
 
 
 add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC} ${IMGUI_SOURCES})
+
+# Mark GLAD as C source
+set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
+
+# Mark all other sources as C++
+set_source_files_properties(${SOURCES} ${IMGUI_SOURCES} 
+    PROPERTIES LANGUAGE CXX
+)
+
+
+
+include(GNUInstallDirs)
+include_directories(SYSTEM
+    ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+
+target_precompile_headers(CelestiaCore PRIVATE 
+    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_SOURCE_DIR}/include/pch.h>
+)
+
+
 
 target_include_directories(CelestiaCore PRIVATE 
     ${CMAKE_SOURCE_DIR}/lib/glad/include

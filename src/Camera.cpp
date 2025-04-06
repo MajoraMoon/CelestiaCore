@@ -1,4 +1,7 @@
+// clang-format off
+#include "pch.h"
 #include "Camera.h"
+// clang-format on
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
     : position(position), worldUp(up), yaw(yaw), pitch(pitch),

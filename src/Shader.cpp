@@ -1,4 +1,7 @@
-#include <Shader.h>
+// clang-format off
+#include "pch.h"
+#include "Shader.h"
+// clang-format on
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
 

@@ -1,4 +1,7 @@
+// clang-format off
+#include "pch.h"
 #include "GuiManager.h"
+// clang-format on
 
 GuiManager::GuiManager(WindowSDLGL &window, FrameTimer &frameTimer)
     : m_Window(window), m_FrameTimer(frameTimer) {

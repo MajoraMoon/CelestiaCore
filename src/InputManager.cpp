@@ -1,4 +1,9 @@
+
+
+// clang-format off
+#include "pch.h"
 #include "InputManager.h"
+// clang-format on
 
 InputManager::InputManager(FrameTimer &frameTimer, GuiManager &guiManager)
     : frameTimer(frameTimer), guiManager(guiManager) {}

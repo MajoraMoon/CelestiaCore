@@ -9,9 +9,6 @@
  * 
  */
 
-#include <glad/glad.h>
-#include <string>
-
 #include "Resources.h"
 
 // clang-format on

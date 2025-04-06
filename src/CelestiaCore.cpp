@@ -1,6 +1,8 @@
+// clang-format off
+#include "pch.h"
 #include "CelestiaCore.h"
+// clang-format on
 
-// testtttttttt
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.2"), frameTimer(), scene(frameTimer),
       guiManager(window, frameTimer), inputManger(frameTimer, guiManager),

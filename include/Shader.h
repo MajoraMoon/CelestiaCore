@@ -1,19 +1,5 @@
 #pragma once
 
-// clang-format off
-
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-// clang-format on
-
 /**
  *
  * Managing the Shader compoment. It can read shaders from files. This class is
