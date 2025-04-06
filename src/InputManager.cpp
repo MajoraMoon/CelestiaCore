@@ -94,6 +94,10 @@ void InputManager::updateCamera(Camera &camera) {
       camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
     if (keys[SDL_SCANCODE_D])
       camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
+    if (keys[SDL_SCANCODE_LSHIFT])
+      camera.processKeyboard(UP, frameTimer.getDeltaTime());
+    if (keys[SDL_SCANCODE_LCTRL] || keys[SDL_SCANCODE_RCTRL])
+      camera.processKeyboard(DOWN, frameTimer.getDeltaTime());
 
     // Mouse
     if (mouseXRel != 0 || mouseYRel != 0) {
