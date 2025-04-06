@@ -26,6 +26,7 @@ Scene::Scene(FrameTimer &frameTimer)
 }
 
 void Scene::update() {
+
   cubeTransforms.clear();
 
   for (size_t i = 0; i < cubePositions.size(); ++i) {

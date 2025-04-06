@@ -66,6 +66,7 @@ void GuiManager::showInformationWindow() {
   ImGui::Text("Press M to show/hide the mouse cursor.");
   ImGui::Text("Press F1 to hide the gui window.");
   ImGui::Spacing();
+  ImGui::Text("Delta time: %.3f", m_FrameTimer.getDeltaTime());
   ImGui::Text("FPS (average): %.3f", m_FrameTimer.getAverageFPS());
   ImGui::Text("Resolution: %ix%i", m_Window.getSDLGLWindowWidth(),
               m_Window.getSDLGLWindowHeight());

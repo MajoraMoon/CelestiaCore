@@ -28,10 +28,15 @@ void CelestiaCore::run() {
       if (guiManager.IsVisible()) {
         guiManager.processGUIEvent(&event);
       }
+      if (event.type == SDL_EVENT_KEY_DOWN) {
+        if (event.key.key == SDLK_SPACE) {
+        }
+      }
     }
     inputManger.updateCamera(scene.camera);
 
     scene.update();
+
     renderer.renderFrame(window.getSDLGLWindowWidth(),
                          window.getSDLGLWindowHeight());
 
