@@ -59,7 +59,7 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
   SDL_GL_SetSwapInterval(static_cast<int>(m_CurrentVsyncMode));
 }
 
-// actual window to render
+// actual window to render. This can be extended with other functions
 void GuiManager::showInformationWindow() {
   ImGui::Begin("Cool Information");
   ImGui::Text("HotKeys: ");

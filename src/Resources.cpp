@@ -22,6 +22,7 @@ unsigned char *loadImage(const char *filePath, int *width, int *height,
   }
 
   if (flipVertically) {
+
     if (!SDL_FlipSurface(surface, SDL_FLIP_VERTICAL)) {
       fprintf(stderr, "Failed to flip texure vertically: %s\n", SDL_GetError());
       return nullptr;

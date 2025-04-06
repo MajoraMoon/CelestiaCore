@@ -52,6 +52,4 @@ private:
   Scene scene;
   Renderer renderer;
   GuiManager guiManager;
-
-  void handleWindowResize(int width, int height);
 };

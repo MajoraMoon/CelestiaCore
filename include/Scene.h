@@ -11,6 +11,7 @@ class Scene {
 
 public:
   Scene(FrameTimer& frameTimer);
+  
   // logic update for rendered objects (e.g. physics)
   void update();
 

@@ -32,17 +32,17 @@ public:
 private:
   FrameTimer &frameTimer;
   GuiManager &guiManager;
+  WindowSDLGL &window;
 
-  bool mouseVisibility = true;
+  // SDL keycodes for input behaviour
+  const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
+  const SDL_Keycode TOGGLE_GUI = SDLK_F1;
+  const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
 
   // Camera movement
   bool keys[SDL_SCANCODE_COUNT] = {false};
   float mouseXRel = 0;
   float mouseYRel = 0;
   float scrollY = 0;
-
-  // SDL keycodes for input behaviour
-  const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
-  const SDL_Keycode TOGGLE_GUI = SDLK_F1;
-  const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
+  bool mouseVisibility = true;
 };

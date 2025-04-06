@@ -65,6 +65,11 @@ Renderer::Renderer(Scene &scene)
   shader.setInt("texture2", 1);
 }
 
+// I am trying to really only render the graphics in the renderer, not the logic
+// for movements or anything similar. The logic needs still be passed over to
+// the renderer so it can render the changing graphics of course. But it's a
+// pass-through, not the actual calculation
+
 void Renderer::renderFrame(unsigned int width, unsigned int height) {
   glViewport(0, 0, width, height);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

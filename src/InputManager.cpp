@@ -7,35 +7,51 @@
 
 InputManager::InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
                            GuiManager &guiManager)
-    : frameTimer(frameTimer), guiManager(guiManager) {}
+    : window(window), frameTimer(frameTimer), guiManager(guiManager) {}
 
 // main sdl Events
 void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
-  if (event.type == SDL_EVENT_QUIT ||
-      (event.type == SDL_EVENT_KEY_DOWN && event.key.key == CLOSE_PROGRAM)) {
+  if (event.type == SDL_EVENT_QUIT) {
 
     quitRequested = true;
   }
 
-  // main events when buttons are pressed
+  // when the window is resized, tell it openGL
+  if (event.type == SDL_EVENT_WINDOW_RESIZED) {
+
+    window.setSDLGLWindowSize(event.window.data1, event.window.data2);
+    glViewport(0, 0, event.window.data1, event.window.data2);
+  }
+
+  // main events when keys are pressed.
   if (event.type == SDL_EVENT_KEY_DOWN) {
 
+    // close program
+    if (event.key.key == CLOSE_PROGRAM) {
+      quitRequested = true;
+    }
+
+    // disable/enable DearImGui Window
     if (event.key.key == TOGGLE_GUI) {
       guiManager.toggleVisibility();
     }
 
+    // toggle mouse for camera mode
     if (event.key.key == TOGGLE_MOUSE) {
 
       toggleMouseVisibility();
       SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(), mouseVisibility);
 
+      // when entering the mouse mode or camera mode, will be placed at the
+      // center of the window
       SDL_WarpMouseInWindow(window.getSDLGLWindow(),
                             window.getSDLGLWindowWidth() / 2,
                             window.getSDLGLWindowHeight() / 2);
     }
   }
 
+  // mouse movement events
   if (event.type == SDL_EVENT_MOUSE_MOTION) {
 
     if (mouseVisibility) {
@@ -44,6 +60,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
     }
   }
 
+  // mouse scroll events
   if (event.type == SDL_EVENT_MOUSE_WHEEL) {
 
     if (mouseVisibility) {

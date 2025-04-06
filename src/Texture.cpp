@@ -25,6 +25,8 @@ Texture::Texture(const std::string &path) {
 
   GLenum format = GL_RGB;
 
+  // std::string::npos means "not found", it contains the value -1.
+  // Use RGB for jpg images and RGBA for png images, supporting opacity
   if (std::string(path).find(".png") != std::string::npos) {
     format = GL_RGBA;
   }

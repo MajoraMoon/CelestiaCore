@@ -3,6 +3,8 @@
 #include "Mesh.h"
 // clang-format on
 
+// I will rewrite this class later. its not the best atm
+
 Mesh::Mesh(const std::vector<float> &vertexData) {
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);

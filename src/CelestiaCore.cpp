@@ -18,22 +18,18 @@ void CelestiaCore::run() {
   // main loop
   while (running) {
 
+    // main FrameTimer
     frameTimer.update();
-    float deltaTime = frameTimer.getDeltaTime();
 
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_WINDOW_RESIZED) {
-        handleWindowResize(event.window.data1, event.window.data2);
-      }
 
       inputManger.processEvent(event, window);
+      inputManger.updateCamera(scene.camera);
 
       if (guiManager.IsVisible()) {
         guiManager.processGUIEvent(&event);
       }
     }
-
-    inputManger.updateCamera(scene.camera);
 
     scene.update();
     renderer.renderFrame(window.getSDLGLWindowWidth(),
@@ -45,11 +41,10 @@ void CelestiaCore::run() {
 
     SDL_GL_SwapWindow(window.getSDLGLWindow());
 
+    // so running is "true". When the quitRequest is also true, running turns
+    // false to stop the render loop. I know it would be easier to change the
+    // running variable, but for me it is better to a default true value instead
+    // of a false value lol
     running = !inputManger.quitRequested;
   }
-}
-
-void CelestiaCore::handleWindowResize(int width, int height) {
-  window.setSDLGLWindowSize(width, height);
-  glViewport(0, 0, width, height);
 }
