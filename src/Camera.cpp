@@ -1,23 +1,17 @@
 #include "Camera.h"
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
+    : position(position), worldUp(up), yaw(yaw), pitch(pitch),
+      front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
-  position = position;
-  worldUp = up;
-  yaw = yaw;
-  pitch = pitch;
   updateCameraVectors();
 }
 
 Camera::Camera(float posX, float posY, float posZ, float upX, float upY,
                float upZ, float yaw, float pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
-      mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
-  position = glm::vec3(posX, posY, posZ);
-  worldUp = glm::vec3(upX, upY, upZ);
-  yaw = yaw;
-  pitch = pitch;
+    : position(glm::vec3(posX, posY, posZ)), worldUp(glm::vec3(upX, upY, upZ)),
+      yaw(yaw), pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)),
+      movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
   updateCameraVectors();
 }
 
