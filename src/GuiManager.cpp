@@ -61,7 +61,11 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
 
 // actual window to render
 void GuiManager::showInformationWindow() {
-  ImGui::Begin("Cool Information (Press F1 to hide this window)");
+  ImGui::Begin("Cool Information");
+  ImGui::Text("HotKeys: ");
+  ImGui::Text("Press M to show/hide the mouse cursor.");
+  ImGui::Text("Press F1 to hide the gui window.");
+  ImGui::Spacing();
   ImGui::Text("FPS (average): %.3f", m_FrameTimer.getAverageFPS());
   ImGui::Text("Resolution: %ix%i", m_Window.getSDLGLWindowWidth(),
               m_Window.getSDLGLWindowHeight());

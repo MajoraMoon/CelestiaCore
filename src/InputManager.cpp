@@ -20,6 +20,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
   // main events when buttons are pressed
   if (event.type == SDL_EVENT_KEY_DOWN) {
+
     if (event.key.key == TOGGLE_GUI) {
       guiManager.toggleVisibility();
     }
