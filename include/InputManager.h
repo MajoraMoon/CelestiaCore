@@ -18,18 +18,22 @@
 class InputManager {
 
 public:
-  InputManager(FrameTimer &frameTimer, GuiManager &guiManager);
+  InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
+               GuiManager &guiManager);
 
   void processEvent(const SDL_Event &event, WindowSDLGL &window);
   void updateCamera(Camera &camera);
 
+  void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }
+
   // state tracking
   bool quitRequested = false;
-  bool uiVisible = true;
 
 private:
   FrameTimer &frameTimer;
   GuiManager &guiManager;
+
+  bool mouseVisibility = true;
 
   // Camera movement
   bool keys[SDL_SCANCODE_COUNT] = {false};
@@ -40,4 +44,5 @@ private:
   // SDL keycodes for input behaviour
   const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
   const SDL_Keycode TOGGLE_GUI = SDLK_F1;
+  const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
 };

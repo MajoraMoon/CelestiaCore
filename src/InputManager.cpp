@@ -5,7 +5,8 @@
 #include "InputManager.h"
 // clang-format on
 
-InputManager::InputManager(FrameTimer &frameTimer, GuiManager &guiManager)
+InputManager::InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
+                           GuiManager &guiManager)
     : frameTimer(frameTimer), guiManager(guiManager) {}
 
 // main sdl Events
@@ -17,20 +18,36 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
     quitRequested = true;
   }
 
+  // main events when buttons are pressed
   if (event.type == SDL_EVENT_KEY_DOWN) {
     if (event.key.key == TOGGLE_GUI) {
-
       guiManager.toggleVisibility();
+    }
+
+    if (event.key.key == TOGGLE_MOUSE) {
+
+      toggleMouseVisibility();
+      SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(), mouseVisibility);
+
+      SDL_WarpMouseInWindow(window.getSDLGLWindow(),
+                            window.getSDLGLWindowWidth() / 2,
+                            window.getSDLGLWindowHeight() / 2);
     }
   }
 
   if (event.type == SDL_EVENT_MOUSE_MOTION) {
-    mouseXRel += event.motion.xrel;
-    mouseYRel += event.motion.yrel;
+
+    if (mouseVisibility) {
+      mouseXRel += event.motion.xrel;
+      mouseYRel += event.motion.yrel;
+    }
   }
 
   if (event.type == SDL_EVENT_MOUSE_WHEEL) {
-    scrollY += event.wheel.y;
+
+    if (mouseVisibility) {
+      scrollY += event.wheel.y;
+    }
   }
 
   switch (event.type) {
@@ -48,23 +65,26 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 }
 
 void InputManager::updateCamera(Camera &camera) {
-  // Keyboard
-  if (keys[SDL_SCANCODE_W])
-    camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
-  if (keys[SDL_SCANCODE_S])
-    camera.processKeyboard(BACKWARD, frameTimer.getDeltaTime());
-  if (keys[SDL_SCANCODE_A])
-    camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
-  if (keys[SDL_SCANCODE_D])
-    camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
 
-  // Mouse
-  if (mouseXRel != 0 || mouseYRel != 0) {
-    camera.processMouseMovement(mouseXRel, -mouseYRel);
-    mouseXRel = mouseYRel = 0;
-  }
-  if (scrollY != 0) {
-    camera.processMouseScroll(scrollY);
-    scrollY = 0;
+  if (mouseVisibility) {
+    // Keyboard
+    if (keys[SDL_SCANCODE_W])
+      camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
+    if (keys[SDL_SCANCODE_S])
+      camera.processKeyboard(BACKWARD, frameTimer.getDeltaTime());
+    if (keys[SDL_SCANCODE_A])
+      camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
+    if (keys[SDL_SCANCODE_D])
+      camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
+
+    // Mouse
+    if (mouseXRel != 0 || mouseYRel != 0) {
+      camera.processMouseMovement(mouseXRel, -mouseYRel);
+      mouseXRel = mouseYRel = 0;
+    }
+    if (scrollY != 0) {
+      camera.processMouseScroll(scrollY);
+      scrollY = 0;
+    }
   }
 }

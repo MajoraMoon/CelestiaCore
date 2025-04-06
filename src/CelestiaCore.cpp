@@ -5,8 +5,8 @@
 
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.2"), frameTimer(), scene(frameTimer),
-      guiManager(window, frameTimer), inputManger(frameTimer, guiManager),
-      renderer(scene) {}
+      guiManager(window, frameTimer),
+      inputManger(window, frameTimer, guiManager), renderer(scene) {}
 
 void CelestiaCore::run() {
 
