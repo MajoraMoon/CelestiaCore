@@ -24,8 +24,12 @@ public:
   void processEvent(const SDL_Event &event, WindowSDLGL &window);
   void updateCamera(Camera &camera);
 
+  // toggle functions for input
   void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }
   void toggleWindowIsMaximized() { windowIsMaximized = !windowIsMaximized; }
+
+  // getter & setter
+  bool isMouseVisible() const { return mouseVisibility; }
 
   // state tracking
   bool quitRequested = false;

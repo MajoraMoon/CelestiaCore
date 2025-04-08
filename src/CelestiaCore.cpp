@@ -29,7 +29,7 @@ void CelestiaCore::run() {
 
       inputManger.processEvent(event, window);
 
-      if (guiManager.IsVisible()) {
+      if (guiManager.IsVisible() && inputManger.isMouseVisible()) {
         guiManager.processGUIEvent(&event);
       }
       if (event.type == SDL_EVENT_KEY_DOWN) {
