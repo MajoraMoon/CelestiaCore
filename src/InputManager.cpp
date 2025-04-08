@@ -20,8 +20,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
   // when the window is resized, tell it openGL
   if (event.type == SDL_EVENT_WINDOW_RESIZED) {
 
-    window.setSDLGLWindowSize(event.window.data1, event.window.data2);
-    glViewport(0, 0, event.window.data1, event.window.data2);
+    handleWindowResize(event.window.data1, event.window.data2);
   }
 
   // main events when keys are pressed.
@@ -34,60 +33,20 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
     // disable/enable DearImGui Window
     if (event.key.key == TOGGLE_GUI) {
+
       guiManager.toggleVisibility();
     }
 
     // toggle mouse for camera mode
     if (event.key.key == TOGGLE_MOUSE) {
 
-      toggleMouseVisibility();
-
-      if (!SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(),
-                                          mouseVisibility)) {
-        std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
-                  << std::endl;
-      }
-
-      // when entering the mouse mode or camera mode, will be placed at the
-      // center of the window
-      SDL_WarpMouseInWindow(window.getSDLGLWindow(),
-                            window.getSDLGLWindowWidth() / 2,
-                            window.getSDLGLWindowHeight() / 2);
+      handleMouseVisibity(window.getSDLGLWindow(), window.getSDLGLWindowWidth(),
+                          window.getSDLGLWindowHeight());
     }
 
     if (event.key.key == MAXIMIZE_WINDOW) {
 
-      if (event.key.key == MAXIMIZE_WINDOW) {
-
-        if (windowIsMaximized) {
-          // Restore window before resizing
-          SDL_RestoreWindow(window.getSDLGLWindow());
-
-          SDL_DisplayID displayID =
-              SDL_GetDisplayForWindow(window.getSDLGLWindow());
-          SDL_Rect usableBounds;
-          if (!SDL_GetDisplayUsableBounds(displayID, &usableBounds)) {
-            std::cerr << "Could not detect usable desktop area: "
-                      << SDL_GetError() << std::endl;
-          } else {
-            int newWidth = usableBounds.w / 2;
-            int newHeight = usableBounds.h / 2;
-
-            SDL_SetWindowSize(window.getSDLGLWindow(), newWidth, newHeight);
-
-            int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
-            int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
-            SDL_SetWindowPosition(window.getSDLGLWindow(), posX, posY);
-            toggleWindowIsMaximized();
-          }
-        } else {
-          if (!SDL_MaximizeWindow(window.getSDLGLWindow())) {
-            std::cerr << "Unable to maximize window: " << SDL_GetError()
-                      << std::endl;
-          }
-          toggleWindowIsMaximized();
-        }
-      }
+      handleMaximizeWindow(window.getSDLGLWindow());
     }
   }
 
@@ -126,17 +85,17 @@ void InputManager::updateCamera(Camera &camera) {
 
   if (mouseVisibility) {
     // Keyboard
-    if (keys[SDL_SCANCODE_W])
+    if (keys[MOVE_FRONT])
       camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
-    if (keys[SDL_SCANCODE_S])
+    if (keys[MOVE_BACK])
       camera.processKeyboard(BACKWARD, frameTimer.getDeltaTime());
-    if (keys[SDL_SCANCODE_A])
+    if (keys[MOVE_LEFT])
       camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
-    if (keys[SDL_SCANCODE_D])
+    if (keys[MOVE_RIGHT])
       camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
-    if (keys[SDL_SCANCODE_LSHIFT])
+    if (keys[MOVE_UP])
       camera.processKeyboard(UP, frameTimer.getDeltaTime());
-    if (keys[SDL_SCANCODE_LCTRL] || keys[SDL_SCANCODE_RCTRL])
+    if (keys[MOVE_DOWN])
       camera.processKeyboard(DOWN, frameTimer.getDeltaTime());
 
     // Mouse
@@ -148,5 +107,62 @@ void InputManager::updateCamera(Camera &camera) {
       camera.processMouseScroll(scrollY);
       scrollY = 0;
     }
+  }
+}
+
+/**
+ * INPUT FUNCTIONS
+ */
+
+void InputManager::handleWindowResize(int width, int height) {
+
+  window.setSDLGLWindowSize(width, height);
+  glViewport(0, 0, width, height);
+}
+
+void InputManager::handleMouseVisibity(SDL_Window *window, int width,
+                                       int height) {
+
+  toggleMouseVisibility();
+
+  if (!SDL_SetWindowRelativeMouseMode(window, mouseVisibility)) {
+    std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
+              << std::endl;
+  }
+
+  // when entering the mouse mode or camera mode, will be placed at the
+  // center of the window
+  SDL_WarpMouseInWindow(window, width / 2, height / 2);
+}
+
+void InputManager::handleMaximizeWindow(SDL_Window *window) {
+  if (windowIsMaximized) {
+    // Restore window before resizing
+    if (!SDL_RestoreWindow(window)) {
+      std::cerr << "Could not restore window properties: " << SDL_GetError()
+                << std::endl;
+    }
+
+    SDL_DisplayID displayID = SDL_GetDisplayForWindow(window);
+    SDL_Rect usableBounds;
+    if (!SDL_GetDisplayUsableBounds(displayID, &usableBounds)) {
+      std::cerr << "Could not detect usable desktop area: " << SDL_GetError()
+                << std::endl;
+    } else {
+      int newWidth = usableBounds.w / 2;
+      int newHeight = usableBounds.h / 2;
+
+      SDL_SetWindowSize(window, newWidth, newHeight);
+
+      int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
+      int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
+      SDL_SetWindowPosition(window, posX, posY);
+      toggleWindowIsMaximized();
+    }
+  } else {
+    if (!SDL_MaximizeWindow(window)) {
+      std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
+    }
+    toggleWindowIsMaximized();
   }
 }
