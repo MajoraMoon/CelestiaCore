@@ -84,19 +84,30 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 void InputManager::updateCamera(Camera &camera) {
 
   if (!mouseVisibility) {
+
+    float baseSpeed = SPEED;
+    float fastSpeed = SPEED * 4.0f;
+    float speed = baseSpeed;
+
+    if (keys[MOVE_FAST]) {
+      speed = fastSpeed;
+    }
+
+    float velocity = speed * frameTimer.getDeltaTime();
+
     // Keyboard
     if (keys[MOVE_FRONT])
-      camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
+      camera.processKeyboard(FORWARD, velocity);
     if (keys[MOVE_BACK])
-      camera.processKeyboard(BACKWARD, frameTimer.getDeltaTime());
+      camera.processKeyboard(BACKWARD, velocity);
     if (keys[MOVE_LEFT])
-      camera.processKeyboard(LEFT, frameTimer.getDeltaTime());
+      camera.processKeyboard(LEFT, velocity);
     if (keys[MOVE_RIGHT])
-      camera.processKeyboard(RIGHT, frameTimer.getDeltaTime());
+      camera.processKeyboard(RIGHT, velocity);
     if (keys[MOVE_UP])
-      camera.processKeyboard(UP, frameTimer.getDeltaTime());
+      camera.processKeyboard(UP, velocity);
     if (keys[MOVE_DOWN])
-      camera.processKeyboard(DOWN, frameTimer.getDeltaTime());
+      camera.processKeyboard(DOWN, velocity);
 
     // Mouse
     if (mouseXRel != 0 || mouseYRel != 0) {

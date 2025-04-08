@@ -50,8 +50,8 @@ glm::mat4 Camera::getViewMatrix() {
  * would be either hella fast or a diashow, depending on the framerate
  */
 
-void Camera::processKeyboard(Camera_Movement direction, float deltaTime) {
-  float velocity = movementSpeed * deltaTime;
+void Camera::processKeyboard(Camera_Movement direction, float velocity) {
+
   if (direction == FORWARD)
     position += front * velocity;
   if (direction == BACKWARD)
