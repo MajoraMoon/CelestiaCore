@@ -48,6 +48,7 @@ void GuiManager::render() {
   // if Visibility is toggled on, the private functions from imgui are shown
   if (m_Visible) {
     showInformationWindow();
+    ImGui::ShowDemoWindow();
   }
 
   ImGui::Render();
