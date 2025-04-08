@@ -53,7 +53,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
   // mouse movement events
   if (event.type == SDL_EVENT_MOUSE_MOTION) {
 
-    if (mouseVisibility) {
+    if (!mouseVisibility) {
       mouseXRel += event.motion.xrel;
       mouseYRel += event.motion.yrel;
     }
@@ -62,7 +62,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
   // mouse scroll events
   if (event.type == SDL_EVENT_MOUSE_WHEEL) {
 
-    if (mouseVisibility) {
+    if (!mouseVisibility) {
       scrollY += event.wheel.y;
     }
   }
@@ -83,7 +83,7 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
 void InputManager::updateCamera(Camera &camera) {
 
-  if (mouseVisibility) {
+  if (!mouseVisibility) {
     // Keyboard
     if (keys[MOVE_FRONT])
       camera.processKeyboard(FORWARD, frameTimer.getDeltaTime());
@@ -123,12 +123,11 @@ void InputManager::handleWindowResize(int width, int height) {
 void InputManager::handleMouseVisibity(SDL_Window *window, int width,
                                        int height) {
 
-  toggleMouseVisibility();
-
   if (!SDL_SetWindowRelativeMouseMode(window, mouseVisibility)) {
     std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
               << std::endl;
   }
+  toggleMouseVisibility();
 
   // when entering the mouse mode or camera mode, will be placed at the
   // center of the window
