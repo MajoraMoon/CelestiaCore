@@ -76,6 +76,8 @@ void GuiManager::showStatsWindow() {
 
   ImGui::Text("Runtime: %02d:%02d:%02d.%03d", hours, minutes, seconds,
               milliseconds);
+  ImGui::Text("Simulation Runtime (seconds): %.2f",
+              frameTimer.getSimulationTime());
   ImGui::Text("Delta time: %.3f", frameTimer.getDeltaTime());
   ImGui::Text("FPS (average): %f", frameTimer.getAverageFPS());
   ImGui::Spacing();

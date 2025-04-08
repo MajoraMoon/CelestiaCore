@@ -16,14 +16,25 @@ class FrameTimer {
 public:
   FrameTimer();
   void update();
+  void setPaused(bool isPaused) { paused = isPaused; }
+  bool isPaused() const { return paused; }
+
   float getDeltaTime() const { return deltaTime; }
+  float getCurrentTime() const { return lastTime; }
+
+  float getSimulationDeltaTime() const { return simulationDeltaTime; }
+  float getSimulationTime() const { return simulationTime; }
+
   float getAverageFPS() const { return stableFPS; }
   float getCurrentFPS() const { return fps; }
-  float getCurrentTime() const { return lastFrame; }
 
 private:
   float deltaTime;
-  float lastFrame;
+  float lastTime;
+  float simulationTime;
+  float simulationDeltaTime;
+  bool paused;
+
   float fps;
   float stableFPS;
   float timeAccumulator;

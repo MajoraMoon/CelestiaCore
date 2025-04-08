@@ -44,6 +44,7 @@ private:
   const SDL_Keycode TOGGLE_GUI = SDLK_F1;
   const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
   const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
+  const SDL_Keycode PAUSE = SDLK_P;
 
   const SDL_Scancode MOVE_FRONT = SDL_SCANCODE_W;
   const SDL_Scancode MOVE_BACK = SDL_SCANCODE_S;

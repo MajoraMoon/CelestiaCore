@@ -5,9 +5,12 @@
 
 FrameTimer::FrameTimer() {
 
+  lastTime = SDL_GetTicks() / 1000.0f;
   deltaTime = 0.0f;
-  // in seconds
-  lastFrame = SDL_GetTicks() / 1000.0f;
+  simulationTime = 0.0f;
+  simulationDeltaTime = 0.0f;
+  paused = false;
+
   fps = 0.0f;
   stableFPS = 0.0f;
   timeAccumulator = 0.0f;
@@ -15,9 +18,16 @@ FrameTimer::FrameTimer() {
 }
 
 void FrameTimer::update() {
-  float currentFrame = SDL_GetTicks() / 1000.0f;
-  deltaTime = currentFrame - lastFrame;
-  lastFrame = currentFrame;
+  float currentTime = SDL_GetTicks() / 1000.0f;
+  deltaTime = currentTime - lastTime;
+  lastTime = currentTime;
+
+  if (!paused) {
+    simulationDeltaTime = deltaTime;
+    simulationTime += simulationDeltaTime;
+  } else {
+    simulationDeltaTime = 0.0f;
+  }
 
   // preventing it to devide with zero. So...if delta time is ever zero for some
   // reason

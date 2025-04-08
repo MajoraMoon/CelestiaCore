@@ -48,6 +48,10 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
       handleMaximizeWindow(window.getSDLGLWindow());
     }
+
+    if (event.key.key == PAUSE) {
+      frameTimer.setPaused(!frameTimer.isPaused());
+    }
   }
 
   // mouse movement events

@@ -37,7 +37,7 @@ void Scene::update() {
     // Add time-based rotation for cubes where i % 3 == 0
     if (i % 3 == 0) {
       angle +=
-          frameTimer.getCurrentTime() * 25.0f; // Keep the rotation over time
+          frameTimer.getSimulationTime() * 25.0f; // Keep the rotation over time
     }
 
     model =
