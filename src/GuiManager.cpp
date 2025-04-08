@@ -46,8 +46,8 @@ void GuiManager::render() {
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
   if (visible) {
-    showStatsWindow();
     showShortcutsWindow();
+    showStatsWindow();
   }
 
   ImGui::Render();
