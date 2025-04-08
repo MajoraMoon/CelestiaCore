@@ -24,18 +24,20 @@ public:
   void render();
   void toggleVsync(bool vsyncEnabled);
 
-  void toggleVisibility() { m_Visible = !m_Visible; }
-  bool IsVisible() const { return m_Visible; }
+  void toggleVisibility() { visible = !visible; }
+  bool IsVisible() const { return visible; }
 
 private:
-  void showInformationWindow();
+  // actual imgui windows to render
+  void showStatsWindow();
+  void showShortcutsWindow();
 
-  WindowSDLGL &m_Window;
-  FrameTimer &m_FrameTimer;
+  WindowSDLGL &window;
+  FrameTimer &frameTimer;
   // inner enum class, so it does not conflict with global on/off values
   // somewhere else. idk how c++ works honestly, I know object oriented design
   // but c++ is something else lol
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
-  bool m_Visible = true;
+  bool visible = true;
 };

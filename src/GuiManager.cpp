@@ -4,9 +4,9 @@
 // clang-format on
 
 GuiManager::GuiManager(WindowSDLGL &window, FrameTimer &frameTimer)
-    : m_Window(window), m_FrameTimer(frameTimer) {
+    : window(window), frameTimer(frameTimer) {
 
-  float scaleFactor = SDL_GetWindowDisplayScale(m_Window.getSDLGLWindow());
+  float scaleFactor = SDL_GetWindowDisplayScale(window.getSDLGLWindow());
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -20,8 +20,7 @@ GuiManager::GuiManager(WindowSDLGL &window, FrameTimer &frameTimer)
 
   ImGui::StyleColorsDark();
 
-  ImGui_ImplSDL3_InitForOpenGL(m_Window.getSDLGLWindow(),
-                               m_Window.getGLContext());
+  ImGui_ImplSDL3_InitForOpenGL(window.getSDLGLWindow(), window.getGLContext());
   ImGui_ImplOpenGL3_Init("#version 460");
 }
 
@@ -46,9 +45,9 @@ void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
-  if (m_Visible) {
-    showInformationWindow();
-    ImGui::ShowDemoWindow();
+  if (visible) {
+    showStatsWindow();
+    showShortcutsWindow();
   }
 
   ImGui::Render();
@@ -60,19 +59,28 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
   SDL_GL_SetSwapInterval(static_cast<int>(m_CurrentVsyncMode));
 }
 
-// actual window to render. This can be extended with other functions
-void GuiManager::showInformationWindow() {
-  ImGui::Begin("Cool Information");
-  ImGui::Text("HotKeys: ");
-  ImGui::Text("Press M to show/hide the mouse cursor.");
-  ImGui::Text("Press F1 to hide the gui window.");
-  ImGui::Text("Press F to maximize the window");
+// actual window to render. This can be extended with other functions later if
+// needed. Just using Imgui::Begin and end
+void GuiManager::showStatsWindow() {
+  ImGui::Begin("Extra Information");
+
+  // I think packing this code to visual the time better into another function
+  // is more verbose than just letting it in here.
+  float currentTime = frameTimer.getCurrentTime();
+  int totalSeconds = static_cast<int>(currentTime);
+  int milliseconds = static_cast<int>((currentTime - totalSeconds) * 1000);
+
+  int hours = totalSeconds / 3600;
+  int minutes = (totalSeconds % 3600) / 60;
+  int seconds = totalSeconds % 60;
+
+  ImGui::Text("Runtime: %02d:%02d:%02d.%03d", hours, minutes, seconds,
+              milliseconds);
+  ImGui::Text("Delta time: %.3f", frameTimer.getDeltaTime());
+  ImGui::Text("FPS (average): %f", frameTimer.getAverageFPS());
   ImGui::Spacing();
-  ImGui::Text("Delta time: %.3f", m_FrameTimer.getDeltaTime());
-  ImGui::Text("FPS (average): %f", m_FrameTimer.getAverageFPS());
-  ImGui::Text("Resolution: %ix%i", m_Window.getSDLGLWindowWidth(),
-              m_Window.getSDLGLWindowHeight());
-  ImGui::Text("Runtime: %.3f", m_FrameTimer.getCurrentTime());
+  ImGui::Text("Resolution: %ix%i", window.getSDLGLWindowWidth(),
+              window.getSDLGLWindowHeight());
 
   // VSync Combo Box
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};
@@ -82,5 +90,13 @@ void GuiManager::showInformationWindow() {
     toggleVsync(currentVsyncIndex == 1);
   }
 
+  ImGui::End();
+}
+
+void GuiManager::showShortcutsWindow() {
+  ImGui::Begin("Hotkeys");
+  ImGui::Text("Press 'M' to show/hide the mouse cursor.");
+  ImGui::Text("Press 'F' to maximize the window");
+  ImGui::Text("Press 'F1' to hide the gui window.");
   ImGui::End();
 }
