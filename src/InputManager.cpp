@@ -41,13 +41,53 @@ void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
     if (event.key.key == TOGGLE_MOUSE) {
 
       toggleMouseVisibility();
-      SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(), mouseVisibility);
+
+      if (!SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(),
+                                          mouseVisibility)) {
+        std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
+                  << std::endl;
+      }
 
       // when entering the mouse mode or camera mode, will be placed at the
       // center of the window
       SDL_WarpMouseInWindow(window.getSDLGLWindow(),
                             window.getSDLGLWindowWidth() / 2,
                             window.getSDLGLWindowHeight() / 2);
+    }
+
+    if (event.key.key == MAXIMIZE_WINDOW) {
+
+      if (event.key.key == MAXIMIZE_WINDOW) {
+
+        if (windowIsMaximized) {
+          // Restore window before resizing
+          SDL_RestoreWindow(window.getSDLGLWindow());
+
+          SDL_DisplayID displayID =
+              SDL_GetDisplayForWindow(window.getSDLGLWindow());
+          SDL_Rect usableBounds;
+          if (!SDL_GetDisplayUsableBounds(displayID, &usableBounds)) {
+            std::cerr << "Could not detect usable desktop area: "
+                      << SDL_GetError() << std::endl;
+          } else {
+            int newWidth = usableBounds.w / 2;
+            int newHeight = usableBounds.h / 2;
+
+            SDL_SetWindowSize(window.getSDLGLWindow(), newWidth, newHeight);
+
+            int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
+            int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
+            SDL_SetWindowPosition(window.getSDLGLWindow(), posX, posY);
+            toggleWindowIsMaximized();
+          }
+        } else {
+          if (!SDL_MaximizeWindow(window.getSDLGLWindow())) {
+            std::cerr << "Unable to maximize window: " << SDL_GetError()
+                      << std::endl;
+          }
+          toggleWindowIsMaximized();
+        }
+      }
     }
   }
 

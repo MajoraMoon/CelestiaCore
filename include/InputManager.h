@@ -25,6 +25,7 @@ public:
   void updateCamera(Camera &camera);
 
   void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }
+  void toggleWindowIsMaximized() { windowIsMaximized = !windowIsMaximized; }
 
   // state tracking
   bool quitRequested = false;
@@ -38,6 +39,7 @@ private:
   const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
   const SDL_Keycode TOGGLE_GUI = SDLK_F1;
   const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
+  const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
 
   // Camera movement
   bool keys[SDL_SCANCODE_COUNT] = {false};
@@ -45,4 +47,5 @@ private:
   float mouseYRel = 0;
   float scrollY = 0;
   bool mouseVisibility = true;
+  bool windowIsMaximized = false;
 };
