@@ -98,7 +98,8 @@ void GuiManager::showStatsWindow() {
 void GuiManager::showShortcutsWindow() {
   ImGui::Begin("Hotkeys");
   ImGui::Text("Press 'M' to show/hide the mouse cursor.");
-  ImGui::Text("Press 'F' to maximize the window");
+  ImGui::Text("Press 'F' to maximize the window.");
   ImGui::Text("Press 'F1' to hide the gui window.");
+  ImGui::Text("Press 'P' to pause the simulation");
   ImGui::End();
 }
