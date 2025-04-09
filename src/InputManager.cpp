@@ -6,122 +6,50 @@
 // clang-format on
 
 InputManager::InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
-                           GuiManager &guiManager)
-    : window(window), frameTimer(frameTimer), guiManager(guiManager) {}
+                           GuiManager &guiManager, EventBus &eventBus)
+    : window(window), frameTimer(frameTimer), guiManager(guiManager),
+      eventBus(eventBus) {}
 
 // main sdl Events
 void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
 
   if (event.type == SDL_EVENT_QUIT) {
-
-    quitRequested = true;
+    eventBus.publish(QuitEvent{});
   }
 
-  // when the window is resized, tell it openGL
-  if (event.type == SDL_EVENT_WINDOW_RESIZED) {
-
-    handleWindowResize(event.window.data1, event.window.data2);
-  }
-
-  // main events when keys are pressed.
   if (event.type == SDL_EVENT_KEY_DOWN) {
+    switch (event.key.key) {
+    case SDLK_ESCAPE:
+      eventBus.publish(QuitEvent{});
+      break;
 
-    // close program
-    if (event.key.key == CLOSE_PROGRAM) {
-      quitRequested = true;
-    }
+    case SDLK_F1:
+      eventBus.publish(ToggleGuiEvent{});
+      break;
 
-    // disable/enable DearImGui Window
-    if (event.key.key == TOGGLE_GUI) {
+    case SDLK_M:
+      eventBus.publish(ToggleMouseEvent{});
+      break;
 
-      guiManager.toggleVisibility();
-    }
+    case SDLK_F:
+      eventBus.publish(MaximizeWindowEvent{});
+      break;
 
-    // toggle mouse for camera mode
-    if (event.key.key == TOGGLE_MOUSE) {
-
-      handleMouseVisibity(window.getSDLGLWindow(), window.getSDLGLWindowWidth(),
-                          window.getSDLGLWindowHeight());
-    }
-
-    if (event.key.key == MAXIMIZE_WINDOW) {
-
-      handleMaximizeWindow(window.getSDLGLWindow());
-    }
-
-    if (event.key.key == PAUSE) {
-      frameTimer.setPaused(!frameTimer.isPaused());
+    case SDLK_P:
+      eventBus.publish(PauseEvent{});
+      break;
     }
   }
 
-  // mouse movement events
-  if (event.type == SDL_EVENT_MOUSE_MOTION) {
-
-    if (!mouseVisibility) {
-      mouseXRel += event.motion.xrel;
-      mouseYRel += event.motion.yrel;
-    }
+  // Convert mouse events
+  if (event.type == SDL_EVENT_MOUSE_MOTION && !mouseVisibility) {
+    eventBus.publish(MouseMoveEvent{static_cast<float>(event.motion.xrel),
+                                    static_cast<float>(event.motion.yrel)});
   }
 
-  // mouse scroll events
-  if (event.type == SDL_EVENT_MOUSE_WHEEL) {
-
-    if (!mouseVisibility) {
-      scrollY += event.wheel.y;
-    }
-  }
-
-  switch (event.type) {
-  case SDL_EVENT_KEY_DOWN:
-    if (event.key.scancode < SDL_SCANCODE_COUNT) {
-      keys[event.key.scancode] = true;
-    }
-    break;
-  case SDL_EVENT_KEY_UP:
-    if (event.key.scancode < SDL_SCANCODE_COUNT) {
-      keys[event.key.scancode] = false;
-    }
-    break;
-  }
-}
-
-void InputManager::updateCamera(Camera &camera) {
-
-  if (!mouseVisibility) {
-
-    float baseSpeed = SPEED;
-    float fastSpeed = SPEED * 4.0f;
-    float speed = baseSpeed;
-
-    if (keys[MOVE_FAST]) {
-      speed = fastSpeed;
-    }
-
-    float velocity = speed * frameTimer.getDeltaTime();
-
-    // Keyboard
-    if (keys[MOVE_FRONT])
-      camera.processKeyboard(FORWARD, velocity);
-    if (keys[MOVE_BACK])
-      camera.processKeyboard(BACKWARD, velocity);
-    if (keys[MOVE_LEFT])
-      camera.processKeyboard(LEFT, velocity);
-    if (keys[MOVE_RIGHT])
-      camera.processKeyboard(RIGHT, velocity);
-    if (keys[MOVE_UP])
-      camera.processKeyboard(UP, velocity);
-    if (keys[MOVE_DOWN])
-      camera.processKeyboard(DOWN, velocity);
-
-    // Mouse
-    if (mouseXRel != 0 || mouseYRel != 0) {
-      camera.processMouseMovement(mouseXRel, -mouseYRel);
-      mouseXRel = mouseYRel = 0;
-    }
-    if (scrollY != 0) {
-      camera.processMouseScroll(scrollY);
-      scrollY = 0;
-    }
+  // Convert scroll events
+  if (event.type == SDL_EVENT_MOUSE_WHEEL && !mouseVisibility) {
+    eventBus.publish(MouseScrollEvent{static_cast<float>(event.wheel.y)});
   }
 }
 

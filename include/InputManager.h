@@ -1,7 +1,8 @@
 #pragma once
 
 // clang-format off
-
+#include "EventBus.h"
+#include "Events.h"
 #include "Camera.h"
 #include "WindowSDLGL.h"
 #include "FrameTimer.h"
@@ -19,7 +20,7 @@ class InputManager {
 
 public:
   InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
-               GuiManager &guiManager);
+               GuiManager &guiManager, EventBus &eventBus);
 
   void processEvent(const SDL_Event &event, WindowSDLGL &window);
   void updateCamera(Camera &camera);
@@ -38,6 +39,7 @@ private:
   FrameTimer &frameTimer;
   GuiManager &guiManager;
   WindowSDLGL &window;
+  EventBus &eventBus;
 
   // SDL keycodes for input behaviour
   const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
