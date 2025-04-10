@@ -22,8 +22,7 @@ public:
   InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
                GuiManager &guiManager, EventBus &eventBus);
 
-  void processEvent(const SDL_Event &event, WindowSDLGL &window);
-  void updateCamera(Camera &camera);
+  void processEvent(const SDL_Event &event);
 
   // toggle functions for input
   void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }

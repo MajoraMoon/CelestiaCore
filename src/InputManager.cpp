@@ -11,7 +11,7 @@ InputManager::InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
       eventBus(eventBus) {}
 
 // main sdl Events
-void InputManager::processEvent(const SDL_Event &event, WindowSDLGL &window) {
+void InputManager::processEvent(const SDL_Event &event) {
 
   if (event.type == SDL_EVENT_QUIT) {
     eventBus.publish(QuitEvent{});
