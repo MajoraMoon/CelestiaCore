@@ -22,6 +22,19 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
 
   ImGui_ImplSDL3_InitForOpenGL(window.getSDLGLWindow(), window.getGLContext());
   ImGui_ImplOpenGL3_Init("#version 460");
+
+  // GUI events
+  eventBus.subscribe<ToggleGuiEvent>(
+      [this](const Event &e) { toggleVisibility(); });
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
+
+    currentTime = ev.lastTime;
+    simulationTime = ev.simulationTime;
+    deltaTime = ev.deltaTime;
+    stableFPS = ev.stableFPS;
+  });
 }
 
 GuiManager::~GuiManager() {
@@ -59,6 +72,8 @@ void GuiManager::toggleVsync(bool vsyncEnabled) {
   SDL_GL_SetSwapInterval(static_cast<int>(m_CurrentVsyncMode));
 }
 
+// FUNCTION CREATION FOR IMGUI WINDOWS
+
 // actual window to render. This can be extended with other functions later if
 // needed. Just using Imgui::Begin and end
 void GuiManager::showStatsWindow() {
@@ -66,7 +81,7 @@ void GuiManager::showStatsWindow() {
 
   // I think packing this code to visual the time better into another function
   // is more verbose than just letting it in here.
-  float currentTime = frameTimer.getCurrentTime();
+
   int totalSeconds = static_cast<int>(currentTime);
   int milliseconds = static_cast<int>((currentTime - totalSeconds) * 1000);
 
@@ -76,10 +91,9 @@ void GuiManager::showStatsWindow() {
 
   ImGui::Text("Runtime: %02d:%02d:%02d.%03d", hours, minutes, seconds,
               milliseconds);
-  ImGui::Text("Simulation Runtime (seconds): %.2f",
-              frameTimer.getSimulationTime());
-  ImGui::Text("Delta time: %.3f", frameTimer.getDeltaTime());
-  ImGui::Text("FPS (average): %f", frameTimer.getAverageFPS());
+  ImGui::Text("Simulation Runtime (seconds): %.2f", simulationTime);
+  ImGui::Text("Delta time: %.3f", deltaTime);
+  ImGui::Text("FPS (average): %f", stableFPS);
   ImGui::Spacing();
   ImGui::Text("Resolution: %ix%i", window.getSDLGLWindowWidth(),
               window.getSDLGLWindowHeight());

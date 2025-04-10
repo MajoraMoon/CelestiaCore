@@ -2,6 +2,7 @@
 
 #include "EventBus.h"
 #include "Events.h"
+#include <unordered_map>
 
 /**
  *
@@ -54,11 +55,15 @@ public:
   void processMouseScroll(float yoffset);
 
 private:
+  std::unordered_map<SDL_Scancode, Camera_Movement> movementKeys;
+  std::unordered_map<SDL_Scancode, bool> activeKeys;
   EventBus &eventBus;
 
   void updateCameraVectors();
 
   void handleKeyInput(const KeyEvent &event);
+
+  void updateMovement();
 
   float deltaTime = 0.0f;
 };

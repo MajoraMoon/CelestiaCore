@@ -34,7 +34,12 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);
     deltaTime = ev.deltaTime;
+    updateMovement();
   });
+
+  movementKeys = {{SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
+                  {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
+                  {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
 
   eventBus.subscribe<KeyEvent>([this](const Event &e) {
     const auto &ev = static_cast<const KeyEvent &>(e);
@@ -44,6 +49,11 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
   eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
     const auto &ev = static_cast<const MouseMoveEvent &>(e);
     processMouseMovement(ev.xrel, ev.yrel);
+  });
+
+  eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseScrollEvent &>(e);
+    processMouseScroll(ev.yoffset);
   });
 
   updateCameraVectors();
@@ -56,7 +66,47 @@ Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
       front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
 
+  movementKeys = {{SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
+                  {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
+                  {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
+    deltaTime = ev.deltaTime;
+  });
+
+  eventBus.subscribe<KeyEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const KeyEvent &>(e);
+    handleKeyInput(ev);
+  });
+
+  eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseMoveEvent &>(e);
+    processMouseMovement(ev.xrel, ev.yrel);
+  });
+
+  eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseScrollEvent &>(e);
+    processMouseScroll(ev.yoffset);
+  });
+
   updateCameraVectors();
+}
+
+void Camera::handleKeyInput(const KeyEvent &event) {
+
+  auto it = movementKeys.find(event.scancode);
+  if (it != movementKeys.end()) {
+    activeKeys[event.scancode] = event.pressed;
+  }
+}
+
+void Camera::updateMovement() {
+  for (const auto &key : activeKeys) {
+    if (key.second) { // If the key is pressed
+      processKeyboard(movementKeys[key.first], movementSpeed * deltaTime);
+    }
+  }
 }
 
 glm::mat4 Camera::getViewMatrix() {
@@ -92,7 +142,7 @@ void Camera::processMouseMovement(float xoffset, float yoffset,
   yoffset *= mouseSensitivity;
 
   yaw += xoffset;
-  pitch += yoffset;
+  pitch -= yoffset;
 
   if (constrainPitch) {
     if (pitch > 89.0f)
@@ -124,21 +174,4 @@ void Camera::updateCameraVectors() {
 
   right = glm::normalize(glm::cross(front, worldUp));
   up = glm::normalize(glm::cross(right, front));
-}
-
-void Camera::handleKeyInput(const KeyEvent &event) {
-
-  static const std::unordered_map<SDL_Scancode, Camera_Movement> keyMap = {
-
-      {SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
-      {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
-      {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
-
-  if (event.pressed) {
-    auto it = keyMap.find(event.scancode);
-
-    if (it != keyMap.end()) {
-      processKeyboard(it->second, movementSpeed * deltaTime);
-    }
-  }
 }

@@ -19,16 +19,6 @@ public:
 
   void processEvent(const SDL_Event &event);
 
-  // toggle functions for input
-  void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }
-  void toggleWindowIsMaximized() { windowIsMaximized = !windowIsMaximized; }
-
-  // getter & setter
-  bool isMouseVisible() const { return mouseVisibility; }
-
-  // state tracking
-  bool quitRequested = false;
-
 private:
   EventBus &eventBus;
 
@@ -52,12 +42,4 @@ private:
   float mouseXRel = 0;
   float mouseYRel = 0;
   float scrollY = 0;
-  bool mouseVisibility = false;
-  bool windowIsMaximized = false;
-
-  // Input functions
-
-  void handleWindowResize(int width, int height);
-  void handleMouseVisibity(SDL_Window *window, int width, int height);
-  void handleMaximizeWindow(SDL_Window *window);
 };

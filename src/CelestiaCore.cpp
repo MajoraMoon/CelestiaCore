@@ -4,7 +4,7 @@
 // clang-format on
 
 CelestiaCore::CelestiaCore()
-    : window("CelestiaCore", "0.3"), frameTimer(eventBus),
+    : window("CelestiaCore", "0.3", eventBus), frameTimer(eventBus),
       scene(frameTimer, eventBus), guiManager(window, eventBus),
       inputManger(eventBus), renderer(scene) {}
 
@@ -16,7 +16,8 @@ void CelestiaCore::run() {
               << std::endl;
   }
 
-  bool running = true;
+  eventBus.subscribe<QuitEvent>([this](const Event &e) { quitCelestiaCore(); });
+
   SDL_Event event;
 
   // main loop
@@ -29,7 +30,7 @@ void CelestiaCore::run() {
 
       inputManger.processEvent(event);
 
-      if (guiManager.IsVisible() && inputManger.isMouseVisible()) {
+      if (guiManager.IsVisible() && window.mouseIsVisible()) {
         guiManager.processGUIEvent(&event);
       }
       if (event.type == SDL_EVENT_KEY_DOWN) {
@@ -48,11 +49,5 @@ void CelestiaCore::run() {
     guiManager.render();
 
     SDL_GL_SwapWindow(window.getSDLGLWindow());
-
-    // so running is "true". When the quitRequest is also true, running turns
-    // false to stop the render loop. I know it would be easier to change the
-    // running variable, but for me it is better to a default true value instead
-    // of a false value lol
-    running = !inputManger.quitRequested;
   }
 }

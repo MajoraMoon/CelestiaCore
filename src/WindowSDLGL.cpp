@@ -4,8 +4,9 @@
 // clang-format on
 
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
-                         unsigned int width, unsigned int height)
-    : width(width), height(height) {
+                         EventBus &eventBus, unsigned int initialWidth,
+                         unsigned int initialHeight)
+    : width(initialWidth), height(initialHeight), eventBus(eventBus) {
 
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);
@@ -73,6 +74,22 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     window = nullptr;
     return;
   }
+
+  // Window Event subscriptions
+
+  eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const WindowResizeEvent &>(e);
+    width = ev.width;
+    height = ev.height;
+
+    handleWindowResize(width, height);
+  });
+
+  eventBus.subscribe<ToggleMouseVisibilityEvent>(
+      [this](const Event &e) { handleMouseVisibity(width, height); });
+
+  eventBus.subscribe<MaximizeWindowEvent>(
+      [this](const Event &e) { handleMaximizeWindow(); });
 }
 
 WindowSDLGL::~WindowSDLGL() {
@@ -81,4 +98,54 @@ WindowSDLGL::~WindowSDLGL() {
   SDL_DestroyWindow(window);
   SDL_Quit();
   SDL_Log("Quitted successfully");
+}
+
+void WindowSDLGL::handleMouseVisibity(unsigned int width, unsigned int height) {
+
+  if (!SDL_SetWindowRelativeMouseMode(window, mouseVisibility)) {
+    std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
+              << std::endl;
+  }
+
+  toggleMouseVisibility();
+
+  // when entering the mouse mode or camera mode, will be placed at the
+  // center of the window
+  SDL_WarpMouseInWindow(window, width / 2, height / 2);
+}
+
+void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
+  glViewport(0, 0, width, height);
+}
+
+void WindowSDLGL::handleMaximizeWindow() {
+  if (windowIsMaximized) {
+    // Restore window before resizing
+    if (!SDL_RestoreWindow(window)) {
+      std::cerr << "Could not restore window properties: " << SDL_GetError()
+                << std::endl;
+    }
+
+    SDL_DisplayID displayID = SDL_GetDisplayForWindow(window);
+    SDL_Rect usableBounds;
+    if (!SDL_GetDisplayUsableBounds(displayID, &usableBounds)) {
+      std::cerr << "Could not detect usable desktop area: " << SDL_GetError()
+                << std::endl;
+    } else {
+      int newWidth = usableBounds.w / 2;
+      int newHeight = usableBounds.h / 2;
+
+      SDL_SetWindowSize(window, newWidth, newHeight);
+
+      int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
+      int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
+      SDL_SetWindowPosition(window, posX, posY);
+      toggleWindowIsMaximized();
+    }
+  } else {
+    if (!SDL_MaximizeWindow(window)) {
+      std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
+    }
+    toggleWindowIsMaximized();
+  }
 }

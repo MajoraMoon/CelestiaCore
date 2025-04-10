@@ -15,6 +15,9 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
   stableFPS = 0.0f;
   timeAccumulator = 0.0f;
   frameCount = 0;
+
+  eventBus.subscribe<PauseEvent>(
+      [this](const Event &e) { toggleSimulationPaused(); });
 }
 
 void FrameTimer::update() {
@@ -49,5 +52,5 @@ void FrameTimer::update() {
   // publish events from EventTimer here, because they are not part of any
   // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
   eventBus.publish(FrameUpdateEvent(deltaTime, lastTime, simulationTime,
-                                    simulationDeltaTime, paused));
+                                    simulationDeltaTime, stableFPS, paused));
 }

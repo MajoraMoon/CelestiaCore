@@ -31,16 +31,19 @@ public:
   float getCurrentFPS() const { return fps; }
 
 private:
+  void toggleSimulationPaused() { paused = !paused; }
+
   EventBus &eventBus;
 
   float deltaTime;
   float lastTime;
   float simulationTime;
   float simulationDeltaTime;
-  bool paused;
 
   float fps;
   float stableFPS;
   float timeAccumulator;
   int frameCount;
+
+  bool paused = false;
 };

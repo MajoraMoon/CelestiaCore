@@ -42,18 +42,19 @@ struct FrameUpdateEvent : Event {
   float lastTime;
   float simulationTime;
   float simulationDeltaTime;
+  float stableFPS;
   bool paused;
 
   FrameUpdateEvent(float deltaTime, float lastTime, float simulationTime,
-                   float simulationDeltaTime, bool paused)
+                   float simulationDeltaTime, float stableFPS, bool paused)
       : deltaTime(deltaTime), lastTime(lastTime),
         simulationTime(simulationTime),
-        simulationDeltaTime(simulationDeltaTime), paused(paused) {}
+        simulationDeltaTime(simulationDeltaTime), stableFPS(stableFPS),
+        paused(paused) {}
 };
 
-// placeholer events
 struct ToggleGuiEvent : Event {};
-struct ToggleMouseEvent : Event {};
+struct ToggleMouseVisibilityEvent : Event {};
 struct PauseEvent : Event {};
 struct MaximizeWindowEvent : Event {};
 struct QuitEvent : Event {};

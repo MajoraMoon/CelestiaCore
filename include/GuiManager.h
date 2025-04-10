@@ -43,4 +43,9 @@ private:
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
   bool visible = true;
+
+  float deltaTime = 0.0f;
+  float currentTime = 0.0f;
+  float simulationTime = 0.0f;
+  float stableFPS = 0.0f;
 };
