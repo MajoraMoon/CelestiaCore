@@ -36,7 +36,22 @@ struct WindowResizeEvent : Event {
   WindowResizeEvent(int w, int h) : width(w), height(h) {}
 };
 
-// Add these to CommonEvents.h
+struct FrameUpdateEvent : Event {
+
+  float deltaTime;
+  float lastTime;
+  float simulationTime;
+  float simulationDeltaTime;
+  bool paused;
+
+  FrameUpdateEvent(float deltaTime, float lastTime, float simulationTime,
+                   float simulationDeltaTime, bool paused)
+      : deltaTime(deltaTime), lastTime(lastTime),
+        simulationTime(simulationTime),
+        simulationDeltaTime(simulationDeltaTime), paused(paused) {}
+};
+
+// placeholer events
 struct ToggleGuiEvent : Event {};
 struct ToggleMouseEvent : Event {};
 struct PauseEvent : Event {};

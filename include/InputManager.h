@@ -40,8 +40,8 @@ private:
   const SDL_Keycode PAUSE = SDLK_P;
 
   const SDL_Scancode MOVE_FRONT = SDL_SCANCODE_W;
-  const SDL_Scancode MOVE_BACK = SDL_SCANCODE_S;
   const SDL_Scancode MOVE_LEFT = SDL_SCANCODE_A;
+  const SDL_Scancode MOVE_BACK = SDL_SCANCODE_S;
   const SDL_Scancode MOVE_RIGHT = SDL_SCANCODE_D;
   const SDL_Scancode MOVE_UP = SDL_SCANCODE_SPACE;
   const SDL_Scancode MOVE_DOWN = SDL_SCANCODE_LCTRL;

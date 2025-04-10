@@ -45,4 +45,9 @@ void FrameTimer::update() {
     frameCount = 0;
     timeAccumulator = 0.0f;
   }
+
+  // publish events from EventTimer here, because they are not part of any
+  // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
+  eventBus.publish(FrameUpdateEvent(deltaTime, lastTime, simulationTime,
+                                    simulationDeltaTime, paused));
 }

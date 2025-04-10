@@ -4,8 +4,9 @@
 // clang-format on
 
 CelestiaCore::CelestiaCore()
-    : window("CelestiaCore", "0.3"), frameTimer(eventBus), scene(frameTimer),
-      guiManager(window, eventBus), inputManger(eventBus), renderer(scene) {}
+    : window("CelestiaCore", "0.3"), frameTimer(eventBus),
+      scene(frameTimer, eventBus), guiManager(window, eventBus),
+      inputManger(eventBus), renderer(scene) {}
 
 void CelestiaCore::run() {
 
@@ -21,7 +22,7 @@ void CelestiaCore::run() {
   // main loop
   while (running) {
 
-    // main FrameTimer
+    // main FrameTimer --> publish frametimer events
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {

@@ -15,6 +15,9 @@ void InputManager::processEvent(const SDL_Event &event) {
   }
 
   if (event.type == SDL_EVENT_KEY_DOWN) {
+
+    eventBus.publish(KeyEvent(event.key.scancode, true));
+
     switch (event.key.key) {
     case SDLK_ESCAPE:
       eventBus.publish(QuitEvent{});

@@ -25,18 +25,37 @@
  *
  * Pitch: The angle, which describes the rotation around the x-axis (vertical)
  */
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-    : position(position), worldUp(up), yaw(yaw), pitch(pitch),
-      front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
+Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
+               float pitch)
+    : eventBus(eventBus), position(position), worldUp(up), yaw(yaw),
+      pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
+    deltaTime = ev.deltaTime;
+  });
+
+  eventBus.subscribe<KeyEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const KeyEvent &>(e);
+    handleKeyInput(ev);
+  });
+
+  eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseMoveEvent &>(e);
+    processMouseMovement(ev.xrel, ev.yrel);
+  });
+
   updateCameraVectors();
 }
 
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY,
-               float upZ, float yaw, float pitch)
-    : position(glm::vec3(posX, posY, posZ)), worldUp(glm::vec3(upX, upY, upZ)),
-      yaw(yaw), pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
+Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
+               float upX, float upY, float upZ, float yaw, float pitch)
+    : eventBus(eventBus), position(glm::vec3(posX, posY, posZ)),
+      worldUp(glm::vec3(upX, upY, upZ)), yaw(yaw), pitch(pitch),
+      front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
+      mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
+
   updateCameraVectors();
 }
 
@@ -105,4 +124,21 @@ void Camera::updateCameraVectors() {
 
   right = glm::normalize(glm::cross(front, worldUp));
   up = glm::normalize(glm::cross(right, front));
+}
+
+void Camera::handleKeyInput(const KeyEvent &event) {
+
+  static const std::unordered_map<SDL_Scancode, Camera_Movement> keyMap = {
+
+      {SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
+      {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
+      {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
+
+  if (event.pressed) {
+    auto it = keyMap.find(event.scancode);
+
+    if (it != keyMap.end()) {
+      processKeyboard(it->second, movementSpeed * deltaTime);
+    }
+  }
 }

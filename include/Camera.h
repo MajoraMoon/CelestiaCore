@@ -1,5 +1,8 @@
 #pragma once
 
+#include "EventBus.h"
+#include "Events.h"
+
 /**
  *
  * This is a central Camera Class. At the moment, it is implementing a simple
@@ -38,11 +41,11 @@ public:
   float mouseSensitivity;
   float zoom;
 
-  Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+  Camera(EventBus &eventBus, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
          glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
          float pitch = PITCH);
-  Camera(float posX, float posY, float posZ, float upX, float upY, float upZ,
-         float yaw, float pitch);
+  Camera(EventBus &eventBus, float posX, float posY, float posZ, float upX,
+         float upY, float upZ, float yaw, float pitch);
 
   glm::mat4 getViewMatrix();
   void processKeyboard(Camera_Movement direction, float deltaTime);
@@ -51,5 +54,11 @@ public:
   void processMouseScroll(float yoffset);
 
 private:
+  EventBus &eventBus;
+
   void updateCameraVectors();
+
+  void handleKeyInput(const KeyEvent &event);
+
+  float deltaTime = 0.0f;
 };
