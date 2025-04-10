@@ -4,9 +4,8 @@
 // clang-format on
 
 CelestiaCore::CelestiaCore()
-    : window("CelestiaCore", "0.2"), frameTimer(), scene(frameTimer),
-      guiManager(window, frameTimer),
-      inputManger(window, frameTimer, guiManager), renderer(scene) {}
+    : window("CelestiaCore", "0.3"), frameTimer(eventBus), scene(frameTimer),
+      guiManager(window, eventBus), inputManger(eventBus), renderer(scene) {}
 
 void CelestiaCore::run() {
 
@@ -27,7 +26,7 @@ void CelestiaCore::run() {
 
     while (SDL_PollEvent(&event)) {
 
-      inputManger.processEvent(event, window);
+      inputManger.processEvent(event);
 
       if (guiManager.IsVisible() && inputManger.isMouseVisible()) {
         guiManager.processGUIEvent(&event);
@@ -37,7 +36,6 @@ void CelestiaCore::run() {
         }
       }
     }
-    inputManger.updateCamera(scene.camera);
 
     scene.update();
 

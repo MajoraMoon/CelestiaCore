@@ -1,7 +1,8 @@
 #pragma once
 
 // clang-format off
-
+#include "EventBus.h"
+#include "Events.h"
 #include "WindowSDLGL.h"
 #include "Renderer.h"
 #include "FrameTimer.h"
@@ -39,6 +40,8 @@
  */
 
 class CelestiaCore {
+
+  EventBus eventBus;
 
 public:
   CelestiaCore();

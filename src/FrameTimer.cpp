@@ -3,7 +3,7 @@
 #include "FrameTimer.h"
 // clang-format on
 
-FrameTimer::FrameTimer() {
+FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
 
   lastTime = SDL_GetTicks() / 1000.0f;
   deltaTime = 0.0f;

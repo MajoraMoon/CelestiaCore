@@ -2,8 +2,10 @@
 
 // clang-format off
 
+#include "EventBus.h"
+#include "Events.h"
+
 #include "WindowSDLGL.h"
-#include "FrameTimer.h"
 
 // clang-format on
 
@@ -16,7 +18,7 @@
 class GuiManager {
 
 public:
-  GuiManager(WindowSDLGL &window, FrameTimer &frameTimer);
+  GuiManager(WindowSDLGL &window, EventBus &eventBus);
   ~GuiManager();
 
   void processGUIEvent(const SDL_Event *event);
@@ -28,12 +30,13 @@ public:
   bool IsVisible() const { return visible; }
 
 private:
+  EventBus &eventBus;
+  WindowSDLGL &window;
+
   // actual imgui windows to render
   void showStatsWindow();
   void showShortcutsWindow();
 
-  WindowSDLGL &window;
-  FrameTimer &frameTimer;
   // inner enum class, so it does not conflict with global on/off values
   // somewhere else. idk how c++ works honestly, I know object oriented design
   // but c++ is something else lol

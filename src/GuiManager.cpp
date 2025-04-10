@@ -3,8 +3,8 @@
 #include "GuiManager.h"
 // clang-format on
 
-GuiManager::GuiManager(WindowSDLGL &window, FrameTimer &frameTimer)
-    : window(window), frameTimer(frameTimer) {
+GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
+    : window(window), eventBus(eventBus) {
 
   float scaleFactor = SDL_GetWindowDisplayScale(window.getSDLGLWindow());
 

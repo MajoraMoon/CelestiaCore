@@ -3,10 +3,6 @@
 // clang-format off
 #include "EventBus.h"
 #include "Events.h"
-#include "Camera.h"
-#include "WindowSDLGL.h"
-#include "FrameTimer.h"
-#include "GuiManager.h"
 
 // clang-format on
 
@@ -19,8 +15,7 @@
 class InputManager {
 
 public:
-  InputManager(WindowSDLGL &window, FrameTimer &frameTimer,
-               GuiManager &guiManager, EventBus &eventBus);
+  InputManager(EventBus &eventBus);
 
   void processEvent(const SDL_Event &event);
 
@@ -35,9 +30,6 @@ public:
   bool quitRequested = false;
 
 private:
-  FrameTimer &frameTimer;
-  GuiManager &guiManager;
-  WindowSDLGL &window;
   EventBus &eventBus;
 
   // SDL keycodes for input behaviour

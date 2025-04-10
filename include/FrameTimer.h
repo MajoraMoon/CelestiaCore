@@ -1,4 +1,6 @@
 #pragma once
+#include "EventBus.h"
+#include "Events.h"
 
 /**
  *
@@ -14,7 +16,7 @@
 class FrameTimer {
 
 public:
-  FrameTimer();
+  FrameTimer(EventBus &eventBus);
   void update();
   void setPaused(bool isPaused) { paused = isPaused; }
   bool isPaused() const { return paused; }
@@ -29,6 +31,8 @@ public:
   float getCurrentFPS() const { return fps; }
 
 private:
+  EventBus &eventBus;
+
   float deltaTime;
   float lastTime;
   float simulationTime;
