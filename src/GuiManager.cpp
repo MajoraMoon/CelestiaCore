@@ -24,8 +24,10 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
   ImGui_ImplOpenGL3_Init("#version 460");
 
   // GUI events
-  eventBus.subscribe<ToggleGuiEvent>(
-      [this](const Event &e) { toggleVisibility(); });
+  eventBus.subscribe<GuiVisibilityChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const GuiVisibilityChanged &>(e);
+    guiVisible = ev.visible;
+  });
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);
@@ -34,6 +36,11 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
     simulationTime = ev.simulationTime;
     deltaTime = ev.deltaTime;
     stableFPS = ev.stableFPS;
+  });
+
+  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
+    mouseVisible = ev.visible;
   });
 }
 
@@ -45,7 +52,10 @@ GuiManager::~GuiManager() {
 }
 
 void GuiManager::processGUIEvent(const SDL_Event *event) {
-  ImGui_ImplSDL3_ProcessEvent(event);
+
+  if (mouseVisible) {
+    ImGui_ImplSDL3_ProcessEvent(event);
+  }
 }
 
 void GuiManager::newFrame() {
@@ -58,7 +68,7 @@ void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
-  if (visible) {
+  if (guiVisible) {
     showShortcutsWindow();
     showStatsWindow();
   }

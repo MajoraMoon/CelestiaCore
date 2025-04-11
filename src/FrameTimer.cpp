@@ -16,8 +16,10 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
   timeAccumulator = 0.0f;
   frameCount = 0;
 
-  eventBus.subscribe<PauseEvent>(
-      [this](const Event &e) { toggleSimulationPaused(); });
+  eventBus.subscribe<SimulationPaused>([this](const Event &e) {
+    const auto &ev = static_cast<const SimulationPaused &>(e);
+    paused = ev.paused;
+  });
 }
 
 void FrameTimer::update() {

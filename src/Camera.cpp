@@ -42,18 +42,29 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
                   {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
 
   eventBus.subscribe<KeyEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const KeyEvent &>(e);
-    handleKeyInput(ev);
+    if (!mouseVisible) {
+      const auto &ev = static_cast<const KeyEvent &>(e);
+      handleKeyInput(ev);
+    }
   });
 
   eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseMoveEvent &>(e);
-    processMouseMovement(ev.xrel, ev.yrel);
+    if (!mouseVisible) {
+      const auto &ev = static_cast<const MouseMoveEvent &>(e);
+      processMouseMovement(ev.xrel, ev.yrel);
+    }
   });
 
   eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseScrollEvent &>(e);
-    processMouseScroll(ev.yoffset);
+    if (!mouseVisible) {
+      const auto &ev = static_cast<const MouseScrollEvent &>(e);
+      processMouseScroll(ev.yoffset);
+    }
+  });
+
+  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
+    mouseVisible = ev.visible;
   });
 
   updateCameraVectors();
@@ -88,6 +99,11 @@ Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
   eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
     const auto &ev = static_cast<const MouseScrollEvent &>(e);
     processMouseScroll(ev.yoffset);
+  });
+
+  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
+    mouseVisible = ev.visible;
   });
 
   updateCameraVectors();

@@ -53,9 +53,31 @@ struct FrameUpdateEvent : Event {
         paused(paused) {}
 };
 
+// triggers for appStates
 struct ToggleMouseVisibilityEvent : Event {};
-
 struct ToggleGuiEvent : Event {};
 struct PauseEvent : Event {};
 struct MaximizeWindowEvent : Event {};
+
 struct QuitEvent : Event {};
+
+// AppState event changes
+struct MouseVisibilityChanged : Event {
+  bool visible;
+  MouseVisibilityChanged(bool v) : visible(v) {}
+};
+
+struct GuiVisibilityChanged : Event {
+  bool visible;
+  GuiVisibilityChanged(bool v) : visible(v) {}
+};
+
+struct SimulationPaused : Event {
+  bool paused;
+  SimulationPaused(bool p) : paused(p) {}
+};
+
+struct WindowMaximized : Event {
+  bool maximized;
+  WindowMaximized(bool m) : maximized(m) {}
+};

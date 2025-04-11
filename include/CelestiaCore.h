@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "InputManager.h"
 #include "GuiManager.h"
+#include "AppState.h"
 
 // clang-format on
 
@@ -42,6 +43,8 @@
 class CelestiaCore {
 
   EventBus eventBus;
+  AppState appState;
+  StateManager stateManager;
 
 public:
   CelestiaCore();

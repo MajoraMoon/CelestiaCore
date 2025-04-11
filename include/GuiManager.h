@@ -26,9 +26,6 @@ public:
   void render();
   void toggleVsync(bool vsyncEnabled);
 
-  void toggleVisibility() { visible = !visible; }
-  bool IsVisible() const { return visible; }
-
 private:
   EventBus &eventBus;
   WindowSDLGL &window;
@@ -42,7 +39,9 @@ private:
   // but c++ is something else lol
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
-  bool visible = true;
+
+  bool guiVisible = true;
+  bool mouseVisible = false;
 
   float deltaTime = 0.0f;
   float currentTime = 0.0f;

@@ -45,5 +45,5 @@ private:
   float timeAccumulator;
   int frameCount;
 
-  bool paused = false;
+  bool paused;
 };

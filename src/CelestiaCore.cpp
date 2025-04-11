@@ -4,9 +4,9 @@
 // clang-format on
 
 CelestiaCore::CelestiaCore()
-    : window("CelestiaCore", "0.3", eventBus), frameTimer(eventBus),
-      scene(frameTimer, eventBus), guiManager(window, eventBus),
-      inputManger(eventBus), renderer(scene) {}
+    : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
+      frameTimer(eventBus), scene(frameTimer, eventBus),
+      guiManager(window, eventBus), inputManger(eventBus), renderer(scene) {}
 
 void CelestiaCore::run() {
 
@@ -29,9 +29,7 @@ void CelestiaCore::run() {
 
       inputManger.processEvent(event);
 
-      if (guiManager.IsVisible() && window.mouseIsVisible()) {
-        guiManager.processGUIEvent(&event);
-      }
+      guiManager.processGUIEvent(&event);
     }
 
     scene.update();

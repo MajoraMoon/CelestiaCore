@@ -66,4 +66,6 @@ private:
   void updateMovement();
 
   float deltaTime = 0.0f;
+
+  bool mouseVisible = false;
 };

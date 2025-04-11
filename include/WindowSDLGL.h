@@ -18,8 +18,6 @@ public:
               unsigned int initialHeight = 1080);
   ~WindowSDLGL();
 
-  bool mouseIsVisible() const { return mouseVisibility; }
-
   SDL_Window *getSDLGLWindow() const { return window; }
   SDL_GLContext getGLContext() const { return glContext; }
 
@@ -34,11 +32,8 @@ private:
   unsigned int width = 1920;
   unsigned int height = 1080;
 
-  bool mouseVisibility = false;
+  bool mouseVisible = false;
   bool windowIsMaximized = false;
-
-  void toggleMouseVisibility() { mouseVisibility = !mouseVisibility; }
-  void toggleWindowIsMaximized() { windowIsMaximized = !windowIsMaximized; }
 
   void handleMouseVisibity(unsigned int width, unsigned int height);
   void handleWindowResize(unsigned int width, unsigned int height);

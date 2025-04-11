@@ -85,11 +85,18 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     handleWindowResize(width, height);
   });
 
-  eventBus.subscribe<ToggleMouseVisibilityEvent>(
-      [this](const Event &e) { handleMouseVisibity(width, height); });
+  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
 
-  eventBus.subscribe<MaximizeWindowEvent>(
-      [this](const Event &e) { handleMaximizeWindow(); });
+    mouseVisible = ev.visible;
+    handleMouseVisibity(width, height);
+  });
+
+  eventBus.subscribe<WindowMaximized>([this](const Event &e) {
+    const auto &ev = static_cast<const WindowMaximized &>(e);
+    windowIsMaximized = ev.maximized;
+    handleMaximizeWindow();
+  });
 }
 
 WindowSDLGL::~WindowSDLGL() {
@@ -102,12 +109,14 @@ WindowSDLGL::~WindowSDLGL() {
 
 void WindowSDLGL::handleMouseVisibity(unsigned int width, unsigned int height) {
 
-  if (!SDL_SetWindowRelativeMouseMode(window, mouseVisibility)) {
+  // invert  boolean values.
+  // mouseEvent says: mouse not visible? then false. mouse visible: then true.
+  bool relativeMode = !mouseVisible;
+
+  if (!SDL_SetWindowRelativeMouseMode(window, relativeMode)) {
     std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
               << std::endl;
   }
-
-  toggleMouseVisibility();
 
   // when entering the mouse mode or camera mode, will be placed at the
   // center of the window
@@ -119,7 +128,11 @@ void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
 }
 
 void WindowSDLGL::handleMaximizeWindow() {
-  if (windowIsMaximized) {
+
+  // invert  boolean values again
+  bool shouldRestore = !windowIsMaximized;
+
+  if (shouldRestore) {
     // Restore window before resizing
     if (!SDL_RestoreWindow(window)) {
       std::cerr << "Could not restore window properties: " << SDL_GetError()
@@ -140,12 +153,10 @@ void WindowSDLGL::handleMaximizeWindow() {
       int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
       int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
       SDL_SetWindowPosition(window, posX, posY);
-      toggleWindowIsMaximized();
     }
   } else {
     if (!SDL_MaximizeWindow(window)) {
       std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
     }
-    toggleWindowIsMaximized();
   }
 }
