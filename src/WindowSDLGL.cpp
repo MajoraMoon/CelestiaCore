@@ -75,6 +75,12 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     return;
   }
 
+  if (!SDL_SetWindowRelativeMouseMode(window, true)) {
+
+    std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
+              << std::endl;
+  }
+
   // Window Event subscriptions
 
   eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {

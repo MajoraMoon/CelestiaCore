@@ -45,6 +45,7 @@ class CelestiaCore {
   EventBus eventBus;
   AppState appState;
   StateManager stateManager;
+  SDL_Event event;
 
 public:
   CelestiaCore();

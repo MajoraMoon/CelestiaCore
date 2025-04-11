@@ -10,15 +10,7 @@ CelestiaCore::CelestiaCore()
 
 void CelestiaCore::run() {
 
-  if (!SDL_SetWindowRelativeMouseMode(window.getSDLGLWindow(), true)) {
-
-    std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
-              << std::endl;
-  }
-
   eventBus.subscribe<QuitEvent>([this](const Event &e) { quitCelestiaCore(); });
-
-  SDL_Event event;
 
   // main loop
   while (running) {
