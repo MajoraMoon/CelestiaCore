@@ -23,7 +23,6 @@ void CelestiaCore::run() {
   // main loop
   while (running) {
 
-    // main FrameTimer --> publish frametimer events
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {
@@ -32,10 +31,6 @@ void CelestiaCore::run() {
 
       if (guiManager.IsVisible() && window.mouseIsVisible()) {
         guiManager.processGUIEvent(&event);
-      }
-      if (event.type == SDL_EVENT_KEY_DOWN) {
-        if (event.key.key == SDLK_SPACE) {
-        }
       }
     }
 

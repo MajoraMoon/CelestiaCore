@@ -102,6 +102,7 @@ void Camera::handleKeyInput(const KeyEvent &event) {
 }
 
 void Camera::updateMovement() {
+
   for (const auto &key : activeKeys) {
     if (key.second) { // If the key is pressed
       processKeyboard(movementKeys[key.first], movementSpeed * deltaTime);

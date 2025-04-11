@@ -53,8 +53,9 @@ struct FrameUpdateEvent : Event {
         paused(paused) {}
 };
 
-struct ToggleGuiEvent : Event {};
 struct ToggleMouseVisibilityEvent : Event {};
+
+struct ToggleGuiEvent : Event {};
 struct PauseEvent : Event {};
 struct MaximizeWindowEvent : Event {};
 struct QuitEvent : Event {};
