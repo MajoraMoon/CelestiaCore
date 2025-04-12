@@ -25,67 +25,109 @@
  *
  * Pitch: The angle, which describes the rotation around the x-axis (vertical)
  */
+
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
+const float SPEED = 4.0f;
+const float SENSITIVITY = 0.1f;
+const float ZOOM = 45.0f;
+
 Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
-               float pitch)
+               float pitch, CameraInputConfig inputConfig)
     : eventBus(eventBus), position(position), worldUp(up), yaw(yaw),
-      pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
+      pitch(pitch), inputConfig(inputConfig), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
 
-  movementKeys = {{SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
-                  {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
-                  {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
-
-  setupEventSubscriptions();
-
+  front = glm::vec3(0.0f, 0.0f, -1.0f);
   updateCameraVectors();
+  setupEventSubscriptions();
 }
 
-void Camera::handleKeyInput(const KeyEvent &event) {
+void Camera::setupEventSubscriptions() {
+  // Frame updates
+  eventBus.subscribe<FrameUpdateEvent>(
+      // not saving deltaTime here in a member variable because only the
+      // movement uses it, no other possible caclulations inside the camera
+      // class
+      [this](const FrameUpdateEvent &ev) { processMovement(ev.deltaTime); });
 
-  auto it = movementKeys.find(event.scancode);
-  if (it != movementKeys.end()) {
-    activeKeys[event.scancode] = event.pressed;
-  }
-}
+  // Keyboard input
+  eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
+    if (!m_mouseVisible) {
 
-void Camera::updateMovement() {
+      // pressing w (trying to work with more structs)
+      inputState.forward = (ev.scancode == inputConfig.moveForward)
+                               ? ev.pressed
+                               : inputState.forward;
+      // pressing s
+      inputState.backward = (ev.scancode == inputConfig.moveBackward)
+                                ? ev.pressed
+                                : inputState.backward;
+      // pressing a
+      inputState.left =
+          (ev.scancode == inputConfig.moveLeft) ? ev.pressed : inputState.left;
+      // pressing d
+      inputState.right = (ev.scancode == inputConfig.moveRight)
+                             ? ev.pressed
+                             : inputState.right;
+      // pressing space
+      inputState.up =
+          (ev.scancode == inputConfig.moveUp) ? ev.pressed : inputState.up;
 
-  for (const auto &key : activeKeys) {
-    if (key.second) { // If the key is pressed
-      processKeyboard(movementKeys[key.first], movementSpeed * m_deltaTime);
+      // pressing ctrl
+      inputState.down =
+          (ev.scancode == inputConfig.moveDown) ? ev.pressed : inputState.down;
+
+      // pressing shift
+      inputState.boost = (ev.scancode == inputConfig.boostSpeed)
+                             ? ev.pressed
+                             : inputState.boost;
     }
-  }
+  });
+
+  eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
+    if (!m_mouseVisible) {
+      handleMouseMovement(ev.xrel, ev.yrel);
+    }
+  });
+
+  // Mouse visibility for deactivating movement
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.mouseVisible;
+      });
+
+  eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
+    zoom -= ev.yoffset;
+    zoom = glm::clamp(zoom, 1.0f, 45.0f);
+  });
 }
 
-glm::mat4 Camera::getViewMatrix() {
-  return glm::lookAt(position, position + front, up);
+void Camera::processMovement(float deltaTime) {
+  float velocity = movementSpeed * deltaTime;
+  if (inputState.boost)
+    velocity = velocity * 2.5f;
+
+  if (inputState.forward)
+    applyMovement(front, velocity);
+  if (inputState.backward)
+    applyMovement(-front, velocity);
+  if (inputState.left)
+    applyMovement(-right, velocity);
+  if (inputState.right)
+    applyMovement(right, velocity);
+  if (inputState.up)
+    applyMovement(worldUp, velocity);
+  if (inputState.down)
+    applyMovement(-worldUp, velocity);
 }
 
-/**
- * Movements speed is multiplied with deltaTime to garanty a smooth movement
- * indepented from the framerate. If not multiplied with deltaTime, this camera
- * would be either hella fast or a diashow, depending on the framerate
- */
-
-void Camera::processKeyboard(Camera_Movement direction, float velocity) {
-
-  if (direction == FORWARD)
-    position += front * velocity;
-  if (direction == BACKWARD)
-    position -= front * velocity;
-  if (direction == LEFT)
-    position -= right * velocity;
-  if (direction == RIGHT)
-    position += right * velocity;
-  if (direction == UP)
-    position += worldUp * velocity;
-  if (direction == DOWN)
-    position -= worldUp * velocity;
+void Camera::applyMovement(glm::vec3 direction, float velocity) {
+  position += glm::normalize(direction) * velocity;
 }
 
-void Camera::processMouseMovement(float xoffset, float yoffset,
-                                  bool constrainPitch) {
-
+void Camera::handleMouseMovement(float xoffset, float yoffset,
+                                 bool constrainPitch) {
   xoffset *= mouseSensitivity;
   yoffset *= mouseSensitivity;
 
@@ -93,64 +135,23 @@ void Camera::processMouseMovement(float xoffset, float yoffset,
   pitch -= yoffset;
 
   if (constrainPitch) {
-    if (pitch > 89.0f)
-      pitch = 89.0f;
-    if (pitch < -89.0f)
-      pitch = -89.0f;
+    pitch = glm::clamp(pitch, -89.0f, 89.0f);
   }
 
   updateCameraVectors();
 }
 
-void Camera::processMouseScroll(float yoffset) {
-
-  zoom -= (float)yoffset;
-  if (zoom < 1.0f)
-    zoom = 1.0f;
-  if (zoom > 45.0f)
-    zoom = 45.0f;
+glm::mat4 Camera::getViewMatrix() const {
+  return glm::lookAt(position, position + front, up);
 }
 
-// magic math to update the cameras view
 void Camera::updateCameraVectors() {
-  glm::vec3 Front;
-  Front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  Front.y = sin(glm::radians(pitch));
-  Front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  glm::vec3 newFront;
+  newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  newFront.y = sin(glm::radians(pitch));
+  newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
-  front = glm::normalize(Front);
-
+  front = glm::normalize(newFront);
   right = glm::normalize(glm::cross(front, worldUp));
   up = glm::normalize(glm::cross(right, front));
-}
-
-void Camera::setupEventSubscriptions() {
-
-  eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
-    m_deltaTime = ev.deltaTime;
-    updateMovement();
-  });
-
-  eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
-    if (!m_mouseVisible) {
-      handleKeyInput(ev);
-    }
-  });
-
-  eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
-    if (!m_mouseVisible) {
-      processMouseMovement(ev.xrel, ev.yrel);
-    }
-  });
-
-  eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
-    if (!m_mouseVisible) {
-      processMouseScroll(ev.yoffset);
-    }
-  });
-
-  eventBus.subscribe<MouseVisibilityChanged>(
-      [this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.mouseVisible;
-      });
 }

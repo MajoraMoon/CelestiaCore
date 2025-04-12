@@ -11,67 +11,61 @@
  * A Camera Object is handled by a Scene Class.
  *
  */
-
-enum Camera_Movement {
-
-  FORWARD,
-  BACKWARD,
-  LEFT,
-  RIGHT,
-  UP,
-  DOWN
+struct CameraInputConfig {
+  SDL_Scancode moveForward = SDL_SCANCODE_W;
+  SDL_Scancode moveBackward = SDL_SCANCODE_S;
+  SDL_Scancode moveLeft = SDL_SCANCODE_A;
+  SDL_Scancode moveRight = SDL_SCANCODE_D;
+  SDL_Scancode moveUp = SDL_SCANCODE_SPACE;
+  SDL_Scancode moveDown = SDL_SCANCODE_LCTRL;
+  SDL_Scancode boostSpeed = SDL_SCANCODE_LSHIFT;
 };
-
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
-const float SPEED = 2.5f;
-const float SENSITIVITY = 0.1f;
-const float ZOOM = 45.0f;
 
 class Camera {
 public:
-  Camera(EventBus &eventBus, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
-         float pitch = PITCH);
+  Camera(EventBus &eventBus, glm::vec3 position = glm::vec3(0.0f),
+         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f,
+         float pitch = 0.0f, CameraInputConfig inputConfig = {});
 
-  glm::mat4 getViewMatrix();
+  glm::mat4 getViewMatrix() const;
+  void updateCameraVectors();
 
+  // Camera state
   glm::vec3 position;
   glm::vec3 front;
   glm::vec3 up;
   glm::vec3 right;
   glm::vec3 worldUp;
-  float yaw;
-  float pitch;
+
+  // Camera parameters
   float movementSpeed;
   float mouseSensitivity;
   float zoom;
 
 private:
   EventBus &eventBus;
+  CameraInputConfig inputConfig;
 
-  const SDL_Scancode MOVE_FRONT = SDL_SCANCODE_W;
-  const SDL_Scancode MOVE_LEFT = SDL_SCANCODE_A;
-  const SDL_Scancode MOVE_BACK = SDL_SCANCODE_S;
-  const SDL_Scancode MOVE_RIGHT = SDL_SCANCODE_D;
-  const SDL_Scancode MOVE_UP = SDL_SCANCODE_SPACE;
-  const SDL_Scancode MOVE_DOWN = SDL_SCANCODE_LCTRL;
-  const SDL_Scancode MOVE_FAST = SDL_SCANCODE_LSHIFT;
+  struct InputState {
+    bool forward = false;
+    bool backward = false;
+    bool left = false;
+    bool right = false;
+    bool up = false;
+    bool down = false;
+    bool boost = false;
+  } inputState;
 
-  std::unordered_map<SDL_Scancode, Camera_Movement> movementKeys;
-  std::unordered_map<SDL_Scancode, bool> activeKeys;
+  // Rotation angles
+  float yaw;
+  float pitch;
 
-  void updateCameraVectors();
-  void handleKeyInput(const KeyEvent &event);
-  void updateMovement();
-
-  void processKeyboard(Camera_Movement direction, float deltaTime);
-  void processMouseMovement(float xoffset, float yoffset,
-                            bool constrainPitch = true);
-  void processMouseScroll(float yoffset);
+  // Internal state
+  bool m_mouseVisible = false;
 
   void setupEventSubscriptions();
-
-  float m_deltaTime = 0.0f;
-  bool m_mouseVisible = false;
+  void processMovement(float deltaTime);
+  void applyMovement(glm::vec3 direction, float velocity);
+  void handleMouseMovement(float xoffset, float yoffset,
+                           bool constrainPitch = true);
 };
