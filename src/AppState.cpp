@@ -9,6 +9,7 @@ void StateManager::setupSubscriptions() {
   // Mouse visibility
   eventBus.subscribe<ToggleMouseVisibilityEvent>([this](const Event &) {
     state.mouseVisible = !state.mouseVisible;
+
     eventBus.publish(MouseVisibilityChanged(state.mouseVisible));
   });
 
@@ -20,8 +21,8 @@ void StateManager::setupSubscriptions() {
 
   // Pause state
   eventBus.subscribe<PauseEvent>([this](const Event &) {
-    state.paused = !state.paused;
-    eventBus.publish(SimulationPaused(state.paused));
+    state.simulationPaused = !state.simulationPaused;
+    eventBus.publish(SimulationPaused(state.simulationPaused));
   });
 
   // Window state

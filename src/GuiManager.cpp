@@ -26,7 +26,7 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
   // GUI events
   eventBus.subscribe<GuiVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const GuiVisibilityChanged &>(e);
-    guiVisible = ev.visible;
+    guiVisible = ev.guiVisible;
   });
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
@@ -40,7 +40,7 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.visible;
+    mouseVisible = ev.mouseVisible;
   });
 
   eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
@@ -112,6 +112,9 @@ void GuiManager::showStatsWindow() {
   ImGui::Text("FPS (average): %.3f", stableFPS);
   ImGui::Spacing();
   ImGui::Text("Resolution: %ix%i", width, height);
+
+  std::cout << std::boolalpha;
+  ImGui::Text("Simulation paused: %s", "fff");
 
   // VSync Combo Box
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};

@@ -64,7 +64,7 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.visible;
+    mouseVisible = ev.mouseVisible;
   });
 
   updateCameraVectors();
@@ -103,7 +103,7 @@ Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.visible;
+    mouseVisible = ev.mouseVisible;
   });
 
   updateCameraVectors();

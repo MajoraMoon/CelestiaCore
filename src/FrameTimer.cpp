@@ -9,7 +9,7 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
   deltaTime = 0.0f;
   simulationTime = 0.0f;
   simulationDeltaTime = 0.0f;
-  paused = false;
+  simulationPaused = false;
 
   fps = 0.0f;
   stableFPS = 0.0f;
@@ -18,7 +18,7 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
 
   eventBus.subscribe<SimulationPaused>([this](const Event &e) {
     const auto &ev = static_cast<const SimulationPaused &>(e);
-    paused = ev.paused;
+    simulationPaused = ev.simulationPaused;
   });
 }
 
@@ -27,7 +27,7 @@ void FrameTimer::update() {
   deltaTime = currentTime - lastTime;
   lastTime = currentTime;
 
-  if (!paused) {
+  if (!simulationPaused) {
     simulationDeltaTime = deltaTime;
     simulationTime += simulationDeltaTime;
   } else {
@@ -54,5 +54,6 @@ void FrameTimer::update() {
   // publish events from EventTimer here, because they are not part of any
   // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
   eventBus.publish(FrameUpdateEvent(deltaTime, lastTime, simulationTime,
-                                    simulationDeltaTime, stableFPS, paused));
+                                    simulationDeltaTime, stableFPS,
+                                    simulationPaused));
 }

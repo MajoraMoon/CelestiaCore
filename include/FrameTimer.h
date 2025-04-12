@@ -32,5 +32,5 @@ private:
   float timeAccumulator;
   int frameCount;
 
-  bool paused;
+  bool simulationPaused;
 };

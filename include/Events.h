@@ -64,21 +64,21 @@ struct QuitEvent : Event {};
 
 // AppState event changes
 struct MouseVisibilityChanged : Event {
-  bool visible;
-  MouseVisibilityChanged(bool v) : visible(v) {}
+  bool mouseVisible;
+  MouseVisibilityChanged(bool v) : mouseVisible(v) {}
 };
 
 struct GuiVisibilityChanged : Event {
-  bool visible;
-  GuiVisibilityChanged(bool v) : visible(v) {}
+  bool guiVisible;
+  GuiVisibilityChanged(bool v) : guiVisible(v) {}
 };
 
 struct SimulationPaused : Event {
-  bool paused;
-  SimulationPaused(bool p) : paused(p) {}
+  bool simulationPaused;
+  SimulationPaused(bool p) : simulationPaused(p) {}
 };
 
 struct WindowMaximized : Event {
-  bool maximized;
-  WindowMaximized(bool m) : maximized(m) {}
+  bool windowMaximized;
+  WindowMaximized(bool m) : windowMaximized(m) {}
 };

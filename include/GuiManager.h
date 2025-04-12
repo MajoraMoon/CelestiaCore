@@ -45,6 +45,7 @@ private:
 
   bool guiVisible = true;
   bool mouseVisible = false;
+  bool simulationPaused = false;
 
   float deltaTime = 0.0f;
   float currentTime = 0.0f;

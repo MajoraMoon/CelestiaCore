@@ -6,7 +6,7 @@
 struct AppState {
   bool mouseVisible = false;
   bool guiVisible = true;
-  bool paused = false;
+  bool simulationPaused = false;
   bool windowMaximized = false;
 };
 
