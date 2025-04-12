@@ -7,6 +7,9 @@ CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
       frameTimer(eventBus), scene(eventBus), guiManager(window, eventBus),
       inputManger(eventBus), renderer(window, eventBus, scene) {
+
+  // set up right resolution after all classes are created and the eventBus is
+  // working
   window.publishCurrentWindowSize();
 }
 
@@ -30,8 +33,6 @@ void CelestiaCore::run() {
 
     renderer.renderFrame();
 
-    // dear ImGui-rendering
-    guiManager.newFrame();
     guiManager.render();
 
     SDL_GL_SwapWindow(window.getSDLGLWindow());

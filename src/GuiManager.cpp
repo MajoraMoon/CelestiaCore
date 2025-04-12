@@ -69,13 +69,11 @@ void GuiManager::processGUIEvent(const SDL_Event *event) {
   }
 }
 
-void GuiManager::newFrame() {
+void GuiManager::render() {
+
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplSDL3_NewFrame();
   ImGui::NewFrame();
-}
-
-void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown

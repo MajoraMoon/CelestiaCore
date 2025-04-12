@@ -22,14 +22,13 @@ public:
   ~GuiManager();
 
   void processGUIEvent(const SDL_Event *event);
-  void newFrame();
   void render();
-  void toggleVsync(bool vsyncEnabled);
 
 private:
   EventBus &eventBus;
   WindowSDLGL &window;
 
+  void toggleVsync(bool vsyncEnabled);
   // actual imgui windows to render
   void showStatsWindow();
   void showShortcutsWindow();

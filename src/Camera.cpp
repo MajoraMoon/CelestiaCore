@@ -77,9 +77,9 @@ Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
       front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
 
-  movementKeys = {{SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
-                  {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
-                  {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
+  movementKeys = {{MOVE_FRONT, FORWARD}, {MOVE_BACK, BACKWARD},
+                  {MOVE_LEFT, LEFT},     {MOVE_RIGHT, RIGHT},
+                  {MOVE_UP, UP},         {MOVE_DOWN, DOWN}};
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);

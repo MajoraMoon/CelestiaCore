@@ -21,7 +21,8 @@ public:
   std::vector<glm::mat4> cubeTransforms;  
 
 
-// Camera is part of the scene
+// Camera is part of the scene. Renderer needs information through the scene's camera
+// There will be only one camera anyway
   Camera camera;
 
   private:
