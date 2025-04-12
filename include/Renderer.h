@@ -34,6 +34,7 @@ private:
   Texture texture1;
   Texture texture2;
   Mesh cubeMesh;
+  Camera camera;
 
   Scene &scene;
   EventBus &eventBus;

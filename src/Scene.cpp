@@ -4,8 +4,7 @@
 // clang-format on
 
 // The Camera is a part of the scene
-Scene::Scene(EventBus &eventBus)
-    : eventBus(eventBus), camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)) {
+Scene::Scene(EventBus &eventBus) : eventBus(eventBus) {
 
   // clang-format off
   cubePositions = {

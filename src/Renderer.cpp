@@ -5,6 +5,7 @@
 
 Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
     : window(window), eventBus(eventBus), scene(scene),
+      camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag"),
       texture1("../assets/textures/rocky_terrain_diff_4k.jpg"),
       texture2("../assets/textures/awesomeface.png"),
@@ -82,9 +83,9 @@ void Renderer::renderFrame() {
   texture2.bind(1);
   shader.use();
 
-  glm::mat4 view = scene.camera.getViewMatrix();
+  glm::mat4 view = camera.getViewMatrix();
   glm::mat4 projection =
-      glm::perspective(glm::radians(scene.camera.zoom),
+      glm::perspective(glm::radians(camera.zoom),
                        static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
   shader.setMat4("view", view);
