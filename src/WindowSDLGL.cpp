@@ -85,28 +85,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
               << std::endl;
   }
 
-  // Window Event subscriptions
-
-  eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const WindowResizeEvent &>(e);
-    m_width = ev.width;
-    m_height = ev.height;
-
-    handleWindowResize(m_width, m_height);
-  });
-
-  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-
-    mouseVisible = ev.mouseVisible;
-    handleMouseVisibity(m_width, m_height);
-  });
-
-  eventBus.subscribe<WindowMaximizedChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const WindowMaximizedChanged &>(e);
-    windowIsMaximized = ev.windowMaximized;
-    handleMaximizeWindow();
-  });
+  setupEventSubscriptions();
 }
 
 WindowSDLGL::~WindowSDLGL() {
@@ -121,7 +100,7 @@ void WindowSDLGL::handleMouseVisibity(unsigned int width, unsigned int height) {
 
   // invert  boolean values.
   // mouseEvent says: mouse not visible? then false. mouse visible: then true.
-  bool relativeMode = !mouseVisible;
+  bool relativeMode = !m_mouseVisible;
 
   if (!SDL_SetWindowRelativeMouseMode(window, relativeMode)) {
     std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
@@ -145,7 +124,7 @@ void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
 void WindowSDLGL::handleMaximizeWindow() {
 
   // invert  boolean values again
-  bool shouldRestore = !windowIsMaximized;
+  bool shouldRestore = !m_windowIsMaximized;
 
   if (shouldRestore) {
     // Restore window before resizing
@@ -178,4 +157,25 @@ void WindowSDLGL::handleMaximizeWindow() {
 
 void WindowSDLGL::publishCurrentWindowSize() {
   eventBus.publish(WindowResizeEvent(m_width, m_height));
+}
+
+void WindowSDLGL::setupEventSubscriptions() {
+  eventBus.subscribe<WindowResizeEvent>([this](const WindowResizeEvent &ev) {
+    m_width = ev.width;
+    m_height = ev.height;
+
+    handleWindowResize(m_width, m_height);
+  });
+
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.mouseVisible;
+        handleMouseVisibity(m_width, m_height);
+      });
+
+  eventBus.subscribe<WindowMaximizedChanged>(
+      [this](const WindowMaximizedChanged &ev) {
+        m_windowIsMaximized = ev.windowMaximized;
+        handleMaximizeWindow();
+      });
 }

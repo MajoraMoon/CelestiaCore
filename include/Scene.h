@@ -1,10 +1,7 @@
 #pragma once
 
 // clang-format off
-
-#include "Camera.h"
 #include "FrameTimer.h"
-
 #include "EventBus.h"
 #include "Events.h"
 
@@ -13,7 +10,7 @@
 class Scene {
 
 public:
-  Scene(EventBus& eventBus);
+  Scene(EventBus& eventBus, FrameTimer& frameTimer);
   
   // logic update for rendered objects (e.g. physics)
   void update();
@@ -25,6 +22,7 @@ public:
 
   private:
   EventBus& eventBus;
+  FrameTimer& frameTimer;
   std::vector<glm::vec3> cubePositions;
 
   float m_simulationDeltaTime = 0.0f;

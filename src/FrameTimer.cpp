@@ -16,10 +16,10 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
   m_timeAccumulator = 0.0f;
   m_frameCount = 0;
 
-  eventBus.subscribe<SimulationPausedChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const SimulationPausedChanged &>(e);
-    m_simulationPaused = ev.simulationPaused;
-  });
+  eventBus.subscribe<SimulationPausedChanged>(
+      [this](const SimulationPausedChanged &ev) {
+        m_simulationPaused = ev.simulationPaused;
+      });
 }
 
 void FrameTimer::update() {

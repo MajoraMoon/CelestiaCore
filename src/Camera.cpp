@@ -31,41 +31,11 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
       pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
 
-  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-    m_deltaTime = ev.deltaTime;
-    updateMovement();
-  });
-
   movementKeys = {{SDL_SCANCODE_W, FORWARD}, {SDL_SCANCODE_S, BACKWARD},
                   {SDL_SCANCODE_A, LEFT},    {SDL_SCANCODE_D, RIGHT},
                   {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
 
-  eventBus.subscribe<KeyEvent>([this](const Event &e) {
-    if (!m_mouseVisible) {
-      const auto &ev = static_cast<const KeyEvent &>(e);
-      handleKeyInput(ev);
-    }
-  });
-
-  eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
-    if (!m_mouseVisible) {
-      const auto &ev = static_cast<const MouseMoveEvent &>(e);
-      processMouseMovement(ev.xrel, ev.yrel);
-    }
-  });
-
-  eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
-    if (!m_mouseVisible) {
-      const auto &ev = static_cast<const MouseScrollEvent &>(e);
-      processMouseScroll(ev.yoffset);
-    }
-  });
-
-  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    m_mouseVisible = ev.mouseVisible;
-  });
+  setupEventSubscriptions();
 
   updateCameraVectors();
 }
@@ -152,4 +122,35 @@ void Camera::updateCameraVectors() {
 
   right = glm::normalize(glm::cross(front, worldUp));
   up = glm::normalize(glm::cross(right, front));
+}
+
+void Camera::setupEventSubscriptions() {
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
+    m_deltaTime = ev.deltaTime;
+    updateMovement();
+  });
+
+  eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
+    if (!m_mouseVisible) {
+      handleKeyInput(ev);
+    }
+  });
+
+  eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
+    if (!m_mouseVisible) {
+      processMouseMovement(ev.xrel, ev.yrel);
+    }
+  });
+
+  eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
+    if (!m_mouseVisible) {
+      processMouseScroll(ev.yoffset);
+    }
+  });
+
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.mouseVisible;
+      });
 }

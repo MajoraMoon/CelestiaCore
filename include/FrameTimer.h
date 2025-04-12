@@ -19,6 +19,9 @@ public:
   FrameTimer(EventBus &eventBus);
   void update();
 
+  float getSimulationDeltaTime() { return m_simulationDeltaTime; }
+  float getSimulationTime() { return m_simulationTime; }
+
 private:
   EventBus &eventBus;
 

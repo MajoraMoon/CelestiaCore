@@ -70,6 +70,8 @@ private:
                             bool constrainPitch = true);
   void processMouseScroll(float yoffset);
 
+  void setupEventSubscriptions();
+
   float m_deltaTime = 0.0f;
   bool m_mouseVisible = false;
 };

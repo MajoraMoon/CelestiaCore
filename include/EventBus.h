@@ -11,11 +11,21 @@ using EventHandler = std::function<void(const Event &)>;
 
 class EventBus {
 
-  std::unordered_map<std::type_index, std::vector<EventHandler>> subscribers;
+  std::unordered_map<std::type_index,
+                     std::vector<std::function<void(const Event &)>>>
+      subscribers;
 
 public:
-  template <typename EventType> void subscribe(EventHandler handler) {
-    subscribers[typeid(EventType)].emplace_back(std::move(handler));
+  template <typename EventType, typename Handler>
+  void subscribe(Handler &&handler) {
+    subscribers[typeid(EventType)].emplace_back(
+        [h = std::forward<Handler>(handler)](const Event &e) {
+          if constexpr (std::is_same_v<EventType, Event>) {
+            h(e);
+          } else {
+            h(static_cast<const EventType &>(e));
+          }
+        });
   }
 
   template <typename EventType> void publish(const EventType &event) {

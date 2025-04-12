@@ -34,10 +34,12 @@ private:
   int m_width;
   int m_height;
 
-  bool mouseVisible = false;
-  bool windowIsMaximized = false;
+  bool m_mouseVisible = false;
+  bool m_windowIsMaximized = false;
 
   void handleMouseVisibity(unsigned int width, unsigned int height);
   void handleWindowResize(unsigned int width, unsigned int height);
   void handleMaximizeWindow();
+
+  void setupEventSubscriptions();
 };

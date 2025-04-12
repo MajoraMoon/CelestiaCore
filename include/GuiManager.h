@@ -33,6 +33,8 @@ private:
   void showStatsWindow();
   void showShortcutsWindow();
 
+  void setupEventSubscriptions();
+
   // inner enum class, so it does not conflict with global on/off values
   // somewhere else. idk how c++ works honestly, I know object oriented design
   // but c++ is something else lol

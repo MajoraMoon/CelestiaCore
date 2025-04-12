@@ -23,36 +23,7 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
   ImGui_ImplSDL3_InitForOpenGL(window.getSDLGLWindow(), window.getGLContext());
   ImGui_ImplOpenGL3_Init("#version 460");
 
-  // GUI events
-  eventBus.subscribe<GuiVisibilityChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const GuiVisibilityChanged &>(e);
-    m_guiVisible = ev.guiVisible;
-  });
-
-  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    m_mouseVisible = ev.mouseVisible;
-  });
-
-  eventBus.subscribe<SimulationPausedChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const SimulationPausedChanged &>(e);
-    m_simulationPaused = ev.simulationPaused;
-  });
-
-  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-
-    m_currentTime = ev.lastTime;
-    m_simulationTime = ev.simulationTime;
-    m_deltaTime = ev.deltaTime;
-    m_stableFPS = ev.stableFPS;
-  });
-
-  eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const WindowResizeEvent &>(e);
-    m_width = ev.width;
-    m_height = ev.height;
-  });
+  setupEventSubscriptions();
 }
 
 GuiManager::~GuiManager() {
@@ -135,4 +106,31 @@ void GuiManager::showShortcutsWindow() {
   ImGui::Text("Press 'F1' to hide the gui window.");
   ImGui::Text("Press 'P' to pause the simulation");
   ImGui::End();
+}
+
+void GuiManager::setupEventSubscriptions() {
+  eventBus.subscribe<GuiVisibilityChanged>(
+      [this](const GuiVisibilityChanged &ev) { m_guiVisible = ev.guiVisible; });
+
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.mouseVisible;
+      });
+
+  eventBus.subscribe<SimulationPausedChanged>(
+      [this](const SimulationPausedChanged &ev) {
+        m_simulationPaused = ev.simulationPaused;
+      });
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
+    m_currentTime = ev.lastTime;
+    m_simulationTime = ev.simulationTime;
+    m_deltaTime = ev.deltaTime;
+    m_stableFPS = ev.stableFPS;
+  });
+
+  eventBus.subscribe<WindowResizeEvent>([this](const WindowResizeEvent &ev) {
+    m_width = ev.width;
+    m_height = ev.height;
+  });
 }

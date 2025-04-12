@@ -5,8 +5,9 @@
 
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
-      frameTimer(eventBus), scene(eventBus), guiManager(window, eventBus),
-      inputManger(eventBus), renderer(window, eventBus, scene) {
+      frameTimer(eventBus), scene(eventBus, frameTimer),
+      guiManager(window, eventBus), inputManger(eventBus),
+      renderer(window, eventBus, scene) {
 
   // set up right resolution after all classes are created and the eventBus is
   // working
@@ -15,7 +16,8 @@ CelestiaCore::CelestiaCore()
 
 void CelestiaCore::run() {
 
-  eventBus.subscribe<QuitEvent>([this](const Event &e) { quitCelestiaCore(); });
+  eventBus.subscribe<QuitEvent>(
+      [this](const QuitEvent &ev) { quitCelestiaCore(); });
 
   // main loop
   while (m_running) {

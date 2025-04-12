@@ -4,7 +4,8 @@
 // clang-format on
 
 // The Camera is a part of the scene
-Scene::Scene(EventBus &eventBus) : eventBus(eventBus) {
+Scene::Scene(EventBus &eventBus, FrameTimer &frameTimer)
+    : eventBus(eventBus), frameTimer(frameTimer) {
 
   // clang-format off
   cubePositions = {
@@ -20,15 +21,14 @@ Scene::Scene(EventBus &eventBus) : eventBus(eventBus) {
     glm::vec3(-1.3f, 1.0f, -1.5f)
   };
   // clang-format on
-
-  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-    m_simulationDeltaTime = ev.simulationDeltaTime;
-    m_simulationTime = ev.simulationTime;
-  });
 }
 
 void Scene::update() {
+
+  // getting values directly from frameTimer not the eventBus, ensuring values
+  // are correct with direct access.
+  m_simulationDeltaTime = frameTimer.getSimulationDeltaTime();
+  m_simulationTime = frameTimer.getSimulationTime();
 
   cubeTransforms.clear();
 
