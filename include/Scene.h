@@ -13,7 +13,7 @@
 class Scene {
 
 public:
-  Scene(FrameTimer& frameTimer, EventBus& eventBus);
+  Scene(EventBus& eventBus);
   
   // logic update for rendered objects (e.g. physics)
   void update();
@@ -26,9 +26,10 @@ public:
 
   private:
   EventBus& eventBus;
-  FrameTimer& frameTimer;
   std::vector<glm::vec3> cubePositions;
-  float currentTime = 0.0f;
+
+  float simulationDeltaTime = 0.0f;
+  float simulationTime = 0.0f;
 
   
 };

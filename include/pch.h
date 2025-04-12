@@ -5,9 +5,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
+#include <typeindex>
+#include <unordered_map>
 #include <vector>
 
 // OpenGL

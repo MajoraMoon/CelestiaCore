@@ -3,8 +3,8 @@
 #include "Renderer.h"
 // clang-format on
 
-Renderer::Renderer(Scene &scene)
-    : scene(scene),
+Renderer::Renderer(EventBus &eventBus, Scene &scene)
+    : eventBus(eventBus), scene(scene),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag"),
       texture1("../assets/textures/rocky_terrain_diff_4k.jpg"),
       texture2("../assets/textures/awesomeface.png"),
@@ -63,6 +63,12 @@ Renderer::Renderer(Scene &scene)
   shader.use();
   shader.setInt("texture1", 0);
   shader.setInt("texture2", 1);
+
+  eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const WindowResizeEvent &>(e);
+    width = ev.width;
+    height = ev.height;
+  });
 }
 
 // I am trying to really only render the graphics in the renderer, not the logic
@@ -70,8 +76,8 @@ Renderer::Renderer(Scene &scene)
 // the renderer so it can render the changing graphics of course. But it's a
 // pass-through, not the actual calculation
 
-void Renderer::renderFrame(unsigned int width, unsigned int height) {
-  glViewport(0, 0, width, height);
+void Renderer::renderFrame() {
+
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

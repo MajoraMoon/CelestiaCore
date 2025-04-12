@@ -1,6 +1,9 @@
 #pragma once
 // clang-format off
 
+#include "EventBus.h"
+#include "Events.h"
+
 #include "Shader.h"
 #include "Resources.h"
 #include "Camera.h"
@@ -21,14 +24,19 @@
 class Renderer {
 
 public:
-  Renderer(Scene &scene);
+  Renderer(EventBus &eventBus, Scene &scene);
   ~Renderer();
-  void renderFrame(unsigned int width, unsigned int height);
+  void renderFrame();
 
 private:
   Shader shader;
   Texture texture1;
   Texture texture2;
   Mesh cubeMesh;
+
   Scene &scene;
+  EventBus &eventBus;
+
+  int width = 1920;
+  int height = 1080;
 };

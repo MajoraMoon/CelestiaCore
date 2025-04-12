@@ -53,14 +53,14 @@ public:
   void run();
 
 private:
-  bool running = true;
-
-  void quitCelestiaCore() { running = !running; }
-
   WindowSDLGL window;
   FrameTimer frameTimer;
   InputManager inputManger;
   Scene scene;
   Renderer renderer;
   GuiManager guiManager;
+
+  void quitCelestiaCore() { running = !running; }
+
+  bool running = true;
 };

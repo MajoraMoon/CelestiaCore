@@ -5,8 +5,8 @@
 
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
-      frameTimer(eventBus), scene(frameTimer, eventBus),
-      guiManager(window, eventBus), inputManger(eventBus), renderer(scene) {}
+      frameTimer(eventBus), scene(eventBus), guiManager(window, eventBus),
+      inputManger(eventBus), renderer(eventBus, scene) {}
 
 void CelestiaCore::run() {
 
@@ -26,8 +26,7 @@ void CelestiaCore::run() {
 
     scene.update();
 
-    renderer.renderFrame(window.getSDLGLWindowWidth(),
-                         window.getSDLGLWindowHeight());
+    renderer.renderFrame();
 
     // dear ImGui-rendering
     guiManager.newFrame();

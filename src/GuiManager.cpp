@@ -42,6 +42,12 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
     mouseVisible = ev.visible;
   });
+
+  eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const WindowResizeEvent &>(e);
+    width = ev.width;
+    height = ev.height;
+  });
 }
 
 GuiManager::~GuiManager() {
@@ -103,10 +109,9 @@ void GuiManager::showStatsWindow() {
               milliseconds);
   ImGui::Text("Simulation Runtime (seconds): %.2f", simulationTime);
   ImGui::Text("Delta time: %.3f", deltaTime);
-  ImGui::Text("FPS (average): %f", stableFPS);
+  ImGui::Text("FPS (average): %.3f", stableFPS);
   ImGui::Spacing();
-  ImGui::Text("Resolution: %ix%i", window.getSDLGLWindowWidth(),
-              window.getSDLGLWindowHeight());
+  ImGui::Text("Resolution: %ix%i", width, height);
 
   // VSync Combo Box
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};

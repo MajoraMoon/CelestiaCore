@@ -54,6 +54,9 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     return;
   }
 
+  SDL_GetWindowSize(window, &width, &height);
+  eventBus.publish(WindowResizeEvent(width, height));
+
   glContext = SDL_GL_CreateContext(window);
   if (!glContext) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
@@ -74,6 +77,8 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     window = nullptr;
     return;
   }
+
+  glViewport(0, 0, width, height);
 
   if (!SDL_SetWindowRelativeMouseMode(window, true)) {
 

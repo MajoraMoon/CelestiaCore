@@ -2,7 +2,6 @@
 
 #include "EventBus.h"
 #include "Events.h"
-#include <unordered_map>
 
 /**
  *
@@ -49,23 +48,30 @@ public:
          float upY, float upZ, float yaw, float pitch);
 
   glm::mat4 getViewMatrix();
+
+private:
+  EventBus &eventBus;
+
+  const SDL_Scancode MOVE_FRONT = SDL_SCANCODE_W;
+  const SDL_Scancode MOVE_LEFT = SDL_SCANCODE_A;
+  const SDL_Scancode MOVE_BACK = SDL_SCANCODE_S;
+  const SDL_Scancode MOVE_RIGHT = SDL_SCANCODE_D;
+  const SDL_Scancode MOVE_UP = SDL_SCANCODE_SPACE;
+  const SDL_Scancode MOVE_DOWN = SDL_SCANCODE_LCTRL;
+  const SDL_Scancode MOVE_FAST = SDL_SCANCODE_LSHIFT;
+
+  std::unordered_map<SDL_Scancode, Camera_Movement> movementKeys;
+  std::unordered_map<SDL_Scancode, bool> activeKeys;
+
+  void updateCameraVectors();
+  void handleKeyInput(const KeyEvent &event);
+  void updateMovement();
+
   void processKeyboard(Camera_Movement direction, float deltaTime);
   void processMouseMovement(float xoffset, float yoffset,
                             bool constrainPitch = true);
   void processMouseScroll(float yoffset);
 
-private:
-  std::unordered_map<SDL_Scancode, Camera_Movement> movementKeys;
-  std::unordered_map<SDL_Scancode, bool> activeKeys;
-  EventBus &eventBus;
-
-  void updateCameraVectors();
-
-  void handleKeyInput(const KeyEvent &event);
-
-  void updateMovement();
-
   float deltaTime = 0.0f;
-
   bool mouseVisible = false;
 };

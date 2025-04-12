@@ -4,12 +4,10 @@
 // clang-format on
 
 // The Camera is a part of the scene
-Scene::Scene(FrameTimer &frameTimer, EventBus &eventBus)
-    : frameTimer(frameTimer), eventBus(eventBus),
-      camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)) {
+Scene::Scene(EventBus &eventBus)
+    : eventBus(eventBus), camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)) {
 
   // clang-format off
-
   cubePositions = {
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(2.0f, 5.0f, -15.0f),
@@ -22,8 +20,13 @@ Scene::Scene(FrameTimer &frameTimer, EventBus &eventBus)
     glm::vec3(1.5f, 0.2f, -1.5f),
     glm::vec3(-1.3f, 1.0f, -1.5f)
   };
-
   // clang-format on
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
+    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
+    simulationDeltaTime = ev.simulationDeltaTime;
+    simulationTime = ev.simulationTime;
+  });
 }
 
 void Scene::update() {
@@ -37,8 +40,7 @@ void Scene::update() {
 
     // Add time-based rotation for cubes where i % 3 == 0
     if (i % 3 == 0) {
-      angle +=
-          frameTimer.getSimulationTime() * 25.0f; // Keep the rotation over time
+      angle += simulationTime * 25.0f; // Keep the rotation over time
     }
 
     model =

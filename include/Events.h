@@ -5,6 +5,7 @@
 // clang-format on
 
 // Keyboard events
+
 struct KeyEvent : Event {
   SDL_Scancode scancode;
   bool pressed;

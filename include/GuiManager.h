@@ -40,6 +40,9 @@ private:
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
 
+  unsigned int width = 1920;
+  unsigned int height = 1080;
+
   bool guiVisible = true;
   bool mouseVisible = false;
 
