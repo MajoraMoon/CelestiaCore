@@ -28,9 +28,4 @@ private:
   const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
   const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
   const SDL_Keycode PAUSE = SDLK_P;
-
-  // Camera movement
-  float mouseXRel = 0;
-  float mouseYRel = 0;
-  float scrollY = 0;
 };

@@ -60,7 +60,7 @@ private:
   Renderer renderer;
   GuiManager guiManager;
 
-  void quitCelestiaCore() { running = !running; }
+  void quitCelestiaCore() { m_running = !m_running; }
 
-  bool running = true;
+  bool m_running = true;
 };

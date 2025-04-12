@@ -22,15 +22,15 @@ public:
 private:
   EventBus &eventBus;
 
-  float deltaTime;
-  float lastTime;
-  float simulationTime;
-  float simulationDeltaTime;
+  float m_deltaTime;
+  float m_lastTime;
+  float m_simulationTime;
+  float m_simulationDeltaTime;
 
-  float fps;
-  float stableFPS;
-  float timeAccumulator;
-  int frameCount;
+  float m_fps;
+  float m_stableFPS;
+  float m_timeAccumulator;
+  int m_frameCount;
 
-  bool simulationPaused;
+  bool m_simulationPaused;
 };

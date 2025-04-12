@@ -6,7 +6,7 @@
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
                          EventBus &eventBus, unsigned int initialWidth,
                          unsigned int initialHeight)
-    : width(initialWidth), height(initialHeight), eventBus(eventBus) {
+    : m_width(initialWidth), m_height(initialHeight), eventBus(eventBus) {
 
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);
@@ -36,8 +36,8 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
                         title.c_str());
   SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
-  SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
-  SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+  SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, m_width);
+  SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, m_height);
   SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
   SDL_SetBooleanProperty(
       props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
@@ -54,7 +54,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     return;
   }
 
-  SDL_GetWindowSize(window, &width, &height);
+  SDL_GetWindowSize(window, &m_width, &m_height);
 
   glContext = SDL_GL_CreateContext(window);
   if (!glContext) {
@@ -77,7 +77,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     return;
   }
 
-  glViewport(0, 0, width, height);
+  glViewport(0, 0, m_width, m_height);
 
   if (!SDL_SetWindowRelativeMouseMode(window, true)) {
 
@@ -89,17 +89,17 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
 
   eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
     const auto &ev = static_cast<const WindowResizeEvent &>(e);
-    width = ev.width;
-    height = ev.height;
+    m_width = ev.width;
+    m_height = ev.height;
 
-    handleWindowResize(width, height);
+    handleWindowResize(m_width, m_height);
   });
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
 
     mouseVisible = ev.mouseVisible;
-    handleMouseVisibity(width, height);
+    handleMouseVisibity(m_width, m_height);
   });
 
   eventBus.subscribe<WindowMaximizedChanged>([this](const Event &e) {
@@ -134,8 +134,11 @@ void WindowSDLGL::handleMouseVisibity(unsigned int width, unsigned int height) {
 }
 
 void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
-  this->width = width;
-  this->height = height;
+
+  // ensure that the dimensions are set. Sometimes it does not set itself
+  // without telling it specifically
+  this->m_width = width;
+  this->m_height = height;
   glViewport(0, 0, width, height);
 }
 
@@ -174,5 +177,5 @@ void WindowSDLGL::handleMaximizeWindow() {
 }
 
 void WindowSDLGL::publishCurrentWindowSize() {
-  eventBus.publish(WindowResizeEvent(width, height));
+  eventBus.publish(WindowResizeEvent(m_width, m_height));
 }

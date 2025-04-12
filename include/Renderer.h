@@ -39,6 +39,6 @@ private:
   EventBus &eventBus;
   WindowSDLGL &window;
 
-  int width;
-  int height;
+  int m_width;
+  int m_height;
 };

@@ -18,7 +18,7 @@ void CelestiaCore::run() {
   eventBus.subscribe<QuitEvent>([this](const Event &e) { quitCelestiaCore(); });
 
   // main loop
-  while (running) {
+  while (m_running) {
 
     frameTimer.update();
 

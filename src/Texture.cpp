@@ -13,8 +13,8 @@ Texture::Texture(const std::string &path) {
     return;
   }
 
-  glGenTextures(1, &id);
-  glBindTexture(GL_TEXTURE_2D, id);
+  glGenTextures(1, &m_id);
+  glBindTexture(GL_TEXTURE_2D, m_id);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -37,9 +37,9 @@ Texture::Texture(const std::string &path) {
   free(imgData);
 }
 
-Texture::~Texture() { glDeleteTextures(1, &id); }
+Texture::~Texture() { glDeleteTextures(1, &m_id); }
 
 void Texture::bind(GLuint unit) const {
   glActiveTexture(GL_TEXTURE0 + unit);
-  glBindTexture(GL_TEXTURE_2D, id);
+  glBindTexture(GL_TEXTURE_2D, m_id);
 }

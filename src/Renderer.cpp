@@ -72,8 +72,8 @@ Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
 
 void Renderer::renderFrame() {
 
-  width = window.getWidth();
-  height = window.getHeight();
+  m_width = window.getWidth();
+  m_height = window.getHeight();
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -85,7 +85,7 @@ void Renderer::renderFrame() {
   glm::mat4 view = scene.camera.getViewMatrix();
   glm::mat4 projection =
       glm::perspective(glm::radians(scene.camera.zoom),
-                       static_cast<float>(width) / height, 0.1f, 100.0f);
+                       static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
   shader.setMat4("view", view);
   shader.setMat4("projection", projection);

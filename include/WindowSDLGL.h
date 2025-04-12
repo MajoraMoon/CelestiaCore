@@ -21,8 +21,8 @@ public:
   SDL_Window *getSDLGLWindow() const { return window; }
   SDL_GLContext getGLContext() const { return glContext; }
 
-  int getWidth() const { return width; }
-  int getHeight() const { return height; }
+  int getWidth() const { return m_width; }
+  int getHeight() const { return m_height; }
 
   void publishCurrentWindowSize();
 
@@ -31,8 +31,8 @@ private:
   SDL_Window *window;
   SDL_GLContext glContext;
   // standard values
-  int width;
-  int height;
+  int m_width;
+  int m_height;
 
   bool mouseVisible = false;
   bool windowIsMaximized = false;

@@ -33,7 +33,7 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-    deltaTime = ev.deltaTime;
+    m_deltaTime = ev.deltaTime;
     updateMovement();
   });
 
@@ -42,21 +42,21 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
                   {SDL_SCANCODE_SPACE, UP},  {SDL_SCANCODE_LCTRL, DOWN}};
 
   eventBus.subscribe<KeyEvent>([this](const Event &e) {
-    if (!mouseVisible) {
+    if (!m_mouseVisible) {
       const auto &ev = static_cast<const KeyEvent &>(e);
       handleKeyInput(ev);
     }
   });
 
   eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
-    if (!mouseVisible) {
+    if (!m_mouseVisible) {
       const auto &ev = static_cast<const MouseMoveEvent &>(e);
       processMouseMovement(ev.xrel, ev.yrel);
     }
   });
 
   eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
-    if (!mouseVisible) {
+    if (!m_mouseVisible) {
       const auto &ev = static_cast<const MouseScrollEvent &>(e);
       processMouseScroll(ev.yoffset);
     }
@@ -64,46 +64,7 @@ Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.mouseVisible;
-  });
-
-  updateCameraVectors();
-}
-
-Camera::Camera(EventBus &eventBus, float posX, float posY, float posZ,
-               float upX, float upY, float upZ, float yaw, float pitch)
-    : eventBus(eventBus), position(glm::vec3(posX, posY, posZ)),
-      worldUp(glm::vec3(upX, upY, upZ)), yaw(yaw), pitch(pitch),
-      front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
-      mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
-
-  movementKeys = {{MOVE_FRONT, FORWARD}, {MOVE_BACK, BACKWARD},
-                  {MOVE_LEFT, LEFT},     {MOVE_RIGHT, RIGHT},
-                  {MOVE_UP, UP},         {MOVE_DOWN, DOWN}};
-
-  eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-    deltaTime = ev.deltaTime;
-  });
-
-  eventBus.subscribe<KeyEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const KeyEvent &>(e);
-    handleKeyInput(ev);
-  });
-
-  eventBus.subscribe<MouseMoveEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseMoveEvent &>(e);
-    processMouseMovement(ev.xrel, ev.yrel);
-  });
-
-  eventBus.subscribe<MouseScrollEvent>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseScrollEvent &>(e);
-    processMouseScroll(ev.yoffset);
-  });
-
-  eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
-    const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.mouseVisible;
+    m_mouseVisible = ev.mouseVisible;
   });
 
   updateCameraVectors();
@@ -121,7 +82,7 @@ void Camera::updateMovement() {
 
   for (const auto &key : activeKeys) {
     if (key.second) { // If the key is pressed
-      processKeyboard(movementKeys[key.first], movementSpeed * deltaTime);
+      processKeyboard(movementKeys[key.first], movementSpeed * m_deltaTime);
     }
   }
 }

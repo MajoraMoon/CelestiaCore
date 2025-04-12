@@ -44,8 +44,6 @@ public:
   Camera(EventBus &eventBus, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
          glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
          float pitch = PITCH);
-  Camera(EventBus &eventBus, float posX, float posY, float posZ, float upX,
-         float upY, float upZ, float yaw, float pitch);
 
   glm::mat4 getViewMatrix();
 
@@ -72,6 +70,6 @@ private:
                             bool constrainPitch = true);
   void processMouseScroll(float yoffset);
 
-  float deltaTime = 0.0f;
-  bool mouseVisible = false;
+  float m_deltaTime = 0.0f;
+  bool m_mouseVisible = false;
 };

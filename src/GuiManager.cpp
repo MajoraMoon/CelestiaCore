@@ -26,32 +26,32 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
   // GUI events
   eventBus.subscribe<GuiVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const GuiVisibilityChanged &>(e);
-    guiVisible = ev.guiVisible;
+    m_guiVisible = ev.guiVisible;
   });
 
   eventBus.subscribe<MouseVisibilityChanged>([this](const Event &e) {
     const auto &ev = static_cast<const MouseVisibilityChanged &>(e);
-    mouseVisible = ev.mouseVisible;
+    m_mouseVisible = ev.mouseVisible;
   });
 
   eventBus.subscribe<SimulationPausedChanged>([this](const Event &e) {
     const auto &ev = static_cast<const SimulationPausedChanged &>(e);
-    simulationPaused = ev.simulationPaused;
+    m_simulationPaused = ev.simulationPaused;
   });
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);
 
-    currentTime = ev.lastTime;
-    simulationTime = ev.simulationTime;
-    deltaTime = ev.deltaTime;
-    stableFPS = ev.stableFPS;
+    m_currentTime = ev.lastTime;
+    m_simulationTime = ev.simulationTime;
+    m_deltaTime = ev.deltaTime;
+    m_stableFPS = ev.stableFPS;
   });
 
   eventBus.subscribe<WindowResizeEvent>([this](const Event &e) {
     const auto &ev = static_cast<const WindowResizeEvent &>(e);
-    width = ev.width;
-    height = ev.height;
+    m_width = ev.width;
+    m_height = ev.height;
   });
 }
 
@@ -64,7 +64,7 @@ GuiManager::~GuiManager() {
 
 void GuiManager::processGUIEvent(const SDL_Event *event) {
 
-  if (mouseVisible) {
+  if (m_mouseVisible) {
     ImGui_ImplSDL3_ProcessEvent(event);
   }
 }
@@ -77,7 +77,7 @@ void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
-  if (guiVisible) {
+  if (m_guiVisible) {
     showShortcutsWindow();
     showStatsWindow();
   }
@@ -101,8 +101,8 @@ void GuiManager::showStatsWindow() {
   // I think packing this code to visual the time better into another function
   // is more verbose than just letting it in here.
 
-  int totalSeconds = static_cast<int>(currentTime);
-  int milliseconds = static_cast<int>((currentTime - totalSeconds) * 1000);
+  int totalSeconds = static_cast<int>(m_currentTime);
+  int milliseconds = static_cast<int>((m_currentTime - totalSeconds) * 1000);
 
   int hours = totalSeconds / 3600;
   int minutes = (totalSeconds % 3600) / 60;
@@ -110,12 +110,12 @@ void GuiManager::showStatsWindow() {
 
   ImGui::Text("Runtime: %02d:%02d:%02d.%03d", hours, minutes, seconds,
               milliseconds);
-  ImGui::Text("Simulation Runtime (seconds): %.2f", simulationTime);
-  ImGui::Text("Delta time: %.3f", deltaTime);
-  ImGui::Text("FPS (average): %.3f", stableFPS);
+  ImGui::Text("Simulation Runtime (seconds): %.2f", m_simulationTime);
+  ImGui::Text("Delta time: %.3f", m_deltaTime);
+  ImGui::Text("FPS (average): %.3f", m_stableFPS);
   ImGui::Spacing();
-  ImGui::Text("Resolution: %ix%i", width, height);
-  ImGui::Text("Simulation paused: %s", simulationPaused ? "True" : "False");
+  ImGui::Text("Resolution: %ix%i", m_width, m_height);
+  ImGui::Text("Simulation paused: %s", m_simulationPaused ? "True" : "False");
 
   // VSync Combo Box
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};

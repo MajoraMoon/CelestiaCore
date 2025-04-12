@@ -24,8 +24,8 @@ Scene::Scene(EventBus &eventBus)
 
   eventBus.subscribe<FrameUpdateEvent>([this](const Event &e) {
     const auto &ev = static_cast<const FrameUpdateEvent &>(e);
-    simulationDeltaTime = ev.simulationDeltaTime;
-    simulationTime = ev.simulationTime;
+    m_simulationDeltaTime = ev.simulationDeltaTime;
+    m_simulationTime = ev.simulationTime;
   });
 }
 
@@ -40,7 +40,7 @@ void Scene::update() {
 
     // Add time-based rotation for cubes where i % 3 == 0
     if (i % 3 == 0) {
-      angle += simulationTime * 25.0f; // Keep the rotation over time
+      angle += m_simulationTime * 25.0f; // Keep the rotation over time
     }
 
     model =

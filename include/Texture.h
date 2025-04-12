@@ -22,7 +22,5 @@ public:
   void bind(GLuint unit) const;
 
 private:
-  GLuint id = 0;
-  int width = 0;
-  int height = 0;
+  GLuint m_id = 0;
 };

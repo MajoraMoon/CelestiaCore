@@ -39,15 +39,15 @@ private:
   enum class VsyncMode { Off = 0, On = 1 };
   VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
 
-  unsigned int width;
-  unsigned int height;
+  unsigned int m_width;
+  unsigned int m_height;
 
-  bool guiVisible = true;
-  bool mouseVisible = false;
-  bool simulationPaused = false;
+  bool m_guiVisible = true;
+  bool m_mouseVisible = false;
+  bool m_simulationPaused = false;
 
-  float deltaTime = 0.0f;
-  float currentTime = 0.0f;
-  float simulationTime = 0.0f;
-  float stableFPS = 0.0f;
+  float m_deltaTime = 0.0f;
+  float m_currentTime = 0.0f;
+  float m_simulationTime = 0.0f;
+  float m_stableFPS = 0.0f;
 };

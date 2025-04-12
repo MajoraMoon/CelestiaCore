@@ -29,8 +29,8 @@ public:
   EventBus& eventBus;
   std::vector<glm::vec3> cubePositions;
 
-  float simulationDeltaTime = 0.0f;
-  float simulationTime = 0.0f;
+  float m_simulationDeltaTime = 0.0f;
+  float m_simulationTime = 0.0f;
 
   
 };
