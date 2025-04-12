@@ -6,6 +6,20 @@ StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {
 
 void StateManager::setupSubscriptions() {
 
+  /**
+   *
+   * These values should be the same for every class accessing them. So it is an
+   * implementation of a global variable, but only indirectly.
+   *
+   * These are subscriptions, which trigger to change a  boolean value and then
+   * publish the value to another specific event which can be accessed to use
+   * the boolean value.
+   *
+   * idk if I explain it well, but these functions should not be that
+   * complicated to understand if you know how the basic idea of this BusEvent
+   * works
+   */
+
   // Mouse visibility
   eventBus.subscribe<ToggleMouseVisibilityEvent>(
       [this](const ToggleMouseVisibilityEvent &) {
