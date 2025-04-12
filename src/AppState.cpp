@@ -22,12 +22,12 @@ void StateManager::setupSubscriptions() {
   // Pause state
   eventBus.subscribe<PauseEvent>([this](const Event &) {
     state.simulationPaused = !state.simulationPaused;
-    eventBus.publish(SimulationPaused(state.simulationPaused));
+    eventBus.publish(SimulationPausedChanged(state.simulationPaused));
   });
 
   // Window state
   eventBus.subscribe<MaximizeWindowEvent>([this](const Event &) {
     state.windowMaximized = !state.windowMaximized;
-    eventBus.publish(WindowMaximized(state.windowMaximized));
+    eventBus.publish(WindowMaximizedChanged(state.windowMaximized));
   });
 }

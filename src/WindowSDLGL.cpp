@@ -103,8 +103,8 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     handleMouseVisibity(width, height);
   });
 
-  eventBus.subscribe<WindowMaximized>([this](const Event &e) {
-    const auto &ev = static_cast<const WindowMaximized &>(e);
+  eventBus.subscribe<WindowMaximizedChanged>([this](const Event &e) {
+    const auto &ev = static_cast<const WindowMaximizedChanged &>(e);
     windowIsMaximized = ev.windowMaximized;
     handleMaximizeWindow();
   });

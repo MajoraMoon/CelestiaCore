@@ -73,12 +73,12 @@ struct GuiVisibilityChanged : Event {
   GuiVisibilityChanged(bool v) : guiVisible(v) {}
 };
 
-struct SimulationPaused : Event {
+struct SimulationPausedChanged : Event {
   bool simulationPaused;
-  SimulationPaused(bool p) : simulationPaused(p) {}
+  SimulationPausedChanged(bool p) : simulationPaused(p) {}
 };
 
-struct WindowMaximized : Event {
+struct WindowMaximizedChanged : Event {
   bool windowMaximized;
-  WindowMaximized(bool m) : windowMaximized(m) {}
+  WindowMaximizedChanged(bool m) : windowMaximized(m) {}
 };
