@@ -6,7 +6,9 @@
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
       frameTimer(eventBus), scene(eventBus), guiManager(window, eventBus),
-      inputManger(eventBus), renderer(eventBus, scene) {}
+      inputManger(eventBus), renderer(window, eventBus, scene) {
+  window.publishCurrentWindowSize();
+}
 
 void CelestiaCore::run() {
 

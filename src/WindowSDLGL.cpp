@@ -55,7 +55,6 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
   }
 
   SDL_GetWindowSize(window, &width, &height);
-  eventBus.publish(WindowResizeEvent(width, height));
 
   glContext = SDL_GL_CreateContext(window);
   if (!glContext) {
@@ -135,6 +134,8 @@ void WindowSDLGL::handleMouseVisibity(unsigned int width, unsigned int height) {
 }
 
 void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
+  this->width = width;
+  this->height = height;
   glViewport(0, 0, width, height);
 }
 
@@ -170,4 +171,8 @@ void WindowSDLGL::handleMaximizeWindow() {
       std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
     }
   }
+}
+
+void WindowSDLGL::publishCurrentWindowSize() {
+  eventBus.publish(WindowResizeEvent(width, height));
 }

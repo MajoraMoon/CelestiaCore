@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Scene.h"
+#include "WindowSDLGL.h"
 
 // clang-format on
 
@@ -24,7 +25,7 @@
 class Renderer {
 
 public:
-  Renderer(EventBus &eventBus, Scene &scene);
+  Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene);
   ~Renderer();
   void renderFrame();
 
@@ -36,7 +37,8 @@ private:
 
   Scene &scene;
   EventBus &eventBus;
+  WindowSDLGL &window;
 
-  int width = 1920;
-  int height = 1080;
+  int width;
+  int height;
 };
