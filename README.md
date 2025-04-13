@@ -7,7 +7,8 @@
 - **Make** or **Ninja**
 
 ### Notes:
-All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project.
+All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. 
+(Tested the compilation on an arch based Linux distribution and on Windows)
 
 ## Steps
 
