@@ -4,6 +4,7 @@
 
 #include "EventBus.h"
 #include "Events.h"
+#include "AppState.h"
 
 #include "WindowSDLGL.h"
 
@@ -18,7 +19,7 @@
 class GuiManager {
 
 public:
-  GuiManager(WindowSDLGL &window, EventBus &eventBus);
+  GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState);
   ~GuiManager();
 
   void processGUIEvent(const SDL_Event *event);
@@ -26,6 +27,7 @@ public:
 
 private:
   EventBus &eventBus;
+  AppState &appState;
   WindowSDLGL &window;
 
   void toggleVsync(bool vsyncEnabled);
@@ -52,4 +54,6 @@ private:
   float m_currentTime = 0.0f;
   float m_simulationTime = 0.0f;
   float m_stableFPS = 0.0f;
+
+  float m_mouseSensitivity;
 };

@@ -101,6 +101,11 @@ void Camera::setupEventSubscriptions() {
     zoom -= ev.yoffset;
     zoom = glm::clamp(zoom, 1.0f, 45.0f);
   });
+
+  eventBus.subscribe<MouseSensitivityChanged>(
+      [this](const MouseSensitivityChanged &ev) {
+        mouseSensitivity = ev.sensitivity;
+      });
 }
 
 void Camera::processMovement(float deltaTime) {

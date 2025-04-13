@@ -11,6 +11,7 @@ struct AppState {
   bool guiVisible = true;
   bool simulationPaused = false;
   bool windowMaximized = false;
+  float mouseSensitivity = 0.1f;
 };
 
 class StateManager {

@@ -44,4 +44,10 @@ void StateManager::setupSubscriptions() {
     state.windowMaximized = !state.windowMaximized;
     eventBus.publish(WindowMaximizedChanged{state.windowMaximized});
   });
+
+  // Mouse sensitivity
+  eventBus.subscribe<MouseSensitivityChanged>(
+      [this](const MouseSensitivityChanged &ev) {
+        state.mouseSensitivity = ev.sensitivity;
+      });
 }

@@ -54,12 +54,11 @@ struct FrameUpdateEvent : Event {
         paused(paused) {}
 };
 
-// triggers for appStates
+// triggers for appStates (used for global states not controlled by the gui)
 struct ToggleMouseVisibilityEvent : Event {};
 struct ToggleGuiEvent : Event {};
 struct PauseEvent : Event {};
 struct MaximizeWindowEvent : Event {};
-
 struct QuitEvent : Event {};
 
 // AppState event changes
@@ -81,4 +80,10 @@ struct SimulationPausedChanged : Event {
 struct WindowMaximizedChanged : Event {
   bool windowMaximized;
   WindowMaximizedChanged(bool m) : windowMaximized(m) {}
+};
+
+// GUI controlled
+struct MouseSensitivityChanged : Event {
+  float sensitivity;
+  MouseSensitivityChanged(float s) : sensitivity(s) {}
 };

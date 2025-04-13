@@ -3,8 +3,9 @@
 #include "GuiManager.h"
 // clang-format on
 
-GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus)
-    : window(window), eventBus(eventBus) {
+GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus,
+                       AppState &appState)
+    : window(window), eventBus(eventBus), appState(appState) {
 
   float scaleFactor = SDL_GetWindowDisplayScale(window.getSDLGLWindow());
 
@@ -31,6 +32,33 @@ GuiManager::~GuiManager() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplSDL3_Shutdown();
   ImGui::DestroyContext();
+}
+
+void GuiManager::setupEventSubscriptions() {
+  eventBus.subscribe<GuiVisibilityChanged>(
+      [this](const GuiVisibilityChanged &ev) { m_guiVisible = ev.guiVisible; });
+
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.mouseVisible;
+      });
+
+  eventBus.subscribe<SimulationPausedChanged>(
+      [this](const SimulationPausedChanged &ev) {
+        m_simulationPaused = ev.simulationPaused;
+      });
+
+  eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
+    m_currentTime = ev.lastTime;
+    m_simulationTime = ev.simulationTime;
+    m_deltaTime = ev.deltaTime;
+    m_stableFPS = ev.stableFPS;
+  });
+
+  eventBus.subscribe<WindowResizeEvent>([this](const WindowResizeEvent &ev) {
+    m_width = ev.width;
+    m_height = ev.height;
+  });
 }
 
 void GuiManager::processGUIEvent(const SDL_Event *event) {
@@ -88,6 +116,12 @@ void GuiManager::showStatsWindow() {
   ImGui::Text("Resolution: %ix%i", m_width, m_height);
   ImGui::Text("Simulation paused: %s", m_simulationPaused ? "True" : "False");
 
+  m_mouseSensitivity = appState.mouseSensitivity;
+  if (ImGui::SliderFloat("Mouse Sensitivity", &m_mouseSensitivity, 0.01f, 1.0f,
+                         "%.2f")) {
+    eventBus.publish(MouseSensitivityChanged{m_mouseSensitivity});
+  }
+
   // VSync Combo Box
   const char *vsyncOptions[] = {"VSync Off", "VSync On"};
   int currentVsyncIndex = static_cast<int>(m_CurrentVsyncMode);
@@ -106,31 +140,4 @@ void GuiManager::showShortcutsWindow() {
   ImGui::Text("Press 'F1' to hide the gui window.");
   ImGui::Text("Press 'P' to pause the simulation");
   ImGui::End();
-}
-
-void GuiManager::setupEventSubscriptions() {
-  eventBus.subscribe<GuiVisibilityChanged>(
-      [this](const GuiVisibilityChanged &ev) { m_guiVisible = ev.guiVisible; });
-
-  eventBus.subscribe<MouseVisibilityChanged>(
-      [this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.mouseVisible;
-      });
-
-  eventBus.subscribe<SimulationPausedChanged>(
-      [this](const SimulationPausedChanged &ev) {
-        m_simulationPaused = ev.simulationPaused;
-      });
-
-  eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
-    m_currentTime = ev.lastTime;
-    m_simulationTime = ev.simulationTime;
-    m_deltaTime = ev.deltaTime;
-    m_stableFPS = ev.stableFPS;
-  });
-
-  eventBus.subscribe<WindowResizeEvent>([this](const WindowResizeEvent &ev) {
-    m_width = ev.width;
-    m_height = ev.height;
-  });
 }

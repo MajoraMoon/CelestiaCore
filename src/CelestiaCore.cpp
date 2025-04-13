@@ -6,7 +6,7 @@
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
       frameTimer(eventBus), scene(eventBus, frameTimer),
-      guiManager(window, eventBus), inputManger(eventBus),
+      guiManager(window, eventBus, appState), inputManger(eventBus),
       renderer(window, eventBus, scene) {
 
   // set up right resolution after all classes are created and the eventBus is
