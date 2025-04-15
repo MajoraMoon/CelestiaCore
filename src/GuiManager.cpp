@@ -17,6 +17,8 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus,
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   io.FontGlobalScale = scaleFactor;
+  io.Fonts->AddFontFromFileTTF(
+      "../assets/fonts/Roboto/static/Roboto-Regular.ttf", 17.0);
   ImGui::GetStyle().ScaleAllSizes(scaleFactor);
 
   ImGui::StyleColorsDark();
