@@ -1,29 +1,43 @@
-# CelestiaCore - Build Instructions
+### Notes:
+All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. 
+(Tested the compilation on an arch based Linux distribution and on Windows)
 
-## Requirements:
-- CMake 3.15+
-- Compiler (gcc, clang, MSVC)
-- Make oder Ninja
+## Steps
 
-## Steps:
+1. **Clone the repository:**
 
-1. Clone the repo:
+   ```bash
    git clone https://github.com/MajoraMoon/CelestiaCore.git
    cd CelestiaCore
+   ```
 
-2. Create build folder:
+2. **Create a build folder:**
+
+   ```bash
    mkdir build
    cd build
+   ```
 
-3. Run CMake:
-   cmake ..
+3. **Run CMake with build type:**
 
-4. Build (choose one):
-   make   # or
-   ninja
+   - For **Linux**:
+     ```bash
+     cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     ```
 
-5. Run:
+   - For **Windows (MinGW)**:
+     ```bash
+     cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     ```
+
+4. **Build the project**:
+   ```bash
+   cmake --build . --parallel
+   ```
+
+
+5. **Run the executable:**
+
+   ```bash
    ./bin/CelestiaCore
-
-## Notes:
-- All libraries are included in the `lib/` folder.
+   ```

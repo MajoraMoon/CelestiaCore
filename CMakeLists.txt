@@ -27,7 +27,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -Wl,--gc-sections
     )
 
-
 endif()
 
 
@@ -50,7 +49,7 @@ set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
 set(ASSIMP_BUILD_DOCS OFF)
 set(ASSIMP_INJECT_DEBUG_POSTFIX OFF)
 set(ASSIMP_BUILD_SAMPLES OFF)
-set(ASSIMP_BUILD_ZLIB OFF)
+set(ASSIMP_BUILD_ZLIB ON)            # <— zlib aus Assimp-Contrib wird jetzt mitgebaut
 set(ASSIMP_BUILD_DRACO OFF)
 
 set(ASSIMP_BUILD_OBJ_IMPORTER ON)
