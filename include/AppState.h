@@ -10,6 +10,7 @@
 
 namespace Celestia {
 
+// forward declarations
 class EventBus;
 struct AppState;
 

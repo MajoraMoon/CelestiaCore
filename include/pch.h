@@ -1,5 +1,7 @@
 #pragma once
 
+// precompiled headers
+
 // Standard Library
 #include <cmath>
 #include <cstdio>

@@ -8,7 +8,7 @@ namespace Celestia {
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
                          EventBus &eventBus, unsigned int initialWidth,
                          unsigned int initialHeight)
-    : m_width(initialWidth), m_height(initialHeight), eventBus(eventBus) {
+    : eventBus(eventBus), m_width(initialWidth), m_height(initialHeight) {
 
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);

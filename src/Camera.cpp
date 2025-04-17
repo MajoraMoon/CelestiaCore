@@ -33,10 +33,10 @@ const float SPEED = 4.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-Camera::Camera(EventBus &eventBus, glm::vec3 position, glm::vec3 up, float yaw,
-               float pitch, CameraInputConfig inputConfig)
-    : eventBus(eventBus), position(position), worldUp(up), yaw(yaw),
-      pitch(pitch), inputConfig(inputConfig), movementSpeed(SPEED),
+Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig,
+               glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+    : eventBus(eventBus), inputConfig(inputConfig), position(position),
+      worldUp(up), yaw(yaw), pitch(pitch), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM) {
 
   front = glm::vec3(0.0f, 0.0f, -1.0f);

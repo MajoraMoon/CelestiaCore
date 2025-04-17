@@ -12,55 +12,56 @@ namespace Celestia {
 
 Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
     : window(window), eventBus(eventBus), scene(scene),
-      camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)),
+      camera(eventBus, {}, glm::vec3(0.0f, 0.0f, 6.0f)),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag"),
-      texture1("../assets/textures/rocky_terrain_diff_4k.jpg"),
-      texture2("../assets/textures/awesomeface.png"),
       cubeMesh({
 
           // clang-format off
-  // Vertex-Data: position, texture position (6 times a single plain for representing a cube)
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-    
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-       -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    
-       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f})
+// Vertex-Data: position, texture position (6 times a single plain for representing a cube)
+      -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+  
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+  
+     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+  
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+  
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+  
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f}),
+      
+      texture1("../assets/textures/rocky_terrain_diff_4k.jpg"),
+      texture2("../assets/textures/awesomeface.png")
 
 // clang-format on
 {

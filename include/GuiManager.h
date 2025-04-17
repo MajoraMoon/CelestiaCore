@@ -8,6 +8,7 @@
 
 namespace Celestia {
 
+// forward declarations
 class WindowSDLGL;
 class EventBus;
 struct AppState;
@@ -22,9 +23,9 @@ public:
   void render();
 
 private:
+  WindowSDLGL &window;
   EventBus &eventBus;
   AppState &appState;
-  WindowSDLGL &window;
 
   void toggleVsync(bool vsyncEnabled);
   // actual imgui windows to render

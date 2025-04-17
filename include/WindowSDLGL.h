@@ -9,6 +9,7 @@
 
 namespace Celestia {
 
+// forward declarations
 class EventBus;
 
 class WindowSDLGL {
@@ -31,7 +32,7 @@ private:
   EventBus &eventBus;
   SDL_Window *window;
   SDL_GLContext glContext;
-  // standard values
+
   int m_width;
   int m_height;
 

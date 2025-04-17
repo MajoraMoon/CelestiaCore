@@ -11,6 +11,7 @@
 
 namespace Celestia {
 
+// forward declarations
 class EventBus;
 
 struct CameraInputConfig {
@@ -25,9 +26,10 @@ struct CameraInputConfig {
 
 class Camera {
 public:
-  Camera(EventBus &eventBus, glm::vec3 position = glm::vec3(0.0f),
+  Camera(EventBus &eventBus, CameraInputConfig inputConfig = {},
+         glm::vec3 position = glm::vec3(0.0f),
          glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f,
-         float pitch = 0.0f, CameraInputConfig inputConfig = {});
+         float pitch = 0.0f);
 
   glm::mat4 getViewMatrix() const;
   void updateCameraVectors();
@@ -45,8 +47,8 @@ public:
   float zoom;
 
 private:
-  CameraInputConfig inputConfig;
   EventBus &eventBus;
+  CameraInputConfig inputConfig;
 
   struct InputState {
     bool forward = false;

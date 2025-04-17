@@ -2,6 +2,7 @@
 
 namespace Celestia {
 
+// forward declarations
 class EventBus;
 class FrameTimer;
 

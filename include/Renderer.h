@@ -15,9 +15,10 @@
 
 namespace Celestia {
 
+// forward declarations
+class WindowSDLGL;
 class EventBus;
 class Scene;
-class WindowSDLGL;
 
 class Renderer {
 
@@ -27,15 +28,16 @@ public:
   void renderFrame();
 
 private:
+  WindowSDLGL &window;
+  EventBus &eventBus;
+  Scene &scene;
+
+  Camera camera;
   Shader shader;
+
+  Mesh cubeMesh;
   Texture texture1;
   Texture texture2;
-  Mesh cubeMesh;
-  Camera camera;
-
-  Scene &scene;
-  EventBus &eventBus;
-  WindowSDLGL &window;
 
   int m_width;
   int m_height;
