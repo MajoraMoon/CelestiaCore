@@ -1,16 +1,12 @@
 #pragma once
 
-// clang-format off
-#include "EventBus.h"
-#include "Events.h"
-
-// clang-format on
-
 /**
  *
  * This class is responsible to process the keyboard/mouse input using SDL3.
  *
  */
+
+class EventBus;
 
 class InputManager {
 

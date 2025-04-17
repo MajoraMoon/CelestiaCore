@@ -1,8 +1,5 @@
 #pragma once
 
-#include "EventBus.h"
-#include "Events.h"
-
 /**
  *
  * This is a central Camera Class. At the moment, it is implementing a simple
@@ -11,6 +8,8 @@
  * A Camera Object is handled by a Scene Class.
  *
  */
+
+class EventBus;
 struct CameraInputConfig {
   SDL_Scancode moveForward = SDL_SCANCODE_W;
   SDL_Scancode moveBackward = SDL_SCANCODE_S;
@@ -43,8 +42,8 @@ public:
   float zoom;
 
 private:
-  EventBus &eventBus;
   CameraInputConfig inputConfig;
+  EventBus &eventBus;
 
   struct InputState {
     bool forward = false;

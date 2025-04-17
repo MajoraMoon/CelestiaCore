@@ -41,3 +41,9 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <imgui_internal.h>
+
+// Intern EvenBus
+#include "AppState.h"
+#include "EventBus.h"
+#include "Events.h"
+#include "InputManager.h"

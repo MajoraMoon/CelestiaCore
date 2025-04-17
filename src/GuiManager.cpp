@@ -1,6 +1,7 @@
 // clang-format off
 #include "pch.h"
 #include "GuiManager.h"
+#include "WindowSDLGL.h"
 // clang-format on
 
 GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus,

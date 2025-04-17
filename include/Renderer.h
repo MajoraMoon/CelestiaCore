@@ -1,18 +1,16 @@
 #pragma once
 // clang-format off
 
-#include "EventBus.h"
-#include "Events.h"
-
 #include "Shader.h"
-#include "Resources.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "Scene.h"
-#include "WindowSDLGL.h"
 
 // clang-format on
+
+class EventBus;
+class Scene;
+class WindowSDLGL;
 
 /**
  *

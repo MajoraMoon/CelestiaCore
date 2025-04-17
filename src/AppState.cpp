@@ -1,4 +1,4 @@
-#include "AppState.h"
+#include "pch.h"
 
 StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {
   setupSubscriptions();

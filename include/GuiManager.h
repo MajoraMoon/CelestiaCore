@@ -1,20 +1,14 @@
 #pragma once
 
-// clang-format off
-
-#include "EventBus.h"
-#include "Events.h"
-#include "AppState.h"
-
-#include "WindowSDLGL.h"
-
-// clang-format on
-
 /**
  *
  * A simple GuiManaging class which uses the dear imgui library.
  *
  */
+
+class WindowSDLGL;
+class EventBus;
+struct AppState;
 
 class GuiManager {
 

@@ -1,6 +1,11 @@
 // clang-format off
+
 #include "pch.h"
 #include "Renderer.h"
+#include "Scene.h"
+#include "WindowSDLGL.h"
+#include "Resources.h"
+
 // clang-format on
 
 Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)

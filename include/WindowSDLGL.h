@@ -1,14 +1,13 @@
 #pragma once
 
-#include "EventBus.h"
-#include "Events.h"
-
 /**
  *
  * This class is responible for creating a window context, as well the
  * openGL/glad context. It also stores width/height information. So the
  * dimensions
  */
+
+class EventBus;
 
 class WindowSDLGL {
 

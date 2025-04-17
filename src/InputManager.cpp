@@ -1,8 +1,8 @@
-
-
 // clang-format off
+
 #include "pch.h"
 #include "InputManager.h"
+
 // clang-format on
 
 InputManager::InputManager(EventBus &eventBus) : eventBus(eventBus) {}

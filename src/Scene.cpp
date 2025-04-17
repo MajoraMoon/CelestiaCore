@@ -1,6 +1,7 @@
 // clang-format off
 #include "pch.h"
 #include "Scene.h"
+#include "FrameTimer.h"
 // clang-format on
 
 // The Camera is a part of the scene

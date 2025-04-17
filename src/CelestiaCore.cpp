@@ -1,6 +1,7 @@
 // clang-format off
 #include "pch.h"
 #include "CelestiaCore.h"
+
 // clang-format on
 
 CelestiaCore::CelestiaCore()

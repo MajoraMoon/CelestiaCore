@@ -1,7 +1,7 @@
 #pragma once
 
-#include "EventBus.h"
-#include "Events.h"
+class EventBus;
+struct AppState;
 
 // these are the default values for the states. Headerfiles who use these values
 // have the values defined as well. Otherwise it is not initialized correctly

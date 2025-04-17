@@ -1,6 +1,4 @@
 #pragma once
-#include "EventBus.h"
-#include "Events.h"
 
 /**
  *
@@ -12,6 +10,8 @@
  * class via a shared smart pointer...
  *
  */
+
+class EventBus;
 
 class FrameTimer {
 

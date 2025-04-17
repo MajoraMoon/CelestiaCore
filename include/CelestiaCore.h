@@ -1,15 +1,12 @@
 #pragma once
 
 // clang-format off
-#include "EventBus.h"
-#include "Events.h"
+
 #include "WindowSDLGL.h"
 #include "Renderer.h"
 #include "FrameTimer.h"
 #include "Scene.h"
-#include "InputManager.h"
 #include "GuiManager.h"
-#include "AppState.h"
 
 // clang-format on
 
@@ -41,11 +38,10 @@
  */
 
 class CelestiaCore {
-
+  SDL_Event event;
   EventBus eventBus;
   AppState appState;
   StateManager stateManager;
-  SDL_Event event;
 
 public:
   CelestiaCore();
@@ -56,8 +52,8 @@ private:
   WindowSDLGL window;
   FrameTimer frameTimer;
   InputManager inputManger;
-  Scene scene;
   Renderer renderer;
+  Scene scene;
   GuiManager guiManager;
 
   void quitCelestiaCore() { m_running = !m_running; }
