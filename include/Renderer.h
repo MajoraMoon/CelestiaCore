@@ -1,18 +1,4 @@
 #pragma once
-// clang-format off
-
-#include "Shader.h"
-#include "Camera.h"
-#include "Texture.h"
-#include "Mesh.h"
-
-// clang-format on
-
-namespace Celestia {
-
-class EventBus;
-class Scene;
-class WindowSDLGL;
 
 /**
  *
@@ -21,6 +7,17 @@ class WindowSDLGL;
  * reference to the Scene class
  *
  */
+
+#include "Camera.h"
+#include "Mesh.h"
+#include "Shader.h"
+#include "Texture.h"
+
+namespace Celestia {
+
+class EventBus;
+class Scene;
+class WindowSDLGL;
 
 class Renderer {
 

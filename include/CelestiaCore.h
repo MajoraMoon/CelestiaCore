@@ -1,15 +1,5 @@
 #pragma once
 
-// clang-format off
-
-#include "WindowSDLGL.h"
-#include "Renderer.h"
-#include "FrameTimer.h"
-#include "Scene.h"
-#include "GuiManager.h"
-
-// clang-format on
-
 /**
  *
  * CelestiaCore is the heart of this program. This Class creates the central
@@ -36,6 +26,12 @@
  * all their Logic are executed in this main loop.
  *
  */
+
+#include "FrameTimer.h"
+#include "GuiManager.h"
+#include "Renderer.h"
+#include "Scene.h"
+#include "WindowSDLGL.h"
 
 namespace Celestia {
 

@@ -1,13 +1,18 @@
 #pragma once
 
+/**
+ *
+ * these are the default values for the states. Headerfiles who use these values
+ * have the values defined as well. Otherwise it is not initialized correctly
+ * for some reason
+ *
+ */
+
 namespace Celestia {
 
 class EventBus;
 struct AppState;
 
-// these are the default values for the states. Headerfiles who use these values
-// have the values defined as well. Otherwise it is not initialized correctly
-// for some reason
 struct AppState {
   bool mouseVisible = false;
   bool guiVisible = true;

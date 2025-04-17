@@ -12,6 +12,7 @@
 namespace Celestia {
 
 class EventBus;
+
 struct CameraInputConfig {
   SDL_Scancode moveForward = SDL_SCANCODE_W;
   SDL_Scancode moveBackward = SDL_SCANCODE_S;
