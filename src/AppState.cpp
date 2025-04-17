@@ -1,5 +1,6 @@
 #include "pch.h"
 
+namespace Celestia {
 StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {
   setupSubscriptions();
 }
@@ -51,3 +52,4 @@ void StateManager::setupSubscriptions() {
         state.mouseSensitivity = ev.sensitivity;
       });
 }
+} // namespace Celestia

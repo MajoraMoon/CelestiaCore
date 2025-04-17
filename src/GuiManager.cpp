@@ -4,6 +4,8 @@
 #include "WindowSDLGL.h"
 // clang-format on
 
+namespace Celestia {
+
 GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus,
                        AppState &appState)
     : window(window), eventBus(eventBus), appState(appState) {
@@ -144,3 +146,5 @@ void GuiManager::showShortcutsWindow() {
   ImGui::Text("Press 'P' to pause the simulation");
   ImGui::End();
 }
+
+} // namespace Celestia

@@ -26,6 +26,7 @@
  * Pitch: The angle, which describes the rotation around the x-axis (vertical)
  */
 
+namespace Celestia {
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 4.0f;
@@ -160,3 +161,4 @@ void Camera::updateCameraVectors() {
   right = glm::normalize(glm::cross(front, worldUp));
   up = glm::normalize(glm::cross(right, front));
 }
+} // namespace Celestia

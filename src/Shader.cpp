@@ -3,6 +3,8 @@
 #include "Shader.h"
 // clang-format on
 
+namespace Celestia {
+
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
 
   std::string vertexCode = readFile(vertexPath);
@@ -76,3 +78,5 @@ void Shader::checkCompileErrors(GLuint shader, const std::string &type) {
 void Shader::use() const { glUseProgram(ID); }
 
 Shader::~Shader() { glDeleteProgram(ID); }
+
+} // namespace Celestia

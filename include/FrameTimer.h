@@ -11,6 +11,8 @@
  *
  */
 
+namespace Celestia {
+
 class EventBus;
 
 class FrameTimer {
@@ -37,3 +39,5 @@ private:
 
   bool m_simulationPaused;
 };
+
+} // namespace Celestia

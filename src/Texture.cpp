@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Texture.h"
 // clang-format on
+namespace Celestia {
 
 Texture::Texture(const std::string &path) {
 
@@ -43,3 +44,5 @@ void Texture::bind(GLuint unit) const {
   glActiveTexture(GL_TEXTURE0 + unit);
   glBindTexture(GL_TEXTURE_2D, m_id);
 }
+
+} // namespace Celestia

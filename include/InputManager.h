@@ -6,6 +6,8 @@
  *
  */
 
+namespace Celestia {
+
 class EventBus;
 
 class InputManager {
@@ -25,3 +27,5 @@ private:
   const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
   const SDL_Keycode PAUSE = SDLK_P;
 };
+
+} // namespace Celestia

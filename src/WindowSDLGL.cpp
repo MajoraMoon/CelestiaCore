@@ -3,6 +3,8 @@
 #include "WindowSDLGL.h"
 // clang-format on
 
+namespace Celestia {
+
 WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
                          EventBus &eventBus, unsigned int initialWidth,
                          unsigned int initialHeight)
@@ -179,3 +181,5 @@ void WindowSDLGL::setupEventSubscriptions() {
         handleMaximizeWindow();
       });
 }
+
+} // namespace Celestia

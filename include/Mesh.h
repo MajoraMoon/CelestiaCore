@@ -4,6 +4,8 @@
  * Temporary class, createst the mesh of objects, will be improved later
  */
 
+namespace Celestia {
+
 class Mesh {
 public:
   Mesh(const std::vector<float> &vertexData);
@@ -15,3 +17,5 @@ private:
   GLuint vbo;
   size_t vertexCount = 0;
 };
+
+} // namespace Celestia

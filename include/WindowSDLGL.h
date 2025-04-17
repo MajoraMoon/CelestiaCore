@@ -7,6 +7,8 @@
  * dimensions
  */
 
+namespace Celestia {
+
 class EventBus;
 
 class WindowSDLGL {
@@ -42,3 +44,5 @@ private:
 
   void setupEventSubscriptions();
 };
+
+} // namespace Celestia

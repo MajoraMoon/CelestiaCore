@@ -9,6 +9,8 @@
  *
  */
 
+namespace Celestia {
+
 class EventBus;
 struct CameraInputConfig {
   SDL_Scancode moveForward = SDL_SCANCODE_W;
@@ -68,3 +70,5 @@ private:
   void handleMouseMovement(float xoffset, float yoffset,
                            bool constrainPitch = true);
 };
+
+} // namespace Celestia

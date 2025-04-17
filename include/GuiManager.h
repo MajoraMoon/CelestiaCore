@@ -6,6 +6,8 @@
  *
  */
 
+namespace Celestia {
+
 class WindowSDLGL;
 class EventBus;
 struct AppState;
@@ -51,3 +53,5 @@ private:
 
   float m_mouseSensitivity;
 };
+
+} // namespace Celestia

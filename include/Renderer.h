@@ -8,6 +8,8 @@
 
 // clang-format on
 
+namespace Celestia {
+
 class EventBus;
 class Scene;
 class WindowSDLGL;
@@ -41,3 +43,5 @@ private:
   int m_width;
   int m_height;
 };
+
+} // namespace Celestia

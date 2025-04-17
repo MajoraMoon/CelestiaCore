@@ -1,17 +1,15 @@
 #pragma once
 
-// clang-format off
-
-
 /**
- * 
- * Simple texture class. It combines the Ressources.h/cpp and creates an usable texture
- * 
+ *
+ * Simple texture class. It combines the Ressources.h/cpp and creates an usable
+ * texture
+ *
  */
 
 #include "Resources.h"
 
-// clang-format on
+namespace Celestia {
 
 class Texture {
 
@@ -24,3 +22,5 @@ public:
 private:
   GLuint m_id = 0;
 };
+
+} // namespace Celestia

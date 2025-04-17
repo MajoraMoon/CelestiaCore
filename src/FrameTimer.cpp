@@ -3,6 +3,8 @@
 #include "FrameTimer.h"
 // clang-format on
 
+namespace Celestia {
+
 FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
 
   m_lastTime = SDL_GetTicks() / 1000.0f;
@@ -57,3 +59,5 @@ void FrameTimer::update() {
                                     m_simulationDeltaTime, m_stableFPS,
                                     m_simulationPaused));
 }
+
+} // namespace Celestia

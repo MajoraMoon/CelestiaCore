@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Celestia {
+
 class EventBus;
 struct AppState;
 
@@ -25,3 +27,5 @@ private:
 
   void setupSubscriptions();
 };
+
+} // namespace Celestia

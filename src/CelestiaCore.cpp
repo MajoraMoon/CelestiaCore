@@ -4,6 +4,8 @@
 
 // clang-format on
 
+namespace Celestia {
+
 CelestiaCore::CelestiaCore()
     : window("CelestiaCore", "0.3", eventBus), stateManager(eventBus, appState),
       frameTimer(eventBus), scene(eventBus, frameTimer),
@@ -41,3 +43,5 @@ void CelestiaCore::run() {
     SDL_GL_SwapWindow(window.getSDLGLWindow());
   }
 }
+
+} // namespace Celestia

@@ -8,6 +8,8 @@
 
 // clang-format on
 
+namespace Celestia {
+
 Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
     : window(window), eventBus(eventBus), scene(scene),
       camera(eventBus, glm::vec3(0.0f, 0.0f, 6.0f)),
@@ -104,3 +106,5 @@ void Renderer::renderFrame() {
 }
 
 Renderer::~Renderer() {}
+
+} // namespace Celestia

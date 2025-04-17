@@ -7,6 +7,8 @@
  *
  */
 
+namespace Celestia {
+
 class Shader {
 
 public:
@@ -70,3 +72,5 @@ private:
   std::string readFile(const std::string &filePath);
   void checkCompileErrors(GLuint shader, const std::string &type);
 };
+
+} // namespace Celestia

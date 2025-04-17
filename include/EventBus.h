@@ -2,8 +2,15 @@
 
 #include "pch.h"
 
-// This class is rather complicated. So I am trying to explain this in simpler
-// words for myself
+namespace Celestia {
+
+/**
+ * This class is rather complicated. So I am trying to
+ * explain this in simpler
+ * words for myself
+ *
+ */
+
 class Event {
 public:
   virtual ~Event() = default;
@@ -103,3 +110,5 @@ public:
     }
   }
 };
+
+} // namespace Celestia

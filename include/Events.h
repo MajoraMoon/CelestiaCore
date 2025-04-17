@@ -5,6 +5,8 @@
 
 // clang-format on
 
+namespace Celestia {
+
 // Keyboard events
 
 struct KeyEvent : Event {
@@ -88,3 +90,5 @@ struct MouseSensitivityChanged : Event {
   float sensitivity;
   MouseSensitivityChanged(float s) : sensitivity(s) {}
 };
+
+} // namespace Celestia

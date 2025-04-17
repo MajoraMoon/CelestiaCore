@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Celestia {
+
 class EventBus;
 class FrameTimer;
 
@@ -21,3 +23,5 @@ private:
   float m_simulationDeltaTime = 0.0f;
   float m_simulationTime = 0.0f;
 };
+
+} // namespace Celestia

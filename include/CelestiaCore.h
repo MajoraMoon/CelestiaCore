@@ -37,6 +37,8 @@
  *
  */
 
+namespace Celestia {
+
 class CelestiaCore {
   SDL_Event event;
   EventBus eventBus;
@@ -60,3 +62,5 @@ private:
 
   bool m_running = true;
 };
+
+} // namespace Celestia

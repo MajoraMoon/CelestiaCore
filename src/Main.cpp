@@ -3,7 +3,7 @@
 int main(int argc, char *argv[]) {
 
   // Starting point.
-  CelestiaCore celestiaCore;
+  Celestia::CelestiaCore celestiaCore;
   celestiaCore.run();
 
   return 0;

@@ -5,6 +5,8 @@
 
 // clang-format on
 
+namespace Celestia {
+
 InputManager::InputManager(EventBus &eventBus) : eventBus(eventBus) {}
 
 // main sdl Events
@@ -61,3 +63,5 @@ void InputManager::processEvent(const SDL_Event &event) {
     eventBus.publish(MouseScrollEvent{static_cast<float>(event.wheel.y)});
   }
 }
+
+} // namespace Celestia
