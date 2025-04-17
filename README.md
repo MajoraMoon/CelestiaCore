@@ -26,25 +26,23 @@ All required libraries are included in the `lib/` folder. No external dependenci
    cd build
    ```
 
-3. **Run CMake:**
+3. **Run CMake with build type:**
 
+   - For **Linux**:
+     ```bash
+     cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     ```
+
+   - For **Windows (MinGW)**:
+     ```bash
+     cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     ```
+
+4. **Build the project**:
    ```bash
-   cmake ..
+   cmake --build . --parallel
    ```
 
-4. **Build the project** (choose one):
-
-   - With **Make**:
-
-     ```bash
-     make
-     ```
-
-   - With **Ninja**:
-
-     ```bash
-     ninja
-     ```
 
 5. **Run the executable:**
 

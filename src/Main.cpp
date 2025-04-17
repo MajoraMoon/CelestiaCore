@@ -1,8 +1,10 @@
 #include "CelestiaCore.h"
+#include "pch.h"
 
 int main(int argc, char *argv[]) {
 
-  // Starting point.
+  std::cout << "CelestiaCore is starting..." << std::endl;
+
   Celestia::CelestiaCore celestiaCore;
   celestiaCore.run();
 
