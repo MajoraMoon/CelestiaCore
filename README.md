@@ -10,8 +10,6 @@
 All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. 
 (Tested the compilation on an arch based Linux distribution and on Windows)
 
-Certainly. Here's your installation and build guide, formatted cleanly and formally in Markdown:
-
 ---
 
 ## Steps
@@ -65,8 +63,6 @@ Certainly. Here's your installation and build guide, formatted cleanly and forma
    ```
 
 --- 
-
-Let me know if you'd like a version for Windows or any additional platform-specific instructions.
 
 ## Directory Structure
 
