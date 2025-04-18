@@ -1,14 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
+project("CelestiaCore")
 
 # some standard cmake settings
-project(CelestiaCore C CXX)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+    "Choose the build type (Debug, Release, RelWithDebInfo, MinSizeRel)")
 
 
-# default build type to Release with Debug Info
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE)
-endif()
-
+# Standard‑Build‑Type: RelWithDebInfo (Release with Debug‑Info)
+set(CMAKE_BUILD_TYPE )
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

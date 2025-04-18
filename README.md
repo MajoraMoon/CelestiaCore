@@ -26,20 +26,28 @@ All required libraries are included in the `lib/` folder. No external dependenci
    cd build
    ```
 
-3. **Run CMake with build type:**
+3. **Run CMake with and append an optional build type for SDL3 (standard is ReleaseWithDebugInfo):**
 
-   - For **Linux**:
      ```bash
-     cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     cmake ..
      ```
+   **or**
 
-   - For **Windows (MinGW)**:
      ```bash
-     cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
+     cmake .. -DCMAKE_BUILD_TYPE=Debug
+     cmake .. -DCMAKE_BUILD_TYPE=Release
+     cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
      ```
+     (more information: https://wiki.libsdl.org/SDL3/README/cmake)
+
+
 
 4. **Build the project**:
    ```bash
+   make
+   ```
+   **or (faster compiling)**
+      ```bash
    cmake --build . --parallel
    ```
 
