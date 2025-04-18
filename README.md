@@ -10,6 +10,10 @@
 All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. 
 (Tested the compilation on an arch based Linux distribution and on Windows)
 
+Certainly. Here's your installation and build guide, formatted cleanly and formally in Markdown:
+
+---
+
 ## Steps
 
 1. **Clone the repository:**
@@ -26,37 +30,43 @@ All required libraries are included in the `lib/` folder. No external dependenci
    cd build
    ```
 
-3. **Run CMake with and append an optional build type for SDL3 (standard is ReleaseWithDebugInfo):**
+3. **Run CMake and append an optional build type for SDL3 (default is `RelWithDebInfo`):**
 
-     ```bash
-     cmake ..
-     ```
-   **or**
+   ```bash
+   cmake ..
+   ```
 
-     ```bash
-     cmake .. -DCMAKE_BUILD_TYPE=Debug
-     cmake .. -DCMAKE_BUILD_TYPE=Release
-     cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
-     ```
-     (more information: https://wiki.libsdl.org/SDL3/README/cmake)
+   Optional alternatives:
 
+   ```bash
+   cmake .. -DCMAKE_BUILD_TYPE=Debug
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+   ```
 
+   For more information, refer to the [SDL3 CMake documentation](https://wiki.libsdl.org/SDL3/README/cmake).
 
-4. **Build the project**:
+4. **Build the project:**
+
    ```bash
    make
    ```
-   **or (faster compiling)**
-      ```bash
+
+   Or, for faster compilation:
+
+   ```bash
    cmake --build . --parallel
    ```
-
 
 5. **Run the executable:**
 
    ```bash
    ./bin/CelestiaCore
    ```
+
+--- 
+
+Let me know if you'd like a version for Windows or any additional platform-specific instructions.
 
 ## Directory Structure
 
