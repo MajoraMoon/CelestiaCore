@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
+# Compiler and linker options
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Common GCC/Clang flags
     add_compile_options(
@@ -26,6 +26,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -Wl,--gc-sections
     )
 
+    # Add static libgcc and libstdc++ for MSYS2/GCC on Windows
+    if(WIN32 AND DEFINED ENV{MSYSTEM} AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        message(STATUS "MSYS2 environment detected: enabling -static-libgcc and -static-libstdc++ flags")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+    endif()
 endif()
 
 
@@ -48,7 +53,6 @@ set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
 set(ASSIMP_BUILD_DOCS OFF)
 set(ASSIMP_INJECT_DEBUG_POSTFIX OFF)
 set(ASSIMP_BUILD_SAMPLES OFF)
-set(ASSIMP_BUILD_ZLIB ON)            # <— zlib aus Assimp-Contrib wird jetzt mitgebaut
 set(ASSIMP_BUILD_DRACO OFF)
 
 set(ASSIMP_BUILD_OBJ_IMPORTER ON)
