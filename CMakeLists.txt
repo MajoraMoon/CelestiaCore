@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 project("CelestiaCore")
 
-# some standard cmake settings
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
-    "Choose the build type (Debug, Release, RelWithDebInfo, MinSizeRel)")
+# Set default build type to Release if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug, Release, etc.)" FORCE)
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-
-# Standard‑Build‑Type: RelWithDebInfo (Release with Debug‑Info)
-set(CMAKE_BUILD_TYPE )
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +31,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
     endif()
 endif()
+
+message(STATUS "CXX Flags: ${CMAKE_CXX_FLAGS}")
+message(STATUS "CXX Release Flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 
 
 
