@@ -97,6 +97,11 @@ void Camera::setupEventSubscriptions() {
   eventBus.subscribe<MouseVisibilityChanged>(
       [this](const MouseVisibilityChanged &ev) {
         m_mouseVisible = ev.visible;
+
+        // // Reset input state when mouse becomes visible
+        if (m_mouseVisible) {
+          inputState = {};
+        }
       });
 
   eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
@@ -111,6 +116,10 @@ void Camera::setupEventSubscriptions() {
 }
 
 void Camera::processMovement(float deltaTime) {
+
+  if (m_mouseVisible)
+    return;
+
   float velocity = movementSpeed * deltaTime;
   if (inputState.boost)
     velocity = velocity * 2.5f;
