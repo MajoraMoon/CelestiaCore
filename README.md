@@ -49,8 +49,13 @@ All required libraries are included in the `lib/` folder. No external dependenci
    ```bash
    make
    ```
+**Or**
 
-   Or, for faster compilation:
+   ```bash
+   ninja
+   ```
+
+   Or, for faster compilation (Could slow down your computer):
 
    ```bash
    cmake --build . --parallel

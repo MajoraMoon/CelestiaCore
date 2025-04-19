@@ -88,6 +88,9 @@ set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
      ${CMAKE_SOURCE_DIR}/lib/imgui/backends
  )
 
+ target_link_libraries(imgui PUBLIC SDL3::SDL3)
+
+
 
  add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC})
 
