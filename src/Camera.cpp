@@ -27,133 +27,139 @@
  * Pitch: The angle, which describes the rotation around the x-axis (vertical)
  */
 
-namespace Celestia
-{
+namespace Celestia {
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 4.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig, glm::vec3 position, glm::vec3 up, float yaw,
-               float pitch)
-    : eventBus(eventBus), inputConfig(inputConfig), position(position), worldUp(up), yaw(yaw), pitch(pitch),
-      movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM)
-{
+Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig,
+               glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+    : position(position), worldUp(up), movementSpeed(SPEED),
+      mouseSensitivity(SENSITIVITY), zoom(ZOOM), eventBus(eventBus),
+      inputConfig(inputConfig), yaw(yaw), pitch(pitch) {
 
-    front = glm::vec3(0.0f, 0.0f, -1.0f);
-    updateCameraVectors();
-    setupEventSubscriptions();
+  front = glm::vec3(0.0f, 0.0f, -1.0f);
+  updateCameraVectors();
+  setupEventSubscriptions();
 }
 
-void Camera::setupEventSubscriptions()
-{
-    // Frame updates
-    eventBus.subscribe<FrameUpdateEvent>(
-        // not saving deltaTime here in a member variable because only the
-        // movement uses it, no other possible caclulations inside the camera
-        // class
-        [this](const FrameUpdateEvent &ev) { processMovement(ev.deltaTime); });
+void Camera::setupEventSubscriptions() {
+  // Frame updates
+  eventBus.subscribe<FrameUpdateEvent>(
+      // not saving deltaTime here in a member variable because only the
+      // movement uses it, no other possible caclulations inside the camera
+      // class
+      [this](const FrameUpdateEvent &ev) { processMovement(ev.deltaTime); });
 
-    // Keyboard input
-    eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
-        if (!m_mouseVisible)
-        {
+  // Keyboard input
+  eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
+    if (!m_mouseVisible) {
 
-            // pressing w (trying to work with more structs)
-            inputState.forward = (ev.scancode == inputConfig.moveForward) ? ev.pressed : inputState.forward;
-            // pressing s
-            inputState.backward = (ev.scancode == inputConfig.moveBackward) ? ev.pressed : inputState.backward;
-            // pressing a
-            inputState.left = (ev.scancode == inputConfig.moveLeft) ? ev.pressed : inputState.left;
-            // pressing d
-            inputState.right = (ev.scancode == inputConfig.moveRight) ? ev.pressed : inputState.right;
-            // pressing space
-            inputState.up = (ev.scancode == inputConfig.moveUp) ? ev.pressed : inputState.up;
+      // pressing w (trying to work with more structs)
+      inputState.forward = (ev.scancode == inputConfig.moveForward)
+                               ? ev.pressed
+                               : inputState.forward;
+      // pressing s
+      inputState.backward = (ev.scancode == inputConfig.moveBackward)
+                                ? ev.pressed
+                                : inputState.backward;
+      // pressing a
+      inputState.left =
+          (ev.scancode == inputConfig.moveLeft) ? ev.pressed : inputState.left;
+      // pressing d
+      inputState.right = (ev.scancode == inputConfig.moveRight)
+                             ? ev.pressed
+                             : inputState.right;
+      // pressing space
+      inputState.up =
+          (ev.scancode == inputConfig.moveUp) ? ev.pressed : inputState.up;
 
-            // pressing ctrl
-            inputState.down = (ev.scancode == inputConfig.moveDown) ? ev.pressed : inputState.down;
+      // pressing ctrl
+      inputState.down =
+          (ev.scancode == inputConfig.moveDown) ? ev.pressed : inputState.down;
 
-            // pressing shift
-            inputState.boost = (ev.scancode == inputConfig.boostSpeed) ? ev.pressed : inputState.boost;
-        }
-    });
-
-    eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
-        if (!m_mouseVisible)
-        {
-            handleMouseMovement(ev.xrel, ev.yrel);
-        }
-    });
-
-    // Mouse visibility for deactivating movement
-    eventBus.subscribe<MouseVisibilityChanged>(
-        [this](const MouseVisibilityChanged &ev) { m_mouseVisible = ev.visible; });
-
-    eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
-        zoom -= ev.yoffset;
-        zoom = glm::clamp(zoom, 1.0f, 45.0f);
-    });
-
-    eventBus.subscribe<MouseSensitivityChanged>(
-        [this](const MouseSensitivityChanged &ev) { mouseSensitivity = ev.sensitivity; });
-}
-
-void Camera::processMovement(float deltaTime)
-{
-    float velocity = movementSpeed * deltaTime;
-    if (inputState.boost)
-        velocity = velocity * 2.5f;
-
-    if (inputState.forward)
-        applyMovement(front, velocity);
-    if (inputState.backward)
-        applyMovement(-front, velocity);
-    if (inputState.left)
-        applyMovement(-right, velocity);
-    if (inputState.right)
-        applyMovement(right, velocity);
-    if (inputState.up)
-        applyMovement(worldUp, velocity);
-    if (inputState.down)
-        applyMovement(-worldUp, velocity);
-}
-
-void Camera::applyMovement(glm::vec3 direction, float velocity)
-{
-    position += glm::normalize(direction) * velocity;
-}
-
-void Camera::handleMouseMovement(float xoffset, float yoffset, bool constrainPitch)
-{
-    xoffset *= mouseSensitivity;
-    yoffset *= mouseSensitivity;
-
-    yaw += xoffset;
-    pitch -= yoffset;
-
-    if (constrainPitch)
-    {
-        pitch = glm::clamp(pitch, -89.0f, 89.0f);
+      // pressing shift
+      inputState.boost = (ev.scancode == inputConfig.boostSpeed)
+                             ? ev.pressed
+                             : inputState.boost;
     }
+  });
 
-    updateCameraVectors();
+  eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
+    if (!m_mouseVisible) {
+      handleMouseMovement(ev.xrel, ev.yrel);
+    }
+  });
+
+  // Mouse visibility for deactivating movement
+  eventBus.subscribe<MouseVisibilityChanged>(
+      [this](const MouseVisibilityChanged &ev) {
+        m_mouseVisible = ev.visible;
+      });
+
+  eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
+    zoom -= ev.yoffset;
+    zoom = glm::clamp(zoom, 1.0f, 45.0f);
+  });
+
+  eventBus.subscribe<MouseSensitivityChanged>(
+      [this](const MouseSensitivityChanged &ev) {
+        mouseSensitivity = ev.sensitivity;
+      });
 }
 
-glm::mat4 Camera::getViewMatrix() const
-{
-    return glm::lookAt(position, position + front, up);
+void Camera::processMovement(float deltaTime) {
+  float velocity = movementSpeed * deltaTime;
+  if (inputState.boost)
+    velocity = velocity * 2.5f;
+
+  if (inputState.forward)
+    applyMovement(front, velocity);
+  if (inputState.backward)
+    applyMovement(-front, velocity);
+  if (inputState.left)
+    applyMovement(-right, velocity);
+  if (inputState.right)
+    applyMovement(right, velocity);
+  if (inputState.up)
+    applyMovement(worldUp, velocity);
+  if (inputState.down)
+    applyMovement(-worldUp, velocity);
 }
 
-void Camera::updateCameraVectors()
-{
-    glm::vec3 newFront;
-    newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
-    newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+void Camera::applyMovement(glm::vec3 direction, float velocity) {
+  position += glm::normalize(direction) * velocity;
+}
 
-    front = glm::normalize(newFront);
-    right = glm::normalize(glm::cross(front, worldUp));
-    up = glm::normalize(glm::cross(right, front));
+void Camera::handleMouseMovement(float xoffset, float yoffset,
+                                 bool constrainPitch) {
+  xoffset *= mouseSensitivity;
+  yoffset *= mouseSensitivity;
+
+  yaw += xoffset;
+  pitch -= yoffset;
+
+  if (constrainPitch) {
+    pitch = glm::clamp(pitch, -89.0f, 89.0f);
+  }
+
+  updateCameraVectors();
+}
+
+glm::mat4 Camera::getViewMatrix() const {
+  return glm::lookAt(position, position + front, up);
+}
+
+void Camera::updateCameraVectors() {
+  glm::vec3 newFront;
+  newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  newFront.y = sin(glm::radians(pitch));
+  newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+  front = glm::normalize(newFront);
+  right = glm::normalize(glm::cross(front, worldUp));
+  up = glm::normalize(glm::cross(right, front));
 }
 } // namespace Celestia

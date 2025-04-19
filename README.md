@@ -8,7 +8,7 @@
 
 ### Notes:
 All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. 
-(Tested the compilation on an arch based Linux distribution and on Windows)
+(Tested the compilation on an arch based Linux distribution with gcc/g++ and on Windows with MingW & MSYS2 )
 
 ---
 

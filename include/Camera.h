@@ -65,7 +65,7 @@ private:
   float pitch;
 
   // Internal state
-  bool m_mouseVisible = false;
+  bool m_mouseVisible;
 
   void setupEventSubscriptions();
   void processMovement(float deltaTime);
