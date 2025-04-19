@@ -28,6 +28,11 @@ public:
 
   void publishCurrentWindowSize();
 
+  enum class FullscreenMode { Windowed, Fullscreen, Borderless };
+
+  void setFullscreenMode(FullscreenMode mode);
+  FullscreenMode getFullscreenMode() const { return windowState.currentMode; }
+
 private:
   EventBus &eventBus;
   SDL_Window *window;
@@ -44,6 +49,16 @@ private:
   void handleMaximizeWindow();
 
   void setupEventSubscriptions();
+
+  struct WindowState {
+    FullscreenMode currentMode = FullscreenMode::Windowed;
+    int prevWidth = 0;
+    int prevHeight = 0;
+    int prevX = 0;
+    int prevY = 0;
+  };
+
+  WindowState windowState;
 };
 
 } // namespace Celestia
