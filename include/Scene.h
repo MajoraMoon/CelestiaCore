@@ -21,8 +21,8 @@ private:
   FrameTimer &frameTimer;
   std::vector<glm::vec3> cubePositions;
 
-  float m_simulationDeltaTime = 0.0f;
-  float m_simulationTime = 0.0f;
+  float m_simulationDeltaTime;
+  float m_simulationTime;
 };
 
 } // namespace Celestia

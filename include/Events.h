@@ -158,4 +158,9 @@ struct MouseSensitivityChanged : Event {
   MouseSensitivityChanged(float s) : sensitivity(s) {}
 };
 
+struct CelestiaCoreQuitChanged : Event {
+  bool quit;
+  CelestiaCoreQuitChanged(bool q) : quit(q) {}
+};
+
 } // namespace Celestia

@@ -1,62 +1,77 @@
 #include "pch.h"
+#include "EventSystem.h"
 
-namespace Celestia {
-StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {
-  setupSubscriptions();
+namespace Celestia
+{
+StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s)
+{
+    setupSubscriptions();
 }
 
-void StateManager::setupSubscriptions() {
+void StateManager::setupSubscriptions()
+{
 
-  /**
-   *
-   * These values should be the same for every class accessing them. So it is an
-   * implementation of a global variable, but only indirectly.
-   *
-   * These are subscriptions, which trigger to change a  boolean value and then
-   * publish the value to another specific event which can be accessed to use
-   * the boolean value.
-   *
-   * idk if I explain it well, but these functions should not be that
-   * complicated to understand if you know how the basic idea of this BusEvent
-   * works
-   */
+    // Broadcast initial state to all listeners
+    eventBus.publish(MouseVisibilityChanged{state.mouseVisible});
+    eventBus.publish(GuiVisibilityChanged{state.guiVisible});
+    eventBus.publish(SimulationPausedChanged{state.simulationPaused});
+    eventBus.publish(WindowMaximizedChanged{state.windowMaximized});
+    eventBus.publish(MouseSensitivityChanged{state.mouseSensitivity});
 
-  // Mouse visibility
-  eventBus.subscribe<ToggleMouseVisibilityEvent>(
-      [this](const ToggleMouseVisibilityEvent &) {
+    /**
+     *
+     * These values should be the same for every class accessing them. So it is an
+     * implementation of a global variable, but only indirectly.
+     *
+     * These are subscriptions, which trigger to change a  boolean value and then
+     * publish the value to another specific event which can be accessed to use
+     * the boolean value.
+     *
+     * idk if I explain it well, but these functions should not be that
+     * complicated to understand if you know how the basic idea of this BusEvent
+     * works
+     */
+
+    // Mouse visibility
+    eventBus.subscribe<ToggleMouseVisibilityEvent>([this](const ToggleMouseVisibilityEvent &) {
         state.mouseVisible = !state.mouseVisible;
         eventBus.publish(MouseVisibilityChanged{state.mouseVisible});
-      });
+    });
 
-  // GUI visibility
-  eventBus.subscribe<ToggleGuiVisibilityEvent>(
-      [this](const ToggleGuiVisibilityEvent &) {
+    // GUI visibility
+    eventBus.subscribe<ToggleGuiVisibilityEvent>([this](const ToggleGuiVisibilityEvent &) {
         state.guiVisible = !state.guiVisible;
         eventBus.publish(GuiVisibilityChanged{state.guiVisible});
-      });
+    });
 
-  // Pause state
-  eventBus.subscribe<TogglePauseEvent>([this](const TogglePauseEvent &) {
-    state.simulationPaused = !state.simulationPaused;
-    eventBus.publish(SimulationPausedChanged{state.simulationPaused});
-  });
+    // Pause state
+    eventBus.subscribe<TogglePauseEvent>([this](const TogglePauseEvent &) {
+        state.simulationPaused = !state.simulationPaused;
+        eventBus.publish(SimulationPausedChanged{state.simulationPaused});
+    });
 
-  // Window state
-  eventBus.subscribe<ToggleWindowMaximizedEvent>(
-      [this](const ToggleWindowMaximizedEvent &) {
+    // Window state
+    eventBus.subscribe<ToggleWindowMaximizedEvent>([this](const ToggleWindowMaximizedEvent &) {
         state.windowMaximized = !state.windowMaximized;
         eventBus.publish(WindowMaximizedChanged{state.windowMaximized});
-      });
+    });
 
-  // Mouse sensitivity
-  eventBus.subscribe<SetMouseSensitivityEvent>(
-      [this](const SetMouseSensitivityEvent &ev) {
+    eventBus.subscribe<QuitEvent>([this](const QuitEvent &) {
+        state.quit = true;
+        eventBus.publish(CelestiaCoreQuitChanged{state.quit});
+    });
+
+    // Mouse sensitivity
+    eventBus.subscribe<SetMouseSensitivityEvent>([this](const SetMouseSensitivityEvent &ev) {
         // no redundant updates for this float value. I might forgot it
         // everywhere else lol
-        if (state.mouseSensitivity != ev.sensitivity) {
-          state.mouseSensitivity = ev.sensitivity;
-          eventBus.publish(MouseSensitivityChanged{ev.sensitivity});
+        // So an if-statement costs more than assigning a new value each frame,
+        // but it also triggers the eventBus publish function.
+        if (state.mouseSensitivity != ev.sensitivity)
+        {
+            state.mouseSensitivity = ev.sensitivity;
+            eventBus.publish(MouseSensitivityChanged{ev.sensitivity});
         }
-      });
+    });
 }
 } // namespace Celestia

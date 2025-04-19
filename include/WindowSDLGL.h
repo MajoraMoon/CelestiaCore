@@ -36,8 +36,8 @@ private:
   int m_width;
   int m_height;
 
-  bool m_mouseVisible = false;
-  bool m_windowIsMaximized = false;
+  bool m_mouseVisible;
+  bool m_windowIsMaximized;
 
   void handleMouseVisibity(unsigned int width, unsigned int height);
   void handleWindowResize(unsigned int width, unsigned int height);

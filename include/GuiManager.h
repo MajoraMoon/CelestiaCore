@@ -43,14 +43,14 @@ private:
   unsigned int m_width;
   unsigned int m_height;
 
-  bool m_guiVisible = true;
-  bool m_mouseVisible = false;
-  bool m_simulationPaused = false;
+  bool m_guiVisible;
+  bool m_mouseVisible;
+  bool m_simulationPaused;
 
-  float m_deltaTime = 0.0f;
-  float m_currentTime = 0.0f;
-  float m_simulationTime = 0.0f;
-  float m_stableFPS = 0.0f;
+  float m_deltaTime;
+  float m_currentTime;
+  float m_simulationTime;
+  float m_stableFPS;
 
   float m_mouseSensitivity;
 };

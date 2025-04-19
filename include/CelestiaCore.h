@@ -32,31 +32,35 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "WindowSDLGL.h"
+#include "EventSystem.h"
 
-namespace Celestia {
+namespace Celestia
+{
 
-class CelestiaCore {
-  SDL_Event event;
-  EventBus eventBus;
-  AppState appState;
-  StateManager stateManager;
+class CelestiaCore
+{
 
-public:
-  CelestiaCore();
+    // The EventBus and ESPECIALLY the AppState should be created before any other
+    // class. Because the AppState is holding the initiale States for many events.
+    SDL_Event event;
+    EventBus eventBus;
+    AppState appState;
+    StateManager stateManager;
 
-  void run();
+  public:
+    CelestiaCore();
 
-private:
-  WindowSDLGL window;
-  FrameTimer frameTimer;
-  InputManager inputManger;
-  Renderer renderer;
-  Scene scene;
-  GuiManager guiManager;
+    void run();
 
-  void quitCelestiaCore() { m_running = !m_running; }
+  private:
+    WindowSDLGL window;
+    FrameTimer frameTimer;
+    InputManager inputManger;
+    Renderer renderer;
+    Scene scene;
+    GuiManager guiManager;
 
-  bool m_running = true;
+    bool m_quit = false;
 };
 
 } // namespace Celestia

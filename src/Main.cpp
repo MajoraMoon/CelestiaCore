@@ -1,12 +1,13 @@
-#include "CelestiaCore.h"
 #include "pch.h"
+#include "CelestiaCore.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
-  std::cout << "CelestiaCore is starting..." << std::endl;
+    std::cout << "CelestiaCore is starting..." << std::endl;
 
-  Celestia::CelestiaCore celestiaCore;
-  celestiaCore.run();
+    Celestia::CelestiaCore celestiaCore;
+    celestiaCore.run();
 
-  return 0;
+    return 0;
 }

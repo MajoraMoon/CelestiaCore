@@ -75,14 +75,22 @@ set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 
 
 
-file(GLOB IMGUI_SOURCES 
-    ${CMAKE_SOURCE_DIR}/lib/imgui/*.cpp
-    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_sdl3.cpp
-    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
-)
+ file(GLOB IMGUI_SOURCES 
+     ${CMAKE_SOURCE_DIR}/lib/imgui/*.cpp
+     ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_sdl3.cpp
+     ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
+ )
 
 
-add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC} ${IMGUI_SOURCES})
+ add_library(imgui STATIC ${IMGUI_SOURCES})
+ target_include_directories(imgui PUBLIC
+     ${CMAKE_SOURCE_DIR}/lib/imgui
+     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
+ )
+
+
+ add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC})
+
 
 target_precompile_headers(CelestiaCore PRIVATE 
     $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_SOURCE_DIR}/include/pch.h>
@@ -100,6 +108,7 @@ target_include_directories(CelestiaCore PRIVATE
 )
 
 target_link_libraries(CelestiaCore PRIVATE 
+    imgui
     SDL3::SDL3
     SDL3_image::SDL3_image
     assimp::assimp
