@@ -7,10 +7,6 @@
  *
  */
 
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-
 unsigned char *loadImage(const char *filePath, int *width, int *height,
                          bool flipHorizontally = false,
                          bool flipVertically = false);

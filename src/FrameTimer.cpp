@@ -20,7 +20,7 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
 
   eventBus.subscribe<SimulationPausedChanged>(
       [this](const SimulationPausedChanged &ev) {
-        m_simulationPaused = ev.simulationPaused;
+        m_simulationPaused = ev.paused;
       });
 }
 

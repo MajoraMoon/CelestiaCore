@@ -41,16 +41,16 @@ GuiManager::~GuiManager() {
 
 void GuiManager::setupEventSubscriptions() {
   eventBus.subscribe<GuiVisibilityChanged>(
-      [this](const GuiVisibilityChanged &ev) { m_guiVisible = ev.guiVisible; });
+      [this](const GuiVisibilityChanged &ev) { m_guiVisible = ev.visible; });
 
   eventBus.subscribe<MouseVisibilityChanged>(
       [this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.mouseVisible;
+        m_mouseVisible = ev.visible;
       });
 
   eventBus.subscribe<SimulationPausedChanged>(
       [this](const SimulationPausedChanged &ev) {
-        m_simulationPaused = ev.simulationPaused;
+        m_simulationPaused = ev.paused;
       });
 
   eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
@@ -124,7 +124,7 @@ void GuiManager::showStatsWindow() {
   m_mouseSensitivity = appState.mouseSensitivity;
   if (ImGui::SliderFloat("Mouse Sensitivity", &m_mouseSensitivity, 0.01f, 1.0f,
                          "%.2f")) {
-    eventBus.publish(MouseSensitivityChanged{m_mouseSensitivity});
+    eventBus.publish(SetMouseSensitivityEvent{m_mouseSensitivity});
   }
 
   // VSync Combo Box

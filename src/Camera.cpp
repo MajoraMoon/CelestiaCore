@@ -95,7 +95,7 @@ void Camera::setupEventSubscriptions() {
   // Mouse visibility for deactivating movement
   eventBus.subscribe<MouseVisibilityChanged>(
       [this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.mouseVisible;
+        m_mouseVisible = ev.visible;
       });
 
   eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {

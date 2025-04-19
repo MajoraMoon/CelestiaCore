@@ -29,27 +29,34 @@ void StateManager::setupSubscriptions() {
       });
 
   // GUI visibility
-  eventBus.subscribe<ToggleGuiEvent>([this](const ToggleGuiEvent &) {
-    state.guiVisible = !state.guiVisible;
-    eventBus.publish(GuiVisibilityChanged{state.guiVisible});
-  });
+  eventBus.subscribe<ToggleGuiVisibilityEvent>(
+      [this](const ToggleGuiVisibilityEvent &) {
+        state.guiVisible = !state.guiVisible;
+        eventBus.publish(GuiVisibilityChanged{state.guiVisible});
+      });
 
   // Pause state
-  eventBus.subscribe<PauseEvent>([this](const PauseEvent &) {
+  eventBus.subscribe<TogglePauseEvent>([this](const TogglePauseEvent &) {
     state.simulationPaused = !state.simulationPaused;
     eventBus.publish(SimulationPausedChanged{state.simulationPaused});
   });
 
   // Window state
-  eventBus.subscribe<MaximizeWindowEvent>([this](const MaximizeWindowEvent &) {
-    state.windowMaximized = !state.windowMaximized;
-    eventBus.publish(WindowMaximizedChanged{state.windowMaximized});
-  });
+  eventBus.subscribe<ToggleWindowMaximizedEvent>(
+      [this](const ToggleWindowMaximizedEvent &) {
+        state.windowMaximized = !state.windowMaximized;
+        eventBus.publish(WindowMaximizedChanged{state.windowMaximized});
+      });
 
   // Mouse sensitivity
-  eventBus.subscribe<MouseSensitivityChanged>(
-      [this](const MouseSensitivityChanged &ev) {
-        state.mouseSensitivity = ev.sensitivity;
+  eventBus.subscribe<SetMouseSensitivityEvent>(
+      [this](const SetMouseSensitivityEvent &ev) {
+        // no redundant updates for this float value. I might forgot it
+        // everywhere else lol
+        if (state.mouseSensitivity != ev.sensitivity) {
+          state.mouseSensitivity = ev.sensitivity;
+          eventBus.publish(MouseSensitivityChanged{ev.sensitivity});
+        }
       });
 }
 } // namespace Celestia

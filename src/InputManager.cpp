@@ -31,7 +31,7 @@ void InputManager::processEvent(const SDL_Event &event) {
       break;
 
     case SDLK_F1:
-      eventBus.publish(ToggleGuiEvent{});
+      eventBus.publish(ToggleGuiVisibilityEvent{});
       break;
 
     case SDLK_M:
@@ -39,11 +39,11 @@ void InputManager::processEvent(const SDL_Event &event) {
       break;
 
     case SDLK_F:
-      eventBus.publish(MaximizeWindowEvent{});
+      eventBus.publish(ToggleWindowMaximizedEvent{});
       break;
 
     case SDLK_P:
-      eventBus.publish(PauseEvent{});
+      eventBus.publish(TogglePauseEvent{});
       break;
     }
   }

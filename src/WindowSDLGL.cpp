@@ -171,13 +171,13 @@ void WindowSDLGL::setupEventSubscriptions() {
 
   eventBus.subscribe<MouseVisibilityChanged>(
       [this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.mouseVisible;
+        m_mouseVisible = ev.visible;
         handleMouseVisibity(m_width, m_height);
       });
 
   eventBus.subscribe<WindowMaximizedChanged>(
       [this](const WindowMaximizedChanged &ev) {
-        m_windowIsMaximized = ev.windowMaximized;
+        m_windowIsMaximized = ev.maximized;
         handleMaximizeWindow();
       });
 }
