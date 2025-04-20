@@ -6,53 +6,48 @@
  *
  */
 
-namespace Celestia {
+namespace Celestia
+{
 
 // forward declarations
 class WindowSDLGL;
 class EventBus;
 struct AppState;
 
-class GuiManager {
+class GuiManager
+{
 
-public:
-  GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState);
-  ~GuiManager();
+  public:
+    GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState);
+    ~GuiManager();
 
-  void processGUIEvent(const SDL_Event *event);
-  void render();
+    void processGUIEvent(const SDL_Event *event);
+    void render();
 
-private:
-  WindowSDLGL &window;
-  EventBus &eventBus;
-  AppState &appState;
+  private:
+    WindowSDLGL &window;
+    EventBus &eventBus;
+    AppState &appState;
 
-  void toggleVsync(bool vsyncEnabled);
-  // actual imgui windows to render
-  void showStatsWindow();
-  void showShortcutsWindow();
+    // actual imgui windows to render
+    void showStatsWindow();
+    void showShortcutsWindow();
 
-  void setupEventSubscriptions();
+    void setupEventSubscriptions();
 
-  // inner enum class, so it does not conflict with global on/off values
-  // somewhere else. idk how c++ works honestly, I know object oriented design
-  // but c++ is something else lol
-  enum class VsyncMode { Off = 0, On = 1 };
-  VsyncMode m_CurrentVsyncMode = VsyncMode::Off;
+    unsigned int m_width;
+    unsigned int m_height;
 
-  unsigned int m_width;
-  unsigned int m_height;
+    bool m_guiVisible;
+    bool m_mouseVisible;
+    bool m_simulationPaused;
 
-  bool m_guiVisible;
-  bool m_mouseVisible;
-  bool m_simulationPaused;
+    float m_deltaTime;
+    float m_currentTime;
+    float m_simulationTime;
+    float m_stableFPS;
 
-  float m_deltaTime;
-  float m_currentTime;
-  float m_simulationTime;
-  float m_stableFPS;
-
-  float m_mouseSensitivity;
+    float m_mouseSensitivity;
 };
 
 } // namespace Celestia
