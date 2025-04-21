@@ -234,6 +234,17 @@ static void SDLCALL SDL_MouseRelativeCursorVisibleChanged(void *userdata, const 
     SDL_SetCursor(NULL); // Update cursor visibility
 }
 
+static void SDLCALL SDL_MouseIntegerModeChanged(void *userdata, const char *name, const char *oldValue, const char *hint)
+{
+    SDL_Mouse *mouse = (SDL_Mouse *)userdata;
+
+    if (hint && *hint) {
+        mouse->integer_mode_flags = (Uint8)SDL_atoi(hint);
+    } else {
+        mouse->integer_mode_flags = 0;
+    }
+}
+
 // Public functions
 bool SDL_PreInitMouse(void)
 {
@@ -287,6 +298,9 @@ bool SDL_PreInitMouse(void)
 
     SDL_AddHintCallback(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE,
                         SDL_MouseRelativeCursorVisibleChanged, mouse);
+
+    SDL_AddHintCallback("SDL_MOUSE_INTEGER_MODE",
+                        SDL_MouseIntegerModeChanged, mouse);
 
     mouse->was_touch_mouse_events = false; // no touch to mouse movement event pending
 
@@ -392,6 +406,19 @@ void SDL_RemoveMouse(SDL_MouseID mouseID, bool send_event)
         event.type = SDL_EVENT_MOUSE_REMOVED;
         event.mdevice.which = mouseID;
         SDL_PushEvent(&event);
+    }
+}
+
+void SDL_SetMouseName(SDL_MouseID mouseID, const char *name)
+{
+    SDL_assert(mouseID != 0);
+
+    const int mouse_index = SDL_GetMouseIndex(mouseID);
+
+    if (mouse_index >= 0) {
+        SDL_MouseInstance *instance = &SDL_mice[mouse_index];
+        SDL_free(instance->name);
+        instance->name = SDL_strdup(name ? name : "");
     }
 }
 
@@ -705,14 +732,19 @@ static void SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL
 
     if (relative) {
         if (mouse->relative_mode) {
-            if (mouse->enable_relative_system_scale) {
-                if (mouse->ApplySystemScale) {
-                    mouse->ApplySystemScale(mouse->system_scale_data, timestamp, window, mouseID, &x, &y);
+            if (mouse->InputTransform) {
+                void *data = mouse->input_transform_data;
+                mouse->InputTransform(data, timestamp, window, mouseID, &x, &y);
+            } else {
+                if (mouse->enable_relative_system_scale) {
+                    if (mouse->ApplySystemScale) {
+                        mouse->ApplySystemScale(mouse->system_scale_data, timestamp, window, mouseID, &x, &y);
+                    }
                 }
-            }
-            if (mouse->enable_relative_speed_scale) {
-                x *= mouse->relative_speed_scale;
-                y *= mouse->relative_speed_scale;
+                if (mouse->enable_relative_speed_scale) {
+                    x *= mouse->relative_speed_scale;
+                    y *= mouse->relative_speed_scale;
+                }
             }
         } else {
             if (mouse->enable_normal_speed_scale) {
@@ -720,12 +752,22 @@ static void SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL
                 y *= mouse->normal_speed_scale;
             }
         }
+        if (mouse->integer_mode_flags & 1) {
+            // Accumulate the fractional relative motion and only process the integer portion
+            mouse->integer_mode_residual_motion_x = SDL_modff(mouse->integer_mode_residual_motion_x + x, &x);
+            mouse->integer_mode_residual_motion_y = SDL_modff(mouse->integer_mode_residual_motion_y + y, &y);
+        }
         xrel = x;
         yrel = y;
         x = (mouse->last_x + xrel);
         y = (mouse->last_y + yrel);
         ConstrainMousePosition(mouse, window, &x, &y);
     } else {
+        if (mouse->integer_mode_flags & 1) {
+            // Discard the fractional component from absolute coordinates
+            x = SDL_truncf(x);
+            y = SDL_truncf(y);
+        }
         ConstrainMousePosition(mouse, window, &x, &y);
         if (mouse->has_position) {
             xrel = x - mouse->last_x;
@@ -998,6 +1040,12 @@ void SDL_SendMouseWheel(Uint64 timestamp, SDL_Window *window, SDL_MouseID mouseI
         SDL_SetMouseFocus(window);
     }
 
+    // Accumulate fractional wheel motion if integer mode is enabled
+    if (mouse->integer_mode_flags & 2) {
+        mouse->integer_mode_residual_scroll_x = SDL_modff(mouse->integer_mode_residual_scroll_x + x, &x);
+        mouse->integer_mode_residual_scroll_y = SDL_modff(mouse->integer_mode_residual_scroll_y + y, &y);
+    }
+
     if (x == 0.0f && y == 0.0f) {
         return;
     }
@@ -1030,10 +1078,12 @@ void SDL_QuitMouse(void)
 
     if (mouse->added_mouse_touch_device) {
         SDL_DelTouch(SDL_MOUSE_TOUCHID);
+        mouse->added_mouse_touch_device = false;
     }
 
     if (mouse->added_pen_touch_device) {
         SDL_DelTouch(SDL_PEN_TOUCHID);
+        mouse->added_pen_touch_device = false;
     }
 
     if (mouse->CaptureMouse) {
@@ -1108,11 +1158,25 @@ void SDL_QuitMouse(void)
     SDL_RemoveHintCallback(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE,
                         SDL_MouseRelativeCursorVisibleChanged, mouse);
 
+    SDL_RemoveHintCallback("SDL_MOUSE_INTEGER_MODE",
+                        SDL_MouseIntegerModeChanged, mouse);
+
     for (int i = SDL_mouse_count; i--; ) {
         SDL_RemoveMouse(SDL_mice[i].instance_id, false);
     }
     SDL_free(SDL_mice);
     SDL_mice = NULL;
+}
+
+bool SDL_SetRelativeMouseTransform(SDL_MouseMotionTransformCallback transform, void *userdata)
+{
+    SDL_Mouse *mouse = SDL_GetMouse();
+    if (mouse->relative_mode) {
+        return SDL_SetError("Can't set mouse transform while relative mode is active");
+    }
+    mouse->InputTransform = transform;
+    mouse->input_transform_data = userdata;
+    return true;
 }
 
 SDL_MouseButtonFlags SDL_GetMouseState(float *x, float *y)
@@ -1426,7 +1490,7 @@ SDL_Cursor *SDL_CreateCursor(const Uint8 *data, const Uint8 *mask, int w, int h,
     SDL_Surface *surface;
     SDL_Cursor *cursor;
     int x, y;
-    Uint32 *pixel;
+    Uint32 *pixels;
     Uint8 datab = 0, maskb = 0;
     const Uint32 black = 0xFF000000;
     const Uint32 white = 0xFFFFFFFF;
@@ -1447,16 +1511,16 @@ SDL_Cursor *SDL_CreateCursor(const Uint8 *data, const Uint8 *mask, int w, int h,
         return NULL;
     }
     for (y = 0; y < h; ++y) {
-        pixel = (Uint32 *)((Uint8 *)surface->pixels + y * surface->pitch);
+        pixels = (Uint32 *)((Uint8 *)surface->pixels + y * surface->pitch);
         for (x = 0; x < w; ++x) {
             if ((x % 8) == 0) {
                 datab = *data++;
                 maskb = *mask++;
             }
             if (maskb & 0x80) {
-                *pixel++ = (datab & 0x80) ? black : white;
+                *pixels++ = (datab & 0x80) ? black : white;
             } else {
-                *pixel++ = (datab & 0x80) ? inverted : transparent;
+                *pixels++ = (datab & 0x80) ? inverted : transparent;
             }
             datab <<= 1;
             maskb <<= 1;
