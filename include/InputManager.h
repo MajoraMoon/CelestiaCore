@@ -6,27 +6,31 @@
  *
  */
 
-namespace Celestia {
+namespace Celestia
+{
 
 // forward declarations
 class EventBus;
+class AppState;
 
-class InputManager {
+class InputManager
+{
 
-public:
-  InputManager(EventBus &eventBus);
+  public:
+    InputManager(EventBus &eventBus, AppState &appState);
 
-  void processEvent(const SDL_Event &event);
+    void processEvent(const SDL_Event &event);
 
-private:
-  EventBus &eventBus;
+  private:
+    EventBus &eventBus;
+    AppState &appState;
 
-  // SDL keycodes for input behaviour
-  const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
-  const SDL_Keycode TOGGLE_GUI = SDLK_F1;
-  const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
-  const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
-  const SDL_Keycode PAUSE = SDLK_P;
+    // SDL keycodes for input behaviour
+    const SDL_Keycode CLOSE_PROGRAM = SDLK_ESCAPE;
+    const SDL_Keycode TOGGLE_GUI = SDLK_F1;
+    const SDL_Keycode TOGGLE_MOUSE = SDLK_M;
+    const SDL_Keycode MAXIMIZE_WINDOW = SDLK_F;
+    const SDL_Keycode PAUSE = SDLK_P;
 };
 
 } // namespace Celestia

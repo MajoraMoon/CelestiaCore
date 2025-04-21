@@ -10,7 +10,7 @@ namespace Celestia
 
 CelestiaCore::CelestiaCore()
     : stateManager(eventBus, appState), window("CelestiaCore", "0.4", eventBus), frameTimer(eventBus),
-      inputManger(eventBus), renderer(window, eventBus, scene), scene(eventBus, frameTimer),
+      inputManger(eventBus, appState), renderer(window, eventBus, scene), scene(eventBus, frameTimer),
       guiManager(window, eventBus, appState)
 {
 
@@ -18,12 +18,12 @@ CelestiaCore::CelestiaCore()
     // working
     stateManager.publishInitialStates();
     window.publishCurrentWindowSize();
+
+    eventBus.subscribe<CelestiaCoreQuitChanged>([this](const CelestiaCoreQuitChanged &ev) { m_quit = ev.quit; });
 }
 
 void CelestiaCore::run()
 {
-
-    eventBus.subscribe<CelestiaCoreQuitChanged>([this](const CelestiaCoreQuitChanged &ev) { m_quit = ev.quit; });
 
     // main loop
     while (!m_quit)
@@ -33,7 +33,6 @@ void CelestiaCore::run()
 
         while (SDL_PollEvent(&event))
         {
-
             inputManger.processEvent(event);
 
             guiManager.processGUIEvent(&event);

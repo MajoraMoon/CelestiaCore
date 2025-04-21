@@ -1,7 +1,8 @@
 #pragma once
 #include "pch.h"
 
-namespace Celestia {
+namespace Celestia
+{
 
 /* ---------------------------------------------------------------- */
 /* ------------------------ CORE INPUT EVENTS --------------------- */
@@ -10,52 +11,65 @@ namespace Celestia {
 
 // Keyboard key state change (press/release)
 // Published by InputManager for every key state change
-struct KeyEvent : Event {
-  SDL_Scancode scancode;
-  bool pressed;
+struct KeyEvent : Event
+{
+    SDL_Scancode scancode;
+    bool pressed;
 
-  KeyEvent(SDL_Scancode code, bool isPressed)
-      : scancode(code), pressed(isPressed) {}
+    KeyEvent(SDL_Scancode code, bool isPressed) : scancode(code), pressed(isPressed)
+    {
+    }
 };
 
 // Relative mouse movement
 // Published by InputManager when mouse moves
-struct MouseMoveEvent : Event {
-  float xrel;
-  float yrel;
+struct MouseMoveEvent : Event
+{
+    float xrel;
+    float yrel;
 
-  MouseMoveEvent(float x, float y) : xrel(x), yrel(y) {}
+    MouseMoveEvent(float x, float y) : xrel(x), yrel(y)
+    {
+    }
 };
 
 // Mouse wheel scroll
 // Published by InputManager for scroll events
-struct MouseScrollEvent : Event {
-  float yoffset;
-  explicit MouseScrollEvent(float y) : yoffset(y) {}
+struct MouseScrollEvent : Event
+{
+    float yoffset;
+    explicit MouseScrollEvent(float y) : yoffset(y)
+    {
+    }
 };
 
 // Window size change notification
 // Published by window system when resized
-struct WindowResizeEvent : Event {
-  int width;
-  int height;
-  WindowResizeEvent(int w, int h) : width(w), height(h) {}
+struct WindowResizeEvent : Event
+{
+    int width;
+    int height;
+    WindowResizeEvent(int w, int h) : width(w), height(h)
+    {
+    }
 };
 
 // Frame timing information
 // Published by main loop each frame from the FrameTimer class
-struct FrameUpdateEvent : Event {
-  float deltaTime;
-  float lastTime;
-  float simulationTime;
-  float simulationDeltaTime;
-  float stableFPS;
-  bool paused;
+struct FrameUpdateEvent : Event
+{
+    float deltaTime;
+    float lastTime;
+    float simulationTime;
+    float simulationDeltaTime;
+    float stableFPS;
+    bool paused;
 
-  FrameUpdateEvent(float delta, float last, float simTime, float simDelta,
-                   float fps, bool paused)
-      : deltaTime(delta), lastTime(last), simulationTime(simTime),
-        simulationDeltaTime(simDelta), stableFPS(fps), paused(paused) {}
+    FrameUpdateEvent(float delta, float last, float simTime, float simDelta, float fps, bool paused)
+        : deltaTime(delta), lastTime(last), simulationTime(simTime), simulationDeltaTime(simDelta), stableFPS(fps),
+          paused(paused)
+    {
+    }
 };
 
 /* ---------------------------------------------------------------- */
@@ -68,23 +82,46 @@ struct FrameUpdateEvent : Event {
 // to set
 
 // Published by InputManager (M key)
-struct ToggleMouseVisibilityEvent : Event {};
+struct ToggleMouseVisibilityEvent : Event
+{
+};
 // Published by InputManager (F1 key)
-struct ToggleGuiVisibilityEvent : Event {};
+struct ToggleGuiVisibilityEvent : Event
+{
+};
 // Published by InputManager (P key)
-struct TogglePauseEvent : Event {};
+struct TogglePauseEvent : Event
+{
+};
 // Published by InputManager (F key)
-struct ToggleWindowMaximizedEvent : Event {};
+struct ToggleWindowMaximizedEvent : Event
+{
+};
 
 // Request to quit application
 // Published by InputManager (ESC Key)
-struct QuitEvent : Event {};
+struct QuitEvent : Event
+{
+};
 
 // Request to set mouse sensitivity
 // Published by GUI settings panel
-struct SetMouseSensitivityEvent : Event {
-  float sensitivity;
-  SetMouseSensitivityEvent(float s) : sensitivity(s) {}
+struct SetMouseSensitivityEvent : Event
+{
+    float sensitivity;
+    SetMouseSensitivityEvent(float s) : sensitivity(s)
+    {
+    }
+};
+
+// Request to set Fullscreen mode on or off
+// Published by GUI settings panel
+struct SetFullscreenModeEvent : Event
+{
+    bool fullscreen;
+    SetFullscreenModeEvent(bool f) : fullscreen(f)
+    {
+    }
 };
 
 // These Set-Events down below are not used yet, but practiaclly if anyone wants
@@ -92,30 +129,42 @@ struct SetMouseSensitivityEvent : Event {
 
 // Request to set mouse visibility state
 // NOT Published by GUI settings panel
-struct SetMouseVisibilityEvent : Event {
-  bool visible;
-  SetMouseVisibilityEvent(bool v) : visible(v) {}
+struct SetMouseVisibilityEvent : Event
+{
+    bool visible;
+    SetMouseVisibilityEvent(bool v) : visible(v)
+    {
+    }
 };
 
 // Request to set GUI visibility state
 // NOT Published by GUI settings panel
-struct SetGuiVisibilityEvent : Event {
-  bool visible;
-  SetGuiVisibilityEvent(bool v) : visible(v) {}
+struct SetGuiVisibilityEvent : Event
+{
+    bool visible;
+    SetGuiVisibilityEvent(bool v) : visible(v)
+    {
+    }
 };
 
 // Request to pause/unpause simulation
 // NOT Published by GUI settings panel
-struct SetSimulationPausedEvent : Event {
-  bool paused;
-  SetSimulationPausedEvent(bool p) : paused(p) {}
+struct SetSimulationPausedEvent : Event
+{
+    bool paused;
+    SetSimulationPausedEvent(bool p) : paused(p)
+    {
+    }
 };
 
 // Request to maximize/restore window
 // NOT Published by GUI settings panel
-struct SetWindowMaximizedEvent : Event {
-  bool maximized;
-  SetWindowMaximizedEvent(bool m) : maximized(m) {}
+struct SetWindowMaximizedEvent : Event
+{
+    bool maximized;
+    SetWindowMaximizedEvent(bool m) : maximized(m)
+    {
+    }
 };
 
 /* ---------------------------------------------------------------- */
@@ -125,42 +174,68 @@ struct SetWindowMaximizedEvent : Event {
 
 // Notification of mouse visibility change
 // Published by StateManager
-struct MouseVisibilityChanged : Event {
-  bool visible;
-  MouseVisibilityChanged(bool v) : visible(v) {}
+struct MouseVisibilityChanged : Event
+{
+    bool visible;
+    MouseVisibilityChanged(bool v) : visible(v)
+    {
+    }
 };
 
 // Notification of GUI visibility change
 // Published by StateManager
-struct GuiVisibilityChanged : Event {
-  bool visible;
-  GuiVisibilityChanged(bool v) : visible(v) {}
+struct GuiVisibilityChanged : Event
+{
+    bool visible;
+    GuiVisibilityChanged(bool v) : visible(v)
+    {
+    }
 };
 
 // Notification of simulation pause state change
 // Published by StateManager
-struct SimulationPausedChanged : Event {
-  bool paused;
-  SimulationPausedChanged(bool p) : paused(p) {}
+struct SimulationPausedChanged : Event
+{
+    bool paused;
+    SimulationPausedChanged(bool p) : paused(p)
+    {
+    }
 };
 
 // Notification of window maximize state change
 // Published by StateManager
-struct WindowMaximizedChanged : Event {
-  bool maximized;
-  WindowMaximizedChanged(bool m) : maximized(m) {}
+struct WindowMaximizedChanged : Event
+{
+    bool maximized;
+    WindowMaximizedChanged(bool m) : maximized(m)
+    {
+    }
 };
 
 // Notification of mouse sensitivity change
 // Published by StateManager
-struct MouseSensitivityChanged : Event {
-  float sensitivity;
-  MouseSensitivityChanged(float s) : sensitivity(s) {}
+struct MouseSensitivityChanged : Event
+{
+    float sensitivity;
+    MouseSensitivityChanged(float s) : sensitivity(s)
+    {
+    }
 };
 
-struct CelestiaCoreQuitChanged : Event {
-  bool quit;
-  CelestiaCoreQuitChanged(bool q) : quit(q) {}
+struct CelestiaCoreQuitChanged : Event
+{
+    bool quit;
+    CelestiaCoreQuitChanged(bool q) : quit(q)
+    {
+    }
+};
+
+struct WindowFullscreenChanged : Event
+{
+    bool fullscreen;
+    WindowFullscreenChanged(bool f) : fullscreen(f)
+    {
+    }
 };
 
 } // namespace Celestia

@@ -7,72 +7,81 @@
  * dimensions
  */
 
-namespace Celestia {
+namespace Celestia
+{
 
 // forward declarations
 class EventBus;
 
-class WindowSDLGL {
+class WindowSDLGL
+{
 
-public:
-  WindowSDLGL(const std::string &title, const std::string &version,
-              EventBus &eventBus, unsigned int initialWidth = 1920,
-              unsigned int initialHeight = 1080);
-  ~WindowSDLGL();
+  public:
+    WindowSDLGL(const std::string &title, const std::string &version, EventBus &eventBus,
+                unsigned int initialWidth = 1920, unsigned int initialHeight = 1080);
+    ~WindowSDLGL();
 
-  // inner enum class, so it does not conflict with global on/off values
-  // somewhere else. idk how c++ works honestly, I know object oriented design
-  // but c++ is something else lol
-  enum class FullscreenMode { Windowed, Fullscreen };
+    enum class VsyncMode
+    {
+        Off = 0,
+        On = 1
+    };
 
-  enum class VsyncMode { Off = 0, On = 1 };
+    void publishCurrentWindowSize();
 
-  void publishCurrentWindowSize();
+    void setVsyncMode(VsyncMode mode);
 
-  void setFullscreenMode(FullscreenMode mode);
+    SDL_Window *getSDLGLWindow() const
+    {
+        return window;
+    }
+    SDL_GLContext getGLContext() const
+    {
+        return glContext;
+    }
 
-  void setVsyncMode(VsyncMode mode);
+    int getWidth() const
+    {
+        return m_width;
+    }
+    int getHeight() const
+    {
+        return m_height;
+    }
 
-  SDL_Window *getSDLGLWindow() const { return window; }
-  SDL_GLContext getGLContext() const { return glContext; }
+    VsyncMode getVsyncMode() const
+    {
+        return m_VsyncMode;
+    }
 
-  int getWidth() const { return m_width; }
-  int getHeight() const { return m_height; }
+  private:
+    EventBus &eventBus;
+    SDL_Window *window;
+    SDL_GLContext glContext;
 
-  FullscreenMode getFullscreenMode() const { return windowState.currentMode; }
+    int m_width;
+    int m_height;
 
-  VsyncMode getVsyncMode() const { return m_VsyncMode; }
+    bool m_mouseVisible;
+    bool m_windowIsMaximized;
+    bool m_windowFullscreen;
 
-private:
-  EventBus &eventBus;
-  SDL_Window *window;
-  SDL_GLContext glContext;
+    const char *m_videoDriver;
 
-  int m_width;
-  int m_height;
+    // Fullscreen mode member variables
+    int m_prevWidth = 0;
+    int m_prevHeight = 0;
+    int m_prevX = 0;
+    int m_prevY = 0;
 
-  bool m_mouseVisible;
-  bool m_windowIsMaximized;
+    void handleMouseVisibity(unsigned int width, unsigned int height);
+    void handleWindowResize(unsigned int width, unsigned int height);
+    void handleMaximizeWindow();
+    void handleFullscreenMode();
 
-  const char *videoDriver;
+    void setupEventSubscriptions();
 
-  void handleMouseVisibity(unsigned int width, unsigned int height);
-  void handleWindowResize(unsigned int width, unsigned int height);
-  void handleMaximizeWindow();
-
-  void setupEventSubscriptions();
-
-  struct WindowState {
-    FullscreenMode currentMode = FullscreenMode::Windowed;
-    int prevWidth = 0;
-    int prevHeight = 0;
-    int prevX = 0;
-    int prevY = 0;
-  };
-
-  VsyncMode m_VsyncMode = VsyncMode::Off;
-
-  WindowState windowState;
+    VsyncMode m_VsyncMode = VsyncMode::Off;
 };
 
 } // namespace Celestia

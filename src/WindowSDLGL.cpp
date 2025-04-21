@@ -90,11 +90,12 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version, E
         std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError() << std::endl;
     }
 
-    SDL_GetWindowPosition(window, &windowState.prevX, &windowState.prevY);
-    windowState.prevWidth = m_width;
-    windowState.prevHeight = m_height;
+    // set up for fullscreen mode
+    SDL_GetWindowPosition(window, &m_prevX, &m_prevY);
+    m_prevWidth = m_width;
+    m_prevHeight = m_height;
 
-    videoDriver = SDL_GetCurrentVideoDriver();
+    m_videoDriver = SDL_GetCurrentVideoDriver();
 
     // Initialize VSync
     SDL_GL_SetSwapInterval(static_cast<int>(m_VsyncMode));
@@ -179,43 +180,40 @@ void WindowSDLGL::handleMaximizeWindow()
     }
 }
 
-void WindowSDLGL::setFullscreenMode(FullscreenMode mode)
+void WindowSDLGL::handleFullscreenMode()
 {
-    if (mode == windowState.currentMode)
-        return;
+    bool setFullscreenMode = m_windowFullscreen;
+    bool isWayland = m_videoDriver && (strcmp(m_videoDriver, "wayland") == 0);
 
-    bool isWayland = videoDriver && (strcmp(videoDriver, "wayland") == 0);
-
-    switch (mode)
+    // set to fullscreen mode
+    if (setFullscreenMode)
     {
-    case FullscreenMode::Windowed:
+
+        SDL_GetWindowSize(window, &m_prevWidth, &m_prevHeight);
+        if (!isWayland)
+        {
+            SDL_GetWindowPosition(window, &m_prevX, &m_prevY);
+        }
+        SDL_SetWindowFullscreen(window, true);
+    }
+    else
+    // set to windowed mode
+    {
         SDL_SetWindowFullscreen(window, false);
 
         if (isWayland)
         {
-            SDL_SetWindowSize(window, windowState.prevWidth, windowState.prevHeight);
+            SDL_SetWindowSize(window, m_prevWidth, m_prevHeight);
             SDL_SetWindowBordered(window, true);
         }
         else
         {
             SDL_SetWindowBordered(window, true);
-            SDL_SetWindowSize(window, windowState.prevWidth, windowState.prevHeight);
-            SDL_SetWindowPosition(window, windowState.prevX, windowState.prevY);
+            SDL_SetWindowSize(window, m_prevWidth, m_prevHeight);
+            SDL_SetWindowPosition(window, m_prevX, m_prevY);
         }
-
-        break;
-
-    case FullscreenMode::Fullscreen:
-        if (!isWayland)
-        {
-            SDL_GetWindowPosition(window, &windowState.prevX, &windowState.prevY);
-        }
-        SDL_GetWindowSize(window, &windowState.prevWidth, &windowState.prevHeight);
-        SDL_SetWindowFullscreen(window, true);
-        break;
     }
 
-    windowState.currentMode = mode;
     publishCurrentWindowSize();
 }
 
@@ -249,6 +247,11 @@ void WindowSDLGL::setupEventSubscriptions()
     eventBus.subscribe<WindowMaximizedChanged>([this](const WindowMaximizedChanged &ev) {
         m_windowIsMaximized = ev.maximized;
         handleMaximizeWindow();
+    });
+
+    eventBus.subscribe<WindowFullscreenChanged>([this](const WindowFullscreenChanged &ev) {
+        m_windowFullscreen = ev.fullscreen;
+        handleFullscreenMode();
     });
 }
 

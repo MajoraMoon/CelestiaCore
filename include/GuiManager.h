@@ -41,6 +41,7 @@ class GuiManager
     bool m_guiVisible;
     bool m_mouseVisible;
     bool m_simulationPaused;
+    bool m_windowFullscreen;
 
     float m_deltaTime;
     float m_currentTime;
