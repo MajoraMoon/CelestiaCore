@@ -62,6 +62,19 @@ set(ASSIMP_BUILD_FBX_IMPORTER ON)
 set(ASSIMP_BUILD_GLTF_IMPORTER ON)
 
 add_subdirectory(lib/sdl3 EXCLUDE_FROM_ALL)
+
+# that's some random sdl compiling error fix. 
+# It tries to compile two identical files "SDL_windowsgameinput".
+# one is a c++ file the other a c file. 
+# I'll remove the .cpp file here because SDL3 is written in C.
+if(WIN32)
+
+  get_target_property(SDL3_SOURCES SDL3-shared SOURCES)
+  # Remove the .cpp file causing duplicates
+  list(FILTER SDL3_SOURCES EXCLUDE REGEX ".*SDL_windowsgameinput\\.cpp$")
+  set_target_properties(SDL3-shared PROPERTIES SOURCES "${SDL3_SOURCES}")
+endif()
+
 add_subdirectory(lib/sdl3_image EXCLUDE_FROM_ALL)
 add_subdirectory(lib/assimp EXCLUDE_FROM_ALL)
 
