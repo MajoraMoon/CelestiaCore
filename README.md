@@ -28,48 +28,57 @@ All required libraries are included in the `lib/` folder. No external dependenci
    cd build
    ```
 
-3. **Run CMake and append an optional build type for SDL3 (default is `RelWithDebInfo`):**
+
+3. **Configure the Project with CMake**
+By default, the build type is `RelWithDebInfo`. Run:
 
    ```bash
    cmake ..
    ```
 
-   Optional alternatives:
+   **Optional build types:**
 
    ```bash
-   cmake .. -DCMAKE_BUILD_TYPE=Debug
-   cmake .. -DCMAKE_BUILD_TYPE=Release
-   cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+   cmake .. -DCMAKE_BUILD_TYPE=Debug       # For debugging
+   cmake .. -DCMAKE_BUILD_TYPE=Release     # For optimized release builds
+   cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel  # For smaller binaries with decent performance
    ```
 
-   For more information, refer to the [SDL3 CMake documentation](https://wiki.libsdl.org/SDL3/README/cmake).
+   For more information, check out the [SDL3 CMake documentation](https://wiki.libsdl.org/SDL3/README/cmake).#
 
-4. **Build the project:**
+
+
+ 4. **Build the Project**
+
+      You can build the project using one of the following tools:
+
+      ```bash
+      make     
+      ```
+
+      **or**
+
+      ```bash
+      ninja       # If you have Ninja installed (usually faster)
+      ```
+
+      *For faster compilation (may stress your CPU):*
+
+      ```bash
+      cmake --build . --parallel
+      ```
+
+
+5. **Run the Executable**
+
+   After building, run the program with:
 
    ```bash
-   make
-   ```
-**Or**
-
-   ```bash
-   ninja
+   ../bin/CelestiaCore
    ```
 
-   Or, for faster compilation (Could slow down your computer):
-
-   ```bash
-   cmake --build . --parallel
-   ```
-
-5. **Run the executable:**
-
-   ```bash
-   ./bin/CelestiaCore
-   ```
-
---- 
-
-## Directory Structure
+---
+ ## Directory Structure
 
 ```
 CelestiaCore/
