@@ -60,6 +60,8 @@ class CelestiaCore
     Scene scene;
     GuiManager guiManager;
 
+    void setupEventSubscriptions();
+
     bool m_quit = false;
 };
 

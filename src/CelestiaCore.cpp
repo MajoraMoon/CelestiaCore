@@ -10,16 +10,16 @@ namespace Celestia
 
 CelestiaCore::CelestiaCore()
     : stateManager(eventBus, appState), window("CelestiaCore", "0.4", eventBus), frameTimer(eventBus),
-      inputManger(eventBus, appState), renderer(window, eventBus, scene), scene(eventBus, frameTimer),
+      inputManger(eventBus), renderer(window, eventBus, scene), scene(eventBus, frameTimer),
       guiManager(window, eventBus, appState)
 {
 
-    // set up right resolution after all classes are created and the eventBus is
-    // working
+    setupEventSubscriptions();
+
+    // set up the initial states of the "global" variables for all classes after their creation
+    // set up the right resolution after all classes are created
     stateManager.publishInitialStates();
     window.publishCurrentWindowSize();
-
-    eventBus.subscribe<CelestiaCoreQuitChanged>([this](const CelestiaCoreQuitChanged &ev) { m_quit = ev.quit; });
 }
 
 void CelestiaCore::run()
@@ -46,6 +46,18 @@ void CelestiaCore::run()
 
         SDL_GL_SwapWindow(window.getSDLGLWindow());
     }
+}
+
+/**
+ *
+ *  I have this class setupEventSubscriptions in every class working with the Event System. For clarity I will put every
+ *  subscription into such a function which is called by the constructor fot the class. Even if it only has one
+ *  subscription
+ *
+ */
+void CelestiaCore::setupEventSubscriptions()
+{
+    eventBus.subscribe<CelestiaCoreQuitChanged>([this](const CelestiaCoreQuitChanged &ev) { m_quit = ev.quit; });
 }
 
 } // namespace Celestia
