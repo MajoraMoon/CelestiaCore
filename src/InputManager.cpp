@@ -26,6 +26,8 @@ void InputManager::processEvent(const SDL_Event &event)
 
         switch (event.key.key)
         {
+
+        // press Esc in fullscreen mode exit it
         case SDLK_ESCAPE:
 
             // if window in fullscreen then exit fullscreen
@@ -37,14 +39,18 @@ void InputManager::processEvent(const SDL_Event &event)
 
             break;
 
+        // press F1 to show/hide the gui windows
         case SDLK_F1:
             eventBus.publish(ToggleGuiVisibilityEvent{});
             break;
 
+            // press m to show/hide the mouse
         case SDLK_M:
             eventBus.publish(ToggleMouseVisibilityEvent{});
+
             break;
 
+        // press f to maximize the window
         case SDLK_F:
 
             // safety check, only can maximize window when not in fullscreen mode.
@@ -55,8 +61,19 @@ void InputManager::processEvent(const SDL_Event &event)
 
             break;
 
+        // press p to pause/unpause the simulation
         case SDLK_P:
             eventBus.publish(TogglePauseEvent{});
+            break;
+
+        // press q+ctrl+shift to close the simulation
+        case SDLK_Q:
+
+            if ((event.key.mod & (SDL_KMOD_LCTRL | SDL_KMOD_LSHIFT)) == (SDL_KMOD_LCTRL | SDL_KMOD_LSHIFT))
+            {
+                eventBus.publish(QuitEvent{});
+            }
+
             break;
         }
     }

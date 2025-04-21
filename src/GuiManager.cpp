@@ -118,7 +118,7 @@ void GuiManager::showStatsWindow()
         eventBus.publish(SetMouseSensitivityEvent{m_mouseSensitivity});
     }
 
-    if (ImGui::Button("Close CelestiaCore"))
+    if (ImGui::Button("Close CelestiaCore", ImVec2(-1, 25)))
     {
         eventBus.publish(QuitEvent{});
     }
