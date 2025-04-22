@@ -14,7 +14,6 @@ InputManager::InputManager(EventBus &eventBus) : eventBus(eventBus)
     setupEventSubscriptions();
 }
 
-// main sdl Events
 void InputManager::processEvent(const SDL_Event &event)
 {
 

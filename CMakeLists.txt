@@ -94,6 +94,11 @@ set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
      ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
  )
 
+ # imgui demo does not need to be compiled with the project itself
+ list(REMOVE_ITEM IMGUI_SOURCES 
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_demo.cpp
+)
+
 
  add_library(imgui STATIC ${IMGUI_SOURCES})
  target_include_directories(imgui PUBLIC
