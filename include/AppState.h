@@ -8,37 +8,38 @@
  *
  */
 
-namespace Celestia
-{
+namespace Celestia {
 
 // forward declarations
 class EventBus;
 struct AppState;
 
-struct AppState
-{
-    bool mouseVisible = false;
-    bool guiVisible = true;
-    bool simulationPaused = false;
-    bool windowMaximized = false;
-    bool windowFullscreen = false;
-    bool quit;
-    float mouseSensitivity = 0.1f;
+// these "global" states have the class+usage naming decleration (to refer where
+// the specific value is effecting which class)
+struct AppState {
+  bool guiManagerGuiVisible = true;
+  bool frameTimerSimulationPaused = false;
+
+  bool windowMouseVisible = false;
+  bool windowMaximized = false;
+  bool windowFullscreen = false;
+
+  bool celestiaCoreQuit;
+  float cameraMouseSensitivity = 0.1f;
 };
 
-class StateManager
-{
+class StateManager {
 
-  public:
-    StateManager(EventBus &eventBus, AppState &state);
+public:
+  StateManager(EventBus &eventBus, AppState &state);
 
-    void publishInitialStates();
+  void publishInitialStates();
 
-  private:
-    EventBus &eventBus;
-    AppState &state;
+private:
+  EventBus &eventBus;
+  AppState &state;
 
-    void setupSubscriptions();
+  void setupSubscriptions();
 };
 
 } // namespace Celestia

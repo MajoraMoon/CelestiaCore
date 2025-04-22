@@ -127,6 +127,8 @@ void GuiManager::showShortcutsWindow() {
   ImGui::Text("Press 'F' to maximize the window.");
   ImGui::Text("Press 'F1' to hide the gui window.");
   ImGui::Text("Press 'P' to pause the simulation");
+  ImGui::Text("Press 'Q + Shift + CTRL' to close the application");
+
   ImGui::End();
 }
 
