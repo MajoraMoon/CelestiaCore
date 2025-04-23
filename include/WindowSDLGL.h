@@ -21,15 +21,7 @@ class WindowSDLGL
                 unsigned int initialWidth = 1920, unsigned int initialHeight = 1080);
     ~WindowSDLGL();
 
-    enum class VsyncMode
-    {
-        Off = 0,
-        On = 1
-    };
-
     void publishCurrentWindowSize();
-
-    void setVsyncMode(VsyncMode mode);
 
     SDL_Window *getSDLGLWindow() const
     {
@@ -49,11 +41,6 @@ class WindowSDLGL
         return m_height;
     }
 
-    VsyncMode getVsyncMode() const
-    {
-        return m_VsyncMode;
-    }
-
   private:
     EventBus &eventBus;
     SDL_Window *window;
@@ -65,6 +52,7 @@ class WindowSDLGL
     bool m_mouseVisible;
     bool m_windowIsMaximized;
     bool m_windowFullscreen;
+    bool m_vsyncMode;
 
     const char *m_videoDriver;
 
@@ -78,10 +66,9 @@ class WindowSDLGL
     void handleWindowResize(unsigned int width, unsigned int height);
     void handleMaximizeWindow();
     void handleFullscreenMode();
+    void handleVsyncMode();
 
     void setupEventSubscriptions();
-
-    VsyncMode m_VsyncMode = VsyncMode::Off;
 };
 
 } // namespace Celestia

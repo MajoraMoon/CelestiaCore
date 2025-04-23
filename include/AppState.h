@@ -34,6 +34,7 @@ struct AppState
         bool mouseVisible = false;
         bool maximized = false;
         bool fullscreen = false;
+        bool vsync = false;
     } window;
 
     struct CelestiaCore

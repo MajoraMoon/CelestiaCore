@@ -76,6 +76,12 @@ void StateManager::setupSubscriptions()
         state.window.fullscreen = ev.fullscreen;
         eventBus.publish(WindowFullscreenChanged{state.window.fullscreen});
     });
+
+    // Vsync mode
+    eventBus.subscribe<SetVsyncModeEvent>([this](const SetVsyncModeEvent &ev) {
+        state.window.vsync = ev.vsync;
+        eventBus.publish(VsyncModeChanged{state.window.vsync});
+    });
 }
 
 void StateManager::publishInitialStates()
@@ -88,6 +94,7 @@ void StateManager::publishInitialStates()
     eventBus.publish(WindowMaximizedChanged{state.window.maximized});
     eventBus.publish(MouseSensitivityChanged{state.camera.mouseSensitivity});
     eventBus.publish(WindowFullscreenChanged{state.window.fullscreen});
+    eventBus.publish(VsyncModeChanged{state.window.vsync});
 }
 
 } // namespace Celestia

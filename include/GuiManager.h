@@ -42,13 +42,14 @@ class GuiManager
     bool m_mouseVisible;
     bool m_simulationPaused;
     bool m_windowFullscreen;
+    bool m_vsyncMode;
+
+    float m_mouseSensitivity;
 
     float m_deltaTime;
     float m_currentTime;
     float m_simulationTime;
     float m_stableFPS;
-
-    float m_mouseSensitivity;
 };
 
 } // namespace Celestia

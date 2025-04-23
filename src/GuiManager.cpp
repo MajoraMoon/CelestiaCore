@@ -11,6 +11,7 @@ namespace Celestia
 GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState)
     : window(window), eventBus(eventBus), appState(appState)
 {
+    setupEventSubscriptions();
 
     float scaleFactor = SDL_GetWindowDisplayScale(window.getSDLGLWindow());
 
@@ -29,8 +30,6 @@ GuiManager::GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appSta
 
     ImGui_ImplSDL3_InitForOpenGL(window.getSDLGLWindow(), window.getGLContext());
     ImGui_ImplOpenGL3_Init("#version 460");
-
-    setupEventSubscriptions();
 }
 
 GuiManager::~GuiManager()
@@ -89,7 +88,6 @@ void GuiManager::showStatsWindow()
 
     ImGui::Text("Runtime: %02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
     ImGui::Text("Simulation Runtime (seconds): %.2f", m_simulationTime);
-    ImGui::Text("Delta time: %.3f", m_deltaTime);
     ImGui::Text("FPS (average): %.3f", m_stableFPS);
     ImGui::Spacing();
     ImGui::Text("Resolution: %ix%i", m_width, m_height);
@@ -97,10 +95,10 @@ void GuiManager::showStatsWindow()
 
     // VSync Combo Box
     const char *vsyncModes[] = {"VSync Off", "VSync On"};
-    int currentVsyncMode = static_cast<int>(window.getVsyncMode());
+    int currentVsyncMode = static_cast<int>(m_vsyncMode);
     if (ImGui::Combo("VSync Mode", &currentVsyncMode, vsyncModes, IM_ARRAYSIZE(vsyncModes)))
     {
-        window.setVsyncMode(static_cast<WindowSDLGL::VsyncMode>(currentVsyncMode));
+        eventBus.publish(SetVsyncModeEvent{static_cast<bool>(currentVsyncMode)});
     }
 
     // Fullscreen mode selector
@@ -153,16 +151,17 @@ void GuiManager::setupEventSubscriptions()
     eventBus.subscribe<WindowFullscreenChanged>(
         [this](const WindowFullscreenChanged &ev) { m_windowFullscreen = ev.fullscreen; });
 
-    eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
-        m_currentTime = ev.lastTime;
-        m_simulationTime = ev.simulationTime;
-        m_deltaTime = ev.deltaTime;
-        m_stableFPS = ev.stableFPS;
-    });
+    eventBus.subscribe<VsyncModeChanged>([this](const VsyncModeChanged &ev) { m_vsyncMode = ev.vsync; });
 
     eventBus.subscribe<WindowResizeEvent>([this](const WindowResizeEvent &ev) {
         m_width = ev.width;
         m_height = ev.height;
+    });
+
+    eventBus.subscribe<FrameUpdateEvent>([this](const FrameUpdateEvent &ev) {
+        m_currentTime = ev.lastTime;
+        m_simulationTime = ev.simulationTime;
+        m_stableFPS = ev.stableFPS;
     });
 }
 

@@ -40,10 +40,10 @@ Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig, glm::vec3 posi
     : position(position), worldUp(up), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM),
       eventBus(eventBus), inputConfig(inputConfig), yaw(yaw), pitch(pitch)
 {
+    setupEventSubscriptions();
 
     front = glm::vec3(0.0f, 0.0f, -1.0f);
     updateCameraVectors();
-    setupEventSubscriptions();
 }
 
 void Camera::processMovement(float deltaTime)

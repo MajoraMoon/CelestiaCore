@@ -9,6 +9,7 @@ namespace Celestia
 
 FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus)
 {
+    setupEventSubscriptions();
 
     m_lastTime = SDL_GetTicks() / 1000.0f;
     m_deltaTime = 0.0f;
@@ -20,8 +21,6 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus)
     m_stableFPS = 0.0f;
     m_timeAccumulator = 0.0f;
     m_frameCount = 0;
-
-    setupEventSubscriptions();
 }
 
 void FrameTimer::update()

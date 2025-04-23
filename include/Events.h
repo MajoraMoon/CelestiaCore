@@ -104,6 +104,8 @@ struct QuitEvent : Event
 {
 };
 
+// HERE ARE GUI SET UPS
+
 // Request to set mouse sensitivity
 // Published by GUI settings panel
 struct SetMouseSensitivityEvent : Event
@@ -124,45 +126,10 @@ struct SetFullscreenModeEvent : Event
     }
 };
 
-// These Set-Events down below are not used yet, but practiaclly if anyone wants
-// to implement it into the gui later.
-
-// Request to set mouse visibility state
-// NOT Published by GUI settings panel
-struct SetMouseVisibilityEvent : Event
+struct SetVsyncModeEvent : Event
 {
-    bool visible;
-    SetMouseVisibilityEvent(bool v) : visible(v)
-    {
-    }
-};
-
-// Request to set GUI visibility state
-// NOT Published by GUI settings panel
-struct SetGuiVisibilityEvent : Event
-{
-    bool visible;
-    SetGuiVisibilityEvent(bool v) : visible(v)
-    {
-    }
-};
-
-// Request to pause/unpause simulation
-// NOT Published by GUI settings panel
-struct SetSimulationPausedEvent : Event
-{
-    bool paused;
-    SetSimulationPausedEvent(bool p) : paused(p)
-    {
-    }
-};
-
-// Request to maximize/restore window
-// NOT Published by GUI settings panel
-struct SetWindowMaximizedEvent : Event
-{
-    bool maximized;
-    SetWindowMaximizedEvent(bool m) : maximized(m)
+    bool vsync;
+    SetVsyncModeEvent(bool v) : vsync(v)
     {
     }
 };
@@ -234,6 +201,14 @@ struct WindowFullscreenChanged : Event
 {
     bool fullscreen;
     WindowFullscreenChanged(bool f) : fullscreen(f)
+    {
+    }
+};
+
+struct VsyncModeChanged : Event
+{
+    bool vsync;
+    VsyncModeChanged(bool v) : vsync(v)
     {
     }
 };

@@ -12,6 +12,8 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version, E
     : eventBus(eventBus), m_width(initialWidth), m_height(initialHeight)
 {
 
+    setupEventSubscriptions();
+
     // Metadata is new in SDL3, why not using it :)
     SDL_SetAppMetadata(title.c_str(), version.c_str(), nullptr);
 
@@ -98,9 +100,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version, E
     m_videoDriver = SDL_GetCurrentVideoDriver();
 
     // Initialize VSync
-    SDL_GL_SetSwapInterval(static_cast<int>(m_VsyncMode));
-
-    setupEventSubscriptions();
+    SDL_GL_SetSwapInterval(m_vsyncMode);
 }
 
 WindowSDLGL::~WindowSDLGL()
@@ -217,12 +217,18 @@ void WindowSDLGL::handleFullscreenMode()
     publishCurrentWindowSize();
 }
 
-void WindowSDLGL::setVsyncMode(VsyncMode mode)
+void WindowSDLGL::handleVsyncMode()
 {
-    if (mode == m_VsyncMode)
-        return;
-    m_VsyncMode = mode;
-    SDL_GL_SetSwapInterval(static_cast<int>(m_VsyncMode));
+    bool setVsnycMode = m_vsyncMode;
+
+    if (setVsnycMode)
+    {
+        SDL_GL_SetSwapInterval(1);
+    }
+    else
+    {
+        SDL_GL_SetSwapInterval(0);
+    }
 }
 
 void WindowSDLGL::publishCurrentWindowSize()
@@ -252,6 +258,11 @@ void WindowSDLGL::setupEventSubscriptions()
     eventBus.subscribe<WindowFullscreenChanged>([this](const WindowFullscreenChanged &ev) {
         m_windowFullscreen = ev.fullscreen;
         handleFullscreenMode();
+    });
+
+    eventBus.subscribe<VsyncModeChanged>([this](const VsyncModeChanged &ev) {
+        m_vsyncMode = ev.vsync;
+        handleVsyncMode();
     });
 }
 
