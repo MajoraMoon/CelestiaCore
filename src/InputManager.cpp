@@ -17,7 +17,7 @@ void InputManager::processEvent(const SDL_Event &event) {
   if (event.type == SDL_EVENT_KEY_DOWN) {
 
     // continuous key input
-    eventBus.publish(KeyEvent(event.key.scancode, true));
+    eventBus.emit(KeyEvent(event.key.scancode, true));
 
     switch (event.key.key) {
 
@@ -27,7 +27,7 @@ void InputManager::processEvent(const SDL_Event &event) {
       // if window in fullscreen then exit fullscreen
       if (m_windowFullscreen) {
 
-        eventBus.publish(
+        eventBus.emit(
             SetFullscreenModeEvent{static_cast<bool>(!m_windowFullscreen)});
       }
 
@@ -35,12 +35,12 @@ void InputManager::processEvent(const SDL_Event &event) {
 
     // press F1 to show/hide the gui windows
     case SDLK_F1:
-      eventBus.publish(ToggleGuiVisibilityEvent{});
+      eventBus.emit(ToggleGuiVisibilityEvent{});
       break;
 
       // press m to show/hide the mouse
     case SDLK_M:
-      eventBus.publish(ToggleMouseVisibilityEvent{});
+      eventBus.emit(ToggleMouseVisibilityEvent{});
 
       break;
 
@@ -49,14 +49,14 @@ void InputManager::processEvent(const SDL_Event &event) {
 
       // safety check, only can maximize window when not in fullscreen mode.
       if (!m_windowFullscreen) {
-        eventBus.publish(ToggleWindowMaximizedEvent{});
+        eventBus.emit(ToggleWindowMaximizedEvent{});
       }
 
       break;
 
     // press p to pause/unpause the simulation
     case SDLK_P:
-      eventBus.publish(TogglePauseEvent{});
+      eventBus.emit(TogglePauseEvent{});
       break;
 
     // press q+ctrl+shift to close the simulation
@@ -64,7 +64,7 @@ void InputManager::processEvent(const SDL_Event &event) {
 
       if ((event.key.mod & (SDL_KMOD_LCTRL | SDL_KMOD_LSHIFT)) ==
           (SDL_KMOD_LCTRL | SDL_KMOD_LSHIFT)) {
-        eventBus.publish(QuitEvent{});
+        eventBus.emit(QuitEvent{});
       }
 
       break;
@@ -72,31 +72,31 @@ void InputManager::processEvent(const SDL_Event &event) {
   }
 
   if (event.type == SDL_EVENT_KEY_UP) {
-    eventBus.publish(KeyEvent(event.key.scancode, false));
+    eventBus.emit(KeyEvent(event.key.scancode, false));
   }
 
   // Convert mouse events
   if (event.type == SDL_EVENT_MOUSE_MOTION) {
-    eventBus.publish(MouseMoveEvent{static_cast<float>(event.motion.xrel),
-                                    static_cast<float>(event.motion.yrel)});
+    eventBus.emit(MouseMoveEvent{static_cast<float>(event.motion.xrel),
+                                 static_cast<float>(event.motion.yrel)});
   }
 
   // Convert scroll events
   if (event.type == SDL_EVENT_MOUSE_WHEEL) {
-    eventBus.publish(MouseScrollEvent{static_cast<float>(event.wheel.y)});
+    eventBus.emit(MouseScrollEvent{static_cast<float>(event.wheel.y)});
   }
 
   if (event.type == SDL_EVENT_QUIT) {
-    eventBus.publish(QuitEvent{});
+    eventBus.emit(QuitEvent{});
   }
 
   if (event.type == SDL_EVENT_WINDOW_RESIZED) {
-    eventBus.publish(WindowResizeEvent(event.window.data1, event.window.data2));
+    eventBus.emit(WindowResizeEvent(event.window.data1, event.window.data2));
   }
 }
 
 void InputManager::setupEventSubscriptions() {
-  eventBus.subscribe<WindowFullscreenChanged>(
+  eventBus.on<WindowFullscreenChanged>(
       [this](const auto &ev) { m_windowFullscreen = ev.fullscreen; });
 }
 

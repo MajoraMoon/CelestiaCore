@@ -82,15 +82,14 @@ public:
   // type of the event and the function which is executed when the Event is
   // called
 
-  template <typename TEvent, typename THandler>
-  void subscribe(THandler &&handler) {
+  template <typename TEvent, typename THandler> void on(THandler &&handler) {
     subscribers[typeid(TEvent)].emplace_back(
         [h = std::forward<THandler>(handler)](const Event &e) {
           h(static_cast<const TEvent &>(e));
         });
   }
 
-  template <typename EventType> void publish(const EventType &event) {
+  template <typename EventType> void emit(const EventType &event) {
     // looks for the given  Event in the hashmap. If the event has any
     // subscribers, iterate through them.
 

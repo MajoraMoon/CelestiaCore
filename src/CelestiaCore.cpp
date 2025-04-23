@@ -53,7 +53,7 @@ void CelestiaCore::run() {
  *
  */
 void CelestiaCore::setupEventSubscriptions() {
-  eventBus.subscribe<CelestiaCoreQuitChanged>(
+  eventBus.on<CelestiaCoreQuitChanged>(
       [this](const auto &ev) { m_quit = ev.quit; });
 }
 

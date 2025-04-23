@@ -93,7 +93,7 @@ void GuiManager::showStatsWindow() {
   int currentVsyncMode = static_cast<int>(m_vsyncMode);
   if (ImGui::Combo("VSync Mode", &currentVsyncMode, vsyncModes,
                    IM_ARRAYSIZE(vsyncModes))) {
-    eventBus.publish(SetVsyncModeEvent{static_cast<bool>(currentVsyncMode)});
+    eventBus.emit(SetVsyncModeEvent{static_cast<bool>(currentVsyncMode)});
   }
 
   // Fullscreen mode selector
@@ -101,18 +101,17 @@ void GuiManager::showStatsWindow() {
   int currentScreenMode = static_cast<int>(m_windowFullscreen);
   if (ImGui::Combo("Display Mode", &currentScreenMode, screenModes,
                    IM_ARRAYSIZE(screenModes))) {
-    eventBus.publish(
-        SetFullscreenModeEvent{static_cast<bool>(currentScreenMode)});
+    eventBus.emit(SetFullscreenModeEvent{static_cast<bool>(currentScreenMode)});
   }
 
   // mouse sensitivity slider
   if (ImGui::SliderFloat("Mouse Sensitivity", &m_mouseSensitivity, 0.001f, 1.0f,
                          "%.3f")) {
-    eventBus.publish(SetMouseSensitivityEvent{m_mouseSensitivity});
+    eventBus.emit(SetMouseSensitivityEvent{m_mouseSensitivity});
   }
 
   if (ImGui::Button("Close CelestiaCore", ImVec2(-1, 0))) {
-    eventBus.publish(QuitEvent{});
+    eventBus.emit(QuitEvent{});
   }
 
   ImGui::End();
@@ -130,30 +129,30 @@ void GuiManager::showShortcutsWindow() {
 }
 
 void GuiManager::setupEventSubscriptions() {
-  eventBus.subscribe<GuiVisibilityChanged>(
+  eventBus.on<GuiVisibilityChanged>(
       [this](const auto &ev) { m_guiVisible = ev.visible; });
 
-  eventBus.subscribe<MouseVisibilityChanged>(
+  eventBus.on<MouseVisibilityChanged>(
       [this](const auto &ev) { m_mouseVisible = ev.visible; });
 
-  eventBus.subscribe<MouseSensitivityChanged>(
+  eventBus.on<MouseSensitivityChanged>(
       [this](const auto &ev) { m_mouseSensitivity = ev.sensitivity; });
 
-  eventBus.subscribe<SimulationPausedChanged>(
+  eventBus.on<SimulationPausedChanged>(
       [this](const auto &ev) { m_simulationPaused = ev.paused; });
 
-  eventBus.subscribe<WindowFullscreenChanged>(
+  eventBus.on<WindowFullscreenChanged>(
       [this](const auto &ev) { m_windowFullscreen = ev.fullscreen; });
 
-  eventBus.subscribe<VsyncModeChanged>(
+  eventBus.on<VsyncModeChanged>(
       [this](const auto &ev) { m_vsyncMode = ev.vsync; });
 
-  eventBus.subscribe<WindowResizeEvent>([this](const auto &ev) {
+  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
     m_width = ev.width;
     m_height = ev.height;
   });
 
-  eventBus.subscribe<FrameUpdateEvent>([this](const auto &ev) {
+  eventBus.on<FrameUpdateEvent>([this](const auto &ev) {
     m_currentTime = ev.lastTime;
     m_simulationTime = ev.simulationTime;
     m_stableFPS = ev.stableFPS;

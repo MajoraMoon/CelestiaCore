@@ -106,14 +106,14 @@ void Camera::updateCameraVectors() {
 
 void Camera::setupEventSubscriptions() {
   // Frame updates
-  eventBus.subscribe<FrameUpdateEvent>(
+  eventBus.on<FrameUpdateEvent>(
       // not saving deltaTime here in a member variable because only the
       // movement uses it, no other possible caclulations inside the camera
       // class
       [this](const auto &ev) { processMovement(ev.deltaTime); });
 
   // Keyboard input
-  eventBus.subscribe<KeyEvent>([this](const auto &ev) {
+  eventBus.on<KeyEvent>([this](const auto &ev) {
     if (!m_mouseVisible) {
 
       // pressing w (trying to work with more structs)
@@ -146,14 +146,14 @@ void Camera::setupEventSubscriptions() {
     }
   });
 
-  eventBus.subscribe<MouseMoveEvent>([this](const auto &ev) {
+  eventBus.on<MouseMoveEvent>([this](const auto &ev) {
     if (!m_mouseVisible) {
       handleMouseMovement(ev.xrel, ev.yrel);
     }
   });
 
   // Mouse visibility for deactivating movement
-  eventBus.subscribe<MouseVisibilityChanged>([this](const auto &ev) {
+  eventBus.on<MouseVisibilityChanged>([this](const auto &ev) {
     m_mouseVisible = ev.visible;
 
     // Reset input state when mouse becomes visible
@@ -164,14 +164,14 @@ void Camera::setupEventSubscriptions() {
     }
   });
 
-  eventBus.subscribe<MouseScrollEvent>([this](const auto &ev) {
+  eventBus.on<MouseScrollEvent>([this](const auto &ev) {
     if (!m_mouseVisible) {
       zoom -= ev.yoffset;
       zoom = glm::clamp(zoom, 1.0f, 45.0f);
     }
   });
 
-  eventBus.subscribe<MouseSensitivityChanged>(
+  eventBus.on<MouseSensitivityChanged>(
       [this](const auto &ev) { mouseSensitivity = ev.sensitivity; });
 }
 } // namespace Celestia

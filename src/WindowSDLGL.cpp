@@ -209,33 +209,33 @@ void WindowSDLGL::handleVsyncMode() {
 }
 
 void WindowSDLGL::publishCurrentWindowSize() {
-  eventBus.publish(WindowResizeEvent(m_width, m_height));
+  eventBus.emit(WindowResizeEvent(m_width, m_height));
 }
 
 void WindowSDLGL::setupEventSubscriptions() {
-  eventBus.subscribe<WindowResizeEvent>([this](const auto &ev) {
+  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
     m_width = ev.width;
     m_height = ev.height;
 
     handleWindowResize(m_width, m_height);
   });
 
-  eventBus.subscribe<MouseVisibilityChanged>([this](const auto &ev) {
+  eventBus.on<MouseVisibilityChanged>([this](const auto &ev) {
     m_mouseVisible = ev.visible;
     handleMouseVisibity(m_width, m_height);
   });
 
-  eventBus.subscribe<WindowMaximizedChanged>([this](const auto &ev) {
+  eventBus.on<WindowMaximizedChanged>([this](const auto &ev) {
     m_windowIsMaximized = ev.maximized;
     handleMaximizeWindow();
   });
 
-  eventBus.subscribe<WindowFullscreenChanged>([this](const auto &ev) {
+  eventBus.on<WindowFullscreenChanged>([this](const auto &ev) {
     m_windowFullscreen = ev.fullscreen;
     handleFullscreenMode();
   });
 
-  eventBus.subscribe<VsyncModeChanged>([this](const auto &ev) {
+  eventBus.on<VsyncModeChanged>([this](const auto &ev) {
     m_vsyncMode = ev.vsync;
     handleVsyncMode();
   });

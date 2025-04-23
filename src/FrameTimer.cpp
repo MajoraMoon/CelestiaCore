@@ -52,13 +52,13 @@ void FrameTimer::update() {
 
   // publish events from EventTimer here, because they are not part of any
   // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
-  eventBus.publish(FrameUpdateEvent(m_deltaTime, m_lastTime, m_simulationTime,
-                                    m_simulationDeltaTime, m_stableFPS,
-                                    m_simulationPaused));
+  eventBus.emit(FrameUpdateEvent(m_deltaTime, m_lastTime, m_simulationTime,
+                                 m_simulationDeltaTime, m_stableFPS,
+                                 m_simulationPaused));
 }
 
 void FrameTimer::setupEventSubscriptions() {
-  eventBus.subscribe<SimulationPausedChanged>(
+  eventBus.on<SimulationPausedChanged>(
       [this](const auto &ev) { m_simulationPaused = ev.paused; });
 }
 
