@@ -81,20 +81,12 @@ class EventBus {
 public:
   // type of the event and the function which is executed when the Event is
   // called
-  template <typename EventType, typename Handler>
-  void subscribe(Handler &&handler) {
-    subscribers[typeid(EventType)].emplace_back(
 
-        // creating a lambda function, which takes an Event reference an an
-        // argument
-        [h = std::forward<Handler>(handler)](const Event &e) {
-          // if Event is the same as the base class Event, use Event. Otherwise
-          // cast Event to the specific event
-          if constexpr (std::is_same_v<EventType, Event>) {
-            h(e);
-          } else {
-            h(static_cast<const EventType &>(e));
-          }
+  template <typename TEvent, typename THandler>
+  void subscribe(THandler &&handler) {
+    subscribers[typeid(TEvent)].emplace_back(
+        [h = std::forward<THandler>(handler)](const Event &e) {
+          h(static_cast<const TEvent &>(e));
         });
   }
 

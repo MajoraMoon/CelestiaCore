@@ -27,149 +27,151 @@
  * Pitch: The angle, which describes the rotation around the x-axis (vertical)
  */
 
-namespace Celestia
-{
+namespace Celestia {
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 4.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig, glm::vec3 position, glm::vec3 up, float yaw,
-               float pitch)
-    : position(position), worldUp(up), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM),
-      eventBus(eventBus), inputConfig(inputConfig), yaw(yaw), pitch(pitch)
-{
-    setupEventSubscriptions();
+Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig,
+               glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+    : position(position), worldUp(up), movementSpeed(SPEED),
+      mouseSensitivity(SENSITIVITY), zoom(ZOOM), eventBus(eventBus),
+      inputConfig(inputConfig), yaw(yaw), pitch(pitch) {
+  setupEventSubscriptions();
 
-    front = glm::vec3(0.0f, 0.0f, -1.0f);
-    updateCameraVectors();
+  front = glm::vec3(0.0f, 0.0f, -1.0f);
+  updateCameraVectors();
 }
 
-void Camera::processMovement(float deltaTime)
-{
+void Camera::processMovement(float deltaTime) {
 
-    // This check is not really necessary, but an extra safety check for not processing any Movement
-    if (m_mouseVisible)
-        return;
+  // This check is not really necessary, but an extra safety check for not
+  // processing any Movement
+  if (m_mouseVisible)
+    return;
 
-    float velocity = movementSpeed * deltaTime;
-    if (inputState.boost)
-        velocity = velocity * 2.5f;
+  float velocity = movementSpeed * deltaTime;
+  if (inputState.boost)
+    velocity = velocity * 2.5f;
 
-    if (inputState.forward)
-        applyMovement(front, velocity);
-    if (inputState.backward)
-        applyMovement(-front, velocity);
-    if (inputState.left)
-        applyMovement(-right, velocity);
-    if (inputState.right)
-        applyMovement(right, velocity);
-    if (inputState.up)
-        applyMovement(worldUp, velocity);
-    if (inputState.down)
-        applyMovement(-worldUp, velocity);
+  if (inputState.forward)
+    applyMovement(front, velocity);
+  if (inputState.backward)
+    applyMovement(-front, velocity);
+  if (inputState.left)
+    applyMovement(-right, velocity);
+  if (inputState.right)
+    applyMovement(right, velocity);
+  if (inputState.up)
+    applyMovement(worldUp, velocity);
+  if (inputState.down)
+    applyMovement(-worldUp, velocity);
 }
 
-void Camera::applyMovement(glm::vec3 direction, float velocity)
-{
-    position += glm::normalize(direction) * velocity;
+void Camera::applyMovement(glm::vec3 direction, float velocity) {
+  position += glm::normalize(direction) * velocity;
 }
 
-void Camera::handleMouseMovement(float xoffset, float yoffset, bool constrainPitch)
-{
-    xoffset *= mouseSensitivity;
-    yoffset *= mouseSensitivity;
+void Camera::handleMouseMovement(float xoffset, float yoffset,
+                                 bool constrainPitch) {
+  xoffset *= mouseSensitivity;
+  yoffset *= mouseSensitivity;
 
-    yaw += xoffset;
-    pitch -= yoffset;
+  yaw += xoffset;
+  pitch -= yoffset;
 
-    if (constrainPitch)
-    {
-        pitch = glm::clamp(pitch, -89.0f, 89.0f);
+  if (constrainPitch) {
+    pitch = glm::clamp(pitch, -89.0f, 89.0f);
+  }
+
+  updateCameraVectors();
+}
+
+glm::mat4 Camera::getViewMatrix() const {
+  return glm::lookAt(position, position + front, up);
+}
+
+void Camera::updateCameraVectors() {
+  glm::vec3 newFront;
+  newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  newFront.y = sin(glm::radians(pitch));
+  newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+  front = glm::normalize(newFront);
+  right = glm::normalize(glm::cross(front, worldUp));
+  up = glm::normalize(glm::cross(right, front));
+}
+
+void Camera::setupEventSubscriptions() {
+  // Frame updates
+  eventBus.subscribe<FrameUpdateEvent>(
+      // not saving deltaTime here in a member variable because only the
+      // movement uses it, no other possible caclulations inside the camera
+      // class
+      [this](const auto &ev) { processMovement(ev.deltaTime); });
+
+  // Keyboard input
+  eventBus.subscribe<KeyEvent>([this](const auto &ev) {
+    if (!m_mouseVisible) {
+
+      // pressing w (trying to work with more structs)
+      inputState.forward = (ev.scancode == inputConfig.moveForward)
+                               ? ev.pressed
+                               : inputState.forward;
+      // pressing s
+      inputState.backward = (ev.scancode == inputConfig.moveBackward)
+                                ? ev.pressed
+                                : inputState.backward;
+      // pressing a
+      inputState.left =
+          (ev.scancode == inputConfig.moveLeft) ? ev.pressed : inputState.left;
+      // pressing d
+      inputState.right = (ev.scancode == inputConfig.moveRight)
+                             ? ev.pressed
+                             : inputState.right;
+      // pressing space
+      inputState.up =
+          (ev.scancode == inputConfig.moveUp) ? ev.pressed : inputState.up;
+
+      // pressing ctrl
+      inputState.down =
+          (ev.scancode == inputConfig.moveDown) ? ev.pressed : inputState.down;
+
+      // pressing shift
+      inputState.boost = (ev.scancode == inputConfig.boostSpeed)
+                             ? ev.pressed
+                             : inputState.boost;
     }
+  });
 
-    updateCameraVectors();
-}
+  eventBus.subscribe<MouseMoveEvent>([this](const auto &ev) {
+    if (!m_mouseVisible) {
+      handleMouseMovement(ev.xrel, ev.yrel);
+    }
+  });
 
-glm::mat4 Camera::getViewMatrix() const
-{
-    return glm::lookAt(position, position + front, up);
-}
+  // Mouse visibility for deactivating movement
+  eventBus.subscribe<MouseVisibilityChanged>([this](const auto &ev) {
+    m_mouseVisible = ev.visible;
 
-void Camera::updateCameraVectors()
-{
-    glm::vec3 newFront;
-    newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
-    newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    // Reset input state when mouse becomes visible
+    // Important for stopping any old movement which was done before the
+    // mouse was visible
+    if (m_mouseVisible) {
+      inputState = {};
+    }
+  });
 
-    front = glm::normalize(newFront);
-    right = glm::normalize(glm::cross(front, worldUp));
-    up = glm::normalize(glm::cross(right, front));
-}
+  eventBus.subscribe<MouseScrollEvent>([this](const auto &ev) {
+    if (!m_mouseVisible) {
+      zoom -= ev.yoffset;
+      zoom = glm::clamp(zoom, 1.0f, 45.0f);
+    }
+  });
 
-void Camera::setupEventSubscriptions()
-{
-    // Frame updates
-    eventBus.subscribe<FrameUpdateEvent>(
-        // not saving deltaTime here in a member variable because only the
-        // movement uses it, no other possible caclulations inside the camera
-        // class
-        [this](const FrameUpdateEvent &ev) { processMovement(ev.deltaTime); });
-
-    // Keyboard input
-    eventBus.subscribe<KeyEvent>([this](const KeyEvent &ev) {
-        if (!m_mouseVisible)
-        {
-
-            // pressing w (trying to work with more structs)
-            inputState.forward = (ev.scancode == inputConfig.moveForward) ? ev.pressed : inputState.forward;
-            // pressing s
-            inputState.backward = (ev.scancode == inputConfig.moveBackward) ? ev.pressed : inputState.backward;
-            // pressing a
-            inputState.left = (ev.scancode == inputConfig.moveLeft) ? ev.pressed : inputState.left;
-            // pressing d
-            inputState.right = (ev.scancode == inputConfig.moveRight) ? ev.pressed : inputState.right;
-            // pressing space
-            inputState.up = (ev.scancode == inputConfig.moveUp) ? ev.pressed : inputState.up;
-
-            // pressing ctrl
-            inputState.down = (ev.scancode == inputConfig.moveDown) ? ev.pressed : inputState.down;
-
-            // pressing shift
-            inputState.boost = (ev.scancode == inputConfig.boostSpeed) ? ev.pressed : inputState.boost;
-        }
-    });
-
-    eventBus.subscribe<MouseMoveEvent>([this](const MouseMoveEvent &ev) {
-        if (!m_mouseVisible)
-        {
-            handleMouseMovement(ev.xrel, ev.yrel);
-        }
-    });
-
-    // Mouse visibility for deactivating movement
-    eventBus.subscribe<MouseVisibilityChanged>([this](const MouseVisibilityChanged &ev) {
-        m_mouseVisible = ev.visible;
-
-        // Reset input state when mouse becomes visible
-        // Important for stopping any old movement which was done before the mouse was visible
-        if (m_mouseVisible)
-        {
-            inputState = {};
-        }
-    });
-
-    eventBus.subscribe<MouseScrollEvent>([this](const MouseScrollEvent &ev) {
-        if (!m_mouseVisible)
-        {
-            zoom -= ev.yoffset;
-            zoom = glm::clamp(zoom, 1.0f, 45.0f);
-        }
-    });
-
-    eventBus.subscribe<MouseSensitivityChanged>(
-        [this](const MouseSensitivityChanged &ev) { mouseSensitivity = ev.sensitivity; });
+  eventBus.subscribe<MouseSensitivityChanged>(
+      [this](const auto &ev) { mouseSensitivity = ev.sensitivity; });
 }
 } // namespace Celestia
