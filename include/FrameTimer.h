@@ -11,34 +11,44 @@
  *
  */
 
-namespace Celestia {
+namespace Celestia
+{
 
 // forward declarations
 class EventBus;
 
-class FrameTimer {
+class FrameTimer
+{
 
-public:
-  FrameTimer(EventBus &eventBus);
-  void update();
+  public:
+    FrameTimer(EventBus &eventBus);
+    void update();
 
-  float getSimulationDeltaTime() { return m_simulationDeltaTime; }
-  float getSimulationTime() { return m_simulationTime; }
+    float getSimulationDeltaTime()
+    {
+        return m_simulationDeltaTime;
+    }
+    float getSimulationTime()
+    {
+        return m_simulationTime;
+    }
 
-private:
-  EventBus &eventBus;
+  private:
+    EventBus &eventBus;
 
-  float m_deltaTime;
-  float m_lastTime;
-  float m_simulationTime;
-  float m_simulationDeltaTime;
+    void setupEventSubscriptions();
 
-  float m_fps;
-  float m_stableFPS;
-  float m_timeAccumulator;
-  int m_frameCount;
+    float m_deltaTime;
+    float m_lastTime;
+    float m_simulationTime;
+    float m_simulationDeltaTime;
 
-  bool m_simulationPaused;
+    float m_fps;
+    float m_stableFPS;
+    float m_timeAccumulator;
+    int m_frameCount;
+
+    bool m_simulationPaused;
 };
 
 } // namespace Celestia

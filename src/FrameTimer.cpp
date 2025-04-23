@@ -21,8 +21,7 @@ FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus)
     m_timeAccumulator = 0.0f;
     m_frameCount = 0;
 
-    eventBus.subscribe<SimulationPausedChanged>(
-        [this](const SimulationPausedChanged &ev) { m_simulationPaused = ev.paused; });
+    setupEventSubscriptions();
 }
 
 void FrameTimer::update()
@@ -64,6 +63,12 @@ void FrameTimer::update()
     // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
     eventBus.publish(FrameUpdateEvent(m_deltaTime, m_lastTime, m_simulationTime, m_simulationDeltaTime, m_stableFPS,
                                       m_simulationPaused));
+}
+
+void FrameTimer::setupEventSubscriptions()
+{
+    eventBus.subscribe<SimulationPausedChanged>(
+        [this](const SimulationPausedChanged &ev) { m_simulationPaused = ev.paused; });
 }
 
 } // namespace Celestia
