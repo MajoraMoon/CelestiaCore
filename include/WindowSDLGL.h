@@ -17,8 +17,7 @@ class WindowSDLGL
 {
 
   public:
-    WindowSDLGL(const std::string &title, const std::string &version, EventBus &eventBus,
-                unsigned int initialWidth = 1920, unsigned int initialHeight = 1080);
+    WindowSDLGL(const std::string &title, const std::string &version, EventBus &eventBus);
     ~WindowSDLGL();
 
     void publishCurrentWindowSize();
@@ -46,8 +45,8 @@ class WindowSDLGL
     SDL_Window *window;
     SDL_GLContext glContext;
 
-    int m_width;
-    int m_height;
+    int m_width = 1920;
+    int m_height = 1080;
 
     bool m_mouseVisible;
     bool m_windowIsMaximized;

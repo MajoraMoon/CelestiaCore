@@ -43,17 +43,6 @@ struct MouseScrollEvent : Event
     }
 };
 
-// Window size change notification
-// Published by window system when resized
-struct WindowResizeEvent : Event
-{
-    int width;
-    int height;
-    WindowResizeEvent(int w, int h) : width(w), height(h)
-    {
-    }
-};
-
 // Frame timing information
 // Published by main loop each frame from the FrameTimer class
 struct FrameUpdateEvent : Event
@@ -102,6 +91,19 @@ struct ToggleWindowMaximizedEvent : Event
 // Published by InputManager (ESC Key)
 struct QuitEvent : Event
 {
+};
+
+// Window size change notification
+// Published by window system when resized (I think everyone knows how to resize a window)
+struct WindowResizeEvent : Event
+{
+    // the initial states of values are not set in the AppState but in the private variable in the windowSDLGL class
+    // (Because of OpenGL)
+    int width;
+    int height;
+    WindowResizeEvent(int w, int h) : width(w), height(h)
+    {
+    }
 };
 
 // HERE ARE GUI SET UPS

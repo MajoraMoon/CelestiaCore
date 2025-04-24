@@ -8,7 +8,8 @@
  *
  */
 
-namespace Celestia {
+namespace Celestia
+{
 
 // forward declarations
 class EventBus;
@@ -16,49 +17,53 @@ struct AppState;
 
 // these "global" states have the class+usage naming decleration (to refer where
 // the specific value is effecting which class)
-struct AppState {
-  struct Gui {
-    bool visible = true;
-  } gui;
+struct AppState
+{
+    struct Gui
+    {
+        bool visible = true;
+    } gui;
 
-  struct Simulation {
-    bool paused = false;
-  } simulation;
+    struct Simulation
+    {
+        bool paused = false;
+    } simulation;
 
-  struct Window {
-    bool mouseVisible = false;
-    bool maximized = false;
-    bool fullscreen = false;
-    bool vsync = false;
+    struct Window
+    {
+        bool mouseVisible = false;
+        bool maximized = false;
+        bool fullscreen = false;
+        bool vsync = false;
 
-    uint32_t width = 1920;
-    uint32_t height = 1080;
+    } window;
 
-  } window;
+    struct CelestiaCore
+    {
+        // no default initialization needed because if that is true, the whole
+        // program is burned next to the sun already. I good english speak very gut
+        bool quit;
+    } celestiaCore;
 
-  struct CelestiaCore {
-    // no default initialization needed because if that is true, the whole
-    // program is burned next to the sun already. I good english speak very gut
-    bool quit;
-  } celestiaCore;
-
-  struct Camera {
-    float mouseSensitivity = 0.150f;
-  } camera;
+    struct Camera
+    {
+        float mouseSensitivity = 0.150f;
+    } camera;
 };
 
-class StateManager {
+class StateManager
+{
 
-public:
-  StateManager(EventBus &eventBus, AppState &state);
+  public:
+    StateManager(EventBus &eventBus, AppState &state);
 
-  void publishInitialStates();
+    void publishInitialStates();
 
-private:
-  EventBus &eventBus;
-  AppState &state;
+  private:
+    EventBus &eventBus;
+    AppState &state;
 
-  void setupSubscriptions();
+    void setupSubscriptions();
 };
 
 } // namespace Celestia
