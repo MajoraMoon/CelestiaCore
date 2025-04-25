@@ -6,26 +6,24 @@
  *
  */
 
-namespace Celestia
-{
+namespace Celestia {
 
 // forward declarations
 class EventBus;
 
-class InputManager
-{
+class InputManager {
 
-  public:
-    InputManager(EventBus &eventBus);
+public:
+  InputManager(EventBus &eventBus);
 
-    void processEvent(const SDL_Event &event);
+  void processEvent(const SDL_Event &event);
 
-  private:
-    EventBus &eventBus;
+private:
+  EventBus &eventBus;
 
-    int m_windowFullscreen;
+  void setupEventSubscriptions();
 
-    void setupEventSubscriptions();
+  int m_windowFullscreen;
 };
 
 } // namespace Celestia

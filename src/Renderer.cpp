@@ -8,11 +8,11 @@
 
 // clang-format on
 
-namespace Celestia
-{
+namespace Celestia {
 
 Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
-    : window(window), eventBus(eventBus), scene(scene), camera(eventBus, {}, glm::vec3(0.0f, 0.0f, 6.0f)),
+    : window(window), eventBus(eventBus), scene(scene),
+      camera(eventBus, {}, glm::vec3(0.0f, 0.0f, 6.0f)),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag"),
       cubeMesh({
 
@@ -65,13 +65,13 @@ Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
 
 // clang-format on
 {
-    // Turn off VSync
-    SDL_GL_SetSwapInterval(0);
-    glEnable(GL_DEPTH_TEST);
+  // Turn off VSync
+  SDL_GL_SetSwapInterval(0);
+  glEnable(GL_DEPTH_TEST);
 
-    shader.use();
-    shader.setInt("texture1", 0);
-    shader.setInt("texture2", 1);
+  shader.use();
+  shader.setInt("texture1", 0);
+  shader.setInt("texture2", 1);
 }
 
 // I am trying to really only render the graphics in the renderer, not the logic
@@ -79,36 +79,33 @@ Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
 // the renderer so it can render the changing graphics of course. But it's a
 // pass-through, not the actual calculation
 
-void Renderer::renderFrame()
-{
+void Renderer::renderFrame() {
 
-    m_width = window.getWidth();
-    m_height = window.getHeight();
+  m_width = window.getWidth();
+  m_height = window.getHeight();
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    texture1.bind(0);
-    texture2.bind(1);
-    shader.use();
+  texture1.bind(0);
+  texture2.bind(1);
+  shader.use();
 
-    glm::mat4 view = camera.getViewMatrix();
-    glm::mat4 projection =
-        glm::perspective(glm::radians(camera.zoom), static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
+  glm::mat4 view = camera.getViewMatrix();
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera.zoom),
+                       static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
-    shader.setMat4("view", view);
-    shader.setMat4("projection", projection);
+  shader.setMat4("view", view);
+  shader.setMat4("projection", projection);
 
-    // Render using precomputed transforms from Scene
-    for (const auto &model : scene.cubeTransforms)
-    {
-        shader.setMat4("model", model);
-        cubeMesh.draw();
-    }
+  // Render using precomputed transforms from Scene
+  for (const auto &model : scene.cubeTransforms) {
+    shader.setMat4("model", model);
+    cubeMesh.draw();
+  }
 }
 
-Renderer::~Renderer()
-{
-}
+Renderer::~Renderer() {}
 
 } // namespace Celestia

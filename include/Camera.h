@@ -60,18 +60,19 @@ private:
     bool boost = false;
   } inputState;
 
-  // Rotation angles
-  float yaw;
-  float pitch;
-
-  // Internal state
-  bool m_mouseVisible;
-
   void setupEventSubscriptions();
   void processMovement(float deltaTime);
   void applyMovement(glm::vec3 direction, float velocity);
+
   void handleMouseMovement(float xoffset, float yoffset,
                            bool constrainPitch = true);
+
+  // Rotation angles
+  float m_yaw;
+  float m_pitch;
+
+  // Internal state
+  bool m_mouseVisible;
 };
 
 } // namespace Celestia

@@ -6,50 +6,48 @@
  *
  */
 
-namespace Celestia
-{
+namespace Celestia {
 
 // forward declarations
 class WindowSDLGL;
 class EventBus;
 struct AppState;
 
-class GuiManager
-{
+class GuiManager {
 
-  public:
-    GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState);
-    ~GuiManager();
+public:
+  GuiManager(WindowSDLGL &window, EventBus &eventBus, AppState &appState);
+  ~GuiManager();
 
-    void processGUIEvent(const SDL_Event *event);
-    void render();
+  void processGUIEvent(const SDL_Event *event);
+  void render();
 
-  private:
-    WindowSDLGL &window;
-    EventBus &eventBus;
-    AppState &appState;
+private:
+  WindowSDLGL &window;
+  EventBus &eventBus;
+  AppState &appState;
 
-    // actual imgui windows to render
-    void showStatsWindow();
-    void showShortcutsWindow();
+  // actual imgui windows to render
+  void showStatsWindow();
+  void showShortcutsWindow();
 
-    void setupEventSubscriptions();
+  void setupEventSubscriptions();
 
-    unsigned int m_width;
-    unsigned int m_height;
+  unsigned int m_width;
+  unsigned int m_height;
 
-    bool m_guiVisible;
-    bool m_mouseVisible;
-    bool m_simulationPaused;
-    bool m_windowFullscreen;
-    bool m_vsyncMode;
+  bool m_guiVisible;
+  bool m_mouseVisible;
+  bool m_simulationPaused;
+  bool m_windowFullscreen;
+  bool m_vsyncMode;
 
-    float m_mouseSensitivity;
+  float m_mouseSensitivity;
 
-    float m_deltaTime;
-    float m_currentTime;
-    float m_simulationTime;
-    float m_stableFPS;
+  float m_deltaTime;
+  float m_currentTime;
+  float m_simulationTime;
+  float m_stableFPS;
 };
 
 } // namespace Celestia
