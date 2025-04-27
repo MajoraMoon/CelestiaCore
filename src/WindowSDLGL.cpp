@@ -8,6 +8,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
                          EventBus &eventBus)
     : eventBus(eventBus), m_title(title), m_version(version) {
 
+  // Order here is important!
   setupEventSubscriptions();
   initializeSDL();
   createWindow();
@@ -84,11 +85,47 @@ void WindowSDLGL::initializeGlad() {
 }
 
 void WindowSDLGL::initializeState() {
+
   glViewport(0, 0, m_width, m_height);
   SDL_GetWindowSize(m_window, &m_width, &m_height);
   m_prevWidth = m_width;
   m_prevHeight = m_height;
   m_videoDriver = SDL_GetCurrentVideoDriver();
+}
+
+//------------------------------------------------------------------------------
+//
+// Event Subscription Setup
+//
+//------------------------------------------------------------------------------
+
+void WindowSDLGL::setupEventSubscriptions() {
+  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
+    m_width = ev.width;
+    m_height = ev.height;
+
+    handleWindowResize(m_width, m_height);
+  });
+
+  eventBus.on<MouseVisibilityChanged>([this](const auto &ev) {
+    m_mouseVisible = ev.visible;
+    handleMouseVisibity();
+  });
+
+  eventBus.on<WindowMaximizedChanged>([this](const auto &ev) {
+    m_windowIsMaximized = ev.maximized;
+    handleMaximizeWindow();
+  });
+
+  eventBus.on<WindowFullscreenChanged>([this](const auto &ev) {
+    m_windowFullscreen = ev.fullscreen;
+    handleFullscreenMode();
+  });
+
+  eventBus.on<VsyncModeChanged>([this](const auto &ev) {
+    m_vsyncMode = ev.vsync;
+    handleVsyncMode();
+  });
 }
 
 void WindowSDLGL::handleMouseVisibity() {
@@ -174,7 +211,7 @@ void WindowSDLGL::handleFullscreenMode() {
     }
   }
 
-  publishCurrentWindowSize();
+  eventBus.emit(WindowResizeEvent(m_width, m_height));
 }
 
 void WindowSDLGL::handleVsyncMode() {
@@ -185,39 +222,6 @@ void WindowSDLGL::handleVsyncMode() {
   } else {
     SDL_GL_SetSwapInterval(0);
   }
-}
-
-void WindowSDLGL::publishCurrentWindowSize() {
-  eventBus.emit(WindowResizeEvent(m_width, m_height));
-}
-
-void WindowSDLGL::setupEventSubscriptions() {
-  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
-    m_width = ev.width;
-    m_height = ev.height;
-
-    handleWindowResize(m_width, m_height);
-  });
-
-  eventBus.on<MouseVisibilityChanged>([this](const auto &ev) {
-    m_mouseVisible = ev.visible;
-    handleMouseVisibity();
-  });
-
-  eventBus.on<WindowMaximizedChanged>([this](const auto &ev) {
-    m_windowIsMaximized = ev.maximized;
-    handleMaximizeWindow();
-  });
-
-  eventBus.on<WindowFullscreenChanged>([this](const auto &ev) {
-    m_windowFullscreen = ev.fullscreen;
-    handleFullscreenMode();
-  });
-
-  eventBus.on<VsyncModeChanged>([this](const auto &ev) {
-    m_vsyncMode = ev.vsync;
-    handleVsyncMode();
-  });
 }
 
 } // namespace Celestia

@@ -8,42 +8,31 @@ StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {
 
 void StateManager::setupSubscriptions() {
 
-  /**
-   *
-   * These values should be the same for every class accessing them. So it is an
-   * implementation of a global variable, but only indirectly.
-   *
-   * These are subscriptions, which trigger to change a  boolean value and then
-   * publish the value to another specific event which can be accessed to use
-   * the boolean value.
-   *
-   * idk if I explain it well, but these functions should not be that
-   * complicated to understand if you know how the basic idea of this BusEvent
-   * works
-   */
+  //------------------------------------------------------------------------------
+  //
+  // Input-Driven State  Changes (From User input -> keyboard, mouse, window...)
+  //
+  //------------------------------------------------------------------------------
 
-  /* --------- Events emited (published) by keyboard/mouse/window input
-   * ---------*/
-
-  // Mouse visibility
+  // Handle mouse visibility toggle requests (M key)
   eventBus.on<ToggleMouseVisibilityEvent>([this](const auto &) {
     state.window.mouseVisible = !state.window.mouseVisible;
     eventBus.emit(MouseVisibilityChanged{state.window.mouseVisible});
   });
 
-  // Window state
+  // Handle window maximize toggle requests (F key)
   eventBus.on<ToggleWindowMaximizedEvent>([this](const auto &) {
     state.window.maximized = !state.window.maximized;
     eventBus.emit(WindowMaximizedChanged{state.window.maximized});
   });
 
-  // GUI visibility
+  // Handle GUI visibility toggle requests (F1 key)
   eventBus.on<ToggleGuiVisibilityEvent>([this](const auto &) {
     state.gui.visible = !state.gui.visible;
     eventBus.emit(GuiVisibilityChanged{state.gui.visible});
   });
 
-  // Pause state
+  // Handle simulation pause toggle requests (P key)
   eventBus.on<TogglePauseEvent>([this](const auto &) {
     state.simulation.paused = !state.simulation.paused;
     eventBus.emit(SimulationPausedChanged{state.simulation.paused});
@@ -51,14 +40,19 @@ void StateManager::setupSubscriptions() {
 
   // the quitEvent does not have multiple bool changes because when the main
   // loop is stopped, the whole simulation and therefore the window disappears.
+  // Handle application termination requests (CTRL+SHIFT+Q)
   eventBus.on<QuitEvent>([this](const auto &) {
     state.celestiaCore.quit = true;
     eventBus.emit(CelestiaCoreQuitChanged{state.celestiaCore.quit});
   });
 
-  /* ---------------- Events emited (published) by gui input -------------- */
+  //------------------------------------------------------------------------------
+  //
+  // GUI-Driven State Changes (From settings panels)
+  //
+  //------------------------------------------------------------------------------
 
-  // Mouse sensitivity
+  // Apply mouse sensitivity changes from GUI slider
   eventBus.on<SetMouseSensitivityEvent>([this](const auto &ev) {
     // no redundant updates for this float value. I might forgot it
     // everywhere else lol
@@ -69,13 +63,13 @@ void StateManager::setupSubscriptions() {
     eventBus.emit(MouseSensitivityChanged{state.camera.mouseSensitivity});
   });
 
-  // Fullscreen mode
+  // Apply fullscreen mode changes from GUI selector
   eventBus.on<SetFullscreenModeEvent>([this](const auto &ev) {
     state.window.fullscreen = ev.fullscreen;
     eventBus.emit(WindowFullscreenChanged{state.window.fullscreen});
   });
 
-  // Vsync mode
+  // Apply VSync mode changes from GUI selector
   eventBus.on<SetVsyncModeEvent>([this](const auto &ev) {
     state.window.vsync = ev.vsync;
     eventBus.emit(VsyncModeChanged{state.window.vsync});
@@ -84,7 +78,7 @@ void StateManager::setupSubscriptions() {
 
 void StateManager::publishInitialStates() {
 
-  // Broadcast initial state to all listeners
+  // Broadcast initial state to synchronize all subscribers
   eventBus.emit(MouseVisibilityChanged{state.window.mouseVisible});
   eventBus.emit(GuiVisibilityChanged{state.gui.visible});
   eventBus.emit(SimulationPausedChanged{state.simulation.paused});

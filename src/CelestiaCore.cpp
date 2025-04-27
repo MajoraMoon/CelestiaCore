@@ -18,7 +18,6 @@ CelestiaCore::CelestiaCore()
   // set up the initial states of the "global" variables for all classes after
   // their creation set up the right resolution after all classes are created
   stateManager.publishInitialStates();
-  window.publishCurrentWindowSize();
 }
 
 void CelestiaCore::run() {

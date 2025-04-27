@@ -1,17 +1,19 @@
 #pragma once
 
-/**
- *
- * This class is responible for creating a window context, as well the
- * openGL/glad context. It also stores width/height information. So the
- * dimensions
- */
-
 namespace Celestia {
 
-// forward declarations
 class EventBus;
 
+/**
+ * @class WindowSDLGL
+ * @brief Manages SDL window creation, window-event related functions and OpenGL
+ * context initialization.
+ *
+ * Handles window lifecycle, display mode changes (e.g. fullscreen/windowed),
+ * and GL context management. Publishes window-related events through EventBus.
+ *
+ *@note Uses SDL3 properties system for window configuration
+ */
 class WindowSDLGL {
 
 public:
@@ -32,13 +34,30 @@ private:
   SDL_Window *m_window = nullptr;
   SDL_GLContext m_glContext = nullptr;
 
+  /**
+   * @brief Initializes SDL video subsystem and application metadata
+   * @throws std::runtime_error If SDL initialization fails
+   */
   void initializeSDL();
+
+  /**
+   * @brief Creates a SDL Window with standard properties
+   * @throws std::runtime_error If Window creation with SDL_Properties fails
+   */
   void createWindow();
   void createGLContext();
   void initializeGlad();
+
+  /**
+   * @brief Sets some initial values afte being called in the constructor
+   */
   void initializeState();
 
-  // Event handlers
+  //------------------------------------------------------------------------------
+  //
+  // Event Subscription Setup
+  //
+  //------------------------------------------------------------------------------
   void setupEventSubscriptions();
   void handleMouseVisibity();
   void handleWindowResize(unsigned int width, unsigned int height);
@@ -46,13 +65,16 @@ private:
   void handleFullscreenMode();
   void handleVsyncMode();
 
+  // values are assigned from the EventBus (AppState)
   bool m_mouseVisible;
   bool m_windowIsMaximized;
   bool m_windowFullscreen;
   bool m_vsyncMode;
 
-  int m_width = 1920;
-  int m_height = 1080;
+  // start resolution initialized here, not in the AppState
+  // Although it is set in the class creation, it throws errors
+  int m_width = 1280;
+  int m_height = 720;
 
   std::string m_videoDriver = "";
   std::string m_title = "";

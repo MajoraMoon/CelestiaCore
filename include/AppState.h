@@ -1,46 +1,48 @@
 #pragma once
 
-/**
- *
- * these are the default values for the states. Headerfiles who use these values
- * have the values defined as well. Otherwise it is not initialized correctly
- * for some reason
- *
- */
-
 namespace Celestia {
 
 // forward declarations
 class EventBus;
 struct AppState;
 
-// these "global" states have the class+usage naming decleration (to refer where
-// the specific value is effecting which class)
+/**
+ * @class AppState
+ * @brief Centralized application state container and management system
+ *
+ *  Provides a structured hierarchy for all global application state values,
+ * including window configuration, GUI visibility, simulation control,
+ * and core lifecycle flags. Managed exclusively through EventBus notifications
+ *
+ * @note MOST state modification should happen through EventBus
+ * notifications. (There are exceptions, e.g. start-resolution)
+ */
 struct AppState {
+
   struct Gui {
-    bool visible = true;
+    bool visible = true; // Global GUI visibility state
   } gui;
 
   struct Simulation {
-    bool paused = false;
+    bool paused = false; // Simulation pause state
   } simulation;
 
   struct Window {
-    bool mouseVisible = false;
-    bool maximized = false;
-    bool fullscreen = false;
-    bool vsync = false;
+    bool mouseVisible = false; // Mouse cursor visibility state
+    bool maximized = false;    // Window maximized state
+    bool fullscreen = false;   // Fullscreen mode state
+    bool vsync = false;        // Vertical synchronization state (aka Vsync)
 
   } window;
 
   struct CelestiaCore {
-    // no default initialization needed because if that is true, the whole
-    // program is burned next to the sun already. I good english speak very gut
-    bool quit;
+    // no default initialization needed because when the main loop is not
+    // looping anymore the simulation closes
+    bool quit; // Application termination flag
   } celestiaCore;
 
   struct Camera {
-    float mouseSensitivity = 0.150f;
+    float mouseSensitivity = 0.150f; // Camera control sensitivity
   } camera;
 };
 
