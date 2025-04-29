@@ -2,86 +2,65 @@
 
 #include "pch.h"
 
-/**
- * This class is rather complicated. So I am trying to
- * explain this in simpler
- * words for myself
- *
- */
-
 namespace Celestia {
 
+/**
+ * @class Event
+ * @brief Base class for all event types
+ */
 class Event {
 public:
   virtual ~Event() = default;
 };
 
 /**
+ * @class EventBus
+ * @brief The central "post office" for handling game Events
  *
- * The EventBus has  two functions.
+ * How it works in simple terms:
+ * 1. There are different "event envelopes" which can be created
+ *    (like KeyEvent or QuitEvent)
  *
- * The "subscribe" function is for registering actions (such as functions) which
- * should be executed when the user is pressing the responsible key on the
- * keyboard or the mouse or something else.
- * There are so called "Events". These data structures which are either empty or
- * can hold some information, which can be used as a "safe" alternative for
- * global variables. This is an example from the "Events.h" class:
+ * 2. Other parts of the code "subscribe" to get certain types of envelops
+ *    (This is done with the "on" - function)
  *
- * "
- * struct KeyEvent : Event {
- * SDL_Scancode scancode;
- * bool pressed;
- * KeyEvent(SDL_Scancode code, bool isPressed)
- *      : scancode(code), pressed(isPressed) {}
- * };
- * "
+ * 3. When something happens (like a a key press), the system "emits" the
+ *    matching envelope.
+ *    (This is done with the "emit" - function)
  *
- * This is an struct which can take a SDL_scancode and the bool if this scancode
- * key is actually pressed or not.
- *
- * The "subscribe" function, is now taking the function and calls it everytime
- * the event is triggered.alignas
- *
- *
- * The trigger for Events is happening in the "publish" function. This function
- * is called when the keypress is activated. This is an example of a publish
- * function:
- *
- * "
- *     case SDLK_ESCAPE:
- *      eventBus.publish(QuitEvent{});
- *            break;
- * "
- *
- * When the Escape key is pressed, then the "publish" function is calling the
- * QuitEvent.
- *
- * All functions, which were put into the "QuitEvent" through the "subscribe"
- * function are called. The "publish" function is checked everyframe in most
- * cases.
- *
- * */
+ * 4. Every event which subscribed to that envelope type  gets notified
+ *    (These notifies can change variables, call other functions etc..)
+ */
 class EventBus {
 
   /**
+   * @brief Storage for all event subscribers
    *
-   * This is like a hash map, which maps specific event like the "QuitEvent" in
-   * the example above, to a dynamic array (or vector) of functions.
-   * This basically means, an specific event is holding all the functions or
-   * values that needs to be executed or changed, when this event is happening.
+   * This can be imagined as a wall of mailboxes:
+   * - Each mailbox is for a specific ev ent type (KeyEvent, QuitEvent, etc..)
+   * - Each mailbox contains a list of people (functions) to to notify
    *
-   * It's like a festival where each event has its own guest list. In the same
-   * way, each event type in the event bus has its own list of subscribers who
-   * get notified when that event happens.
+   * When the system gets a mail (emit an event), we put it in the right mailbox
+   * and everyone registered there gets a copy
    */
   std::unordered_map<std::type_index,
                      std::vector<std::function<void(const Event &)>>>
       subscribers;
 
 public:
-  // type of the event and the function which is executed when the Event is
-  // called
-
+  /**
+   * @brief Subscribe to an event type
+   * @tparam TEvent The type of event to listen for (e.gj., KeyEvent)
+   * @tparam THandler The callback function type
+   * @param handler The function to call when event happens
+   *
+   * Example usage:
+   * @code
+   * eventBus.on<KeyEvent>([](const KeyEvent& ev) {
+   *   if(ev.pressed) handleKeyPress(ev.scancode);
+   * });
+   * @endcode
+   */
   template <typename TEvent, typename THandler> void on(THandler &&handler) {
     subscribers[typeid(TEvent)].emplace_back(
         [h = std::forward<THandler>(handler)](const Event &e) {
@@ -89,12 +68,22 @@ public:
         });
   }
 
+  /**
+   * @brief Send out an event notification
+   * @tparam EventType The type of event to send
+   * @param event The actual event data to distribute
+   *
+   * Example usage when ESC key is pressed:
+   * @code
+   * eventBus.emit(QuitEvent{});
+   * @endcode
+   *
+   * This would notify everyone who subscribed to QuitEvent events.
+   */
   template <typename EventType> void emit(const EventType &event) {
-    // looks for the given  Event in the hashmap. If the event has any
-    // subscribers, iterate through them.
-
     auto it = subscribers.find(typeid(EventType));
     if (it != subscribers.end()) {
+      // Send event to all subscribers like delivering mail
       for (auto &handler : it->second) {
         handler(event);
       }
