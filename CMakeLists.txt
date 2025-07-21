@@ -48,19 +48,6 @@ set(SDL_IMAGE_SHARED ON CACHE BOOL "Build SDL_image as shared" FORCE)
 set(SDL_TESTS OFF CACHE BOOL "Disable SDL tests" FORCE)
 set(SDL_EXAMPLES OFF CACHE BOOL "Disable SDL examples" FORCE)
 
-
-set(ASSIMP_BUILD_TESTS OFF)
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
-set(ASSIMP_BUILD_DOCS OFF)
-set(ASSIMP_INJECT_DEBUG_POSTFIX OFF)
-set(ASSIMP_BUILD_SAMPLES OFF)
-set(ASSIMP_BUILD_DRACO OFF)
-
-set(ASSIMP_BUILD_OBJ_IMPORTER ON)
-set(ASSIMP_BUILD_FBX_IMPORTER ON)
-set(ASSIMP_BUILD_GLTF_IMPORTER ON)
-
 add_subdirectory(lib/sdl3 EXCLUDE_FROM_ALL)
 
 # that's some random sdl compiling error fix. 
@@ -76,8 +63,6 @@ if(WIN32)
 endif()
 
 add_subdirectory(lib/sdl3_image EXCLUDE_FROM_ALL)
-add_subdirectory(lib/assimp EXCLUDE_FROM_ALL)
-
 
 # compile all .cpp files in the src folder
 file(GLOB_RECURSE SOURCES "src/*.cpp")
@@ -125,14 +110,12 @@ target_include_directories(CelestiaCore PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/imgui
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
     ${CMAKE_SOURCE_DIR}/lib/glm
-    ${CMAKE_SOURCE_DIR}/lib/assimp/include
 )
 
 target_link_libraries(CelestiaCore PRIVATE 
     imgui
     SDL3::SDL3
     SDL3_image::SDL3_image
-    assimp::assimp
 )
 
 # put lib data into a libs folder to make everything cleaner on linux builds. Windows gets the standard treatment
