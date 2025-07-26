@@ -1,19 +1,22 @@
-#include "pch.h"
 #include "CelestiaCore.h"
+#include "pch.h"
 
 /**
  *
- * Note: If you compile this program running natively under wayland, the
- * perfomance might be worse than over x11 or xWayland. I could not find out the
- * reason for it, I assume it is my use of an nvidia graphics card (proprietary
- * drivers) in combination with OpenGL. SDL3 could be a factor too. The
- * Operating System itself should not effect it much. Linux can often bring
- * better perfomance than windows (at least on x11) because it uses less
- * ressources for other processes
+ *
+ * Note: Depending on the GPU, Desktop Enviroment, Window Manager and display
+ * server protocol the perfomance will vary like in every other graphical
+ * application.
+ *
+ * Nvidia GPU's on Linux are always a pain. Proprietary Nvidia Drivers are
+ * poorly working on Wayland. AMD GPU'S will work better, they actually respect
+ * some kind of open source nature.
+ *
+ * OpenGL is not developed anymore but it will still gonna supported for a long
+ * time.
  *
  * I compiled this project on Windows 10/11 with MingW and MSYS2 and on Linux on
- * the KDE Plasma 6 enviroment on EndeavourOS
- *
+ * the KDE Plasma 6 enviroment on EndeavourOS.
  */
 
 int main(int argc, char *argv[]) {
