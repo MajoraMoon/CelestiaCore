@@ -1,6 +1,8 @@
+// clang-format off
 #include "pch.h"
 #include "WindowSDLGL.h"
 #include "EventSystem.h"
+// clang-format on
 
 namespace Celestia {
 
