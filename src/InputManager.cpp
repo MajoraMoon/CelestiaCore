@@ -1,9 +1,7 @@
 // clang-format off
-
 #include "pch.h"
 #include "InputManager.h"
 #include "EventSystem.h"
-
 // clang-format on
 
 namespace Celestia {

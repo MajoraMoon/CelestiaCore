@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "EventSystem.h"
-
 // clang-format on
 
 // I will rewrite this class later. its not the best atm

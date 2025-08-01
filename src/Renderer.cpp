@@ -1,11 +1,9 @@
 // clang-format off
-
 #include "pch.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "WindowSDLGL.h"
 #include "Resources.h"
-
 // clang-format on
 
 namespace Celestia {

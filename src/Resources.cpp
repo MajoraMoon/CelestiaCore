@@ -1,7 +1,6 @@
 // clang-format off
 #include "pch.h"
 #include "Resources.h"
-
 // clang-format on
 
 unsigned char *loadImage(const char *filePath, int *width, int *height,

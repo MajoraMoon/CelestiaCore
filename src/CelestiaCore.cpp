@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "CelestiaCore.h"
 #include "EventSystem.h"
-
 // clang-format on
 
 namespace Celestia {

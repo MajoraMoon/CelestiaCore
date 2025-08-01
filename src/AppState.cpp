@@ -1,5 +1,7 @@
-#include "EventSystem.h"
+// clang-format off
 #include "pch.h"
+#include "EventSystem.h"
+// clang-format on
 
 namespace Celestia {
 StateManager::StateManager(EventBus &eb, AppState &s) : eventBus(eb), state(s) {

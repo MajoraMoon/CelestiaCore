@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Texture.h"
 // clang-format on
+
 namespace Celestia {
 
 Texture::Texture(const std::string &path) {
