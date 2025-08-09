@@ -129,7 +129,7 @@ struct SetMouseSensitivityEvent : Event {
 
 /// @brief Changes window fullscreen state
 /// @param fullscreen Requested fullscreen mode
-/// @note Published by GuiManager, handled by WindowSDLGL
+/// @note Published by GuiManager & InputManager, handled by WindowSDLGL
 struct SetFullscreenModeEvent : Event {
   bool fullscreen;
   SetFullscreenModeEvent(bool f) : fullscreen(f) {}

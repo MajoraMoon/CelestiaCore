@@ -1,17 +1,7 @@
 #pragma once
-
 #include "pch.h"
 
 namespace Celestia {
-
-/**
- * @class Event
- * @brief Base class for all event types
- */
-class Event {
-public:
-  virtual ~Event() = default;
-};
 
 /**
  * @class EventBus
@@ -37,8 +27,8 @@ class EventBus {
    * @brief Storage for all event subscribers
    *
    * This can be imagined as a wall of mailboxes:
-   * - Each mailbox is for a specific ev ent type (KeyEvent, QuitEvent, etc..)
-   * - Each mailbox contains a list of people (functions) to to notify
+   * - Each mailbox is for a specific event type (KeyEvent, QuitEvent, etc..)
+   * - Each mailbox contains a list of people (functions) tonotify
    *
    * When the system gets a mail (emit an event), we put it in the right mailbox
    * and everyone registered there gets a copy

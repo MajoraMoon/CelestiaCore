@@ -1,6 +1,9 @@
 #pragma once
 
-#include "AppState.h"
+// clang-format off
 #include "EventBus.h"
+#include "Event.h"
 #include "Events.h"
+#include "AppState.h"
 #include "InputManager.h"
+// clang-format on  
