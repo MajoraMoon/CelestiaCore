@@ -10,20 +10,18 @@ namespace Celestia {
 
 // forward declarations
 class EventBus;
+class AppState;
 
 class InputManager {
 
 public:
-  InputManager(EventBus &eventBus);
+  InputManager(EventBus &eventBus, AppState &appState);
 
   void processEvent(const SDL_Event &event);
 
 private:
   EventBus &eventBus;
-
-  void setupEventSubscriptions();
-
-  int m_windowFullscreen;
+  AppState &appState;
 };
 
 } // namespace Celestia

@@ -41,7 +41,7 @@ GuiManager::~GuiManager() {
 
 void GuiManager::processGUIEvent(const SDL_Event *event) {
 
-  if (m_mouseVisible) {
+  if (appState.window.mouseVisible) {
     ImGui_ImplSDL3_ProcessEvent(event);
   }
 }
@@ -54,7 +54,7 @@ void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
-  if (m_guiVisible) {
+  if (appState.gui.visible) {
     showShortcutsWindow();
     showStatsWindow();
   }
@@ -86,11 +86,12 @@ void GuiManager::showStatsWindow() {
   ImGui::Text("FPS (average): %.3f", m_stableFPS);
   ImGui::Spacing();
   ImGui::Text("Resolution: %ix%i", m_width, m_height);
-  ImGui::Text("Simulation paused: %s", m_simulationPaused ? "True" : "False");
+  ImGui::Text("Simulation paused: %s",
+              appState.simulation.paused ? "True" : "False");
 
   // VSync Combo Box
   const char *vsyncModes[] = {"VSync Off", "VSync On"};
-  int currentVsyncMode = static_cast<int>(m_vsyncMode);
+  int currentVsyncMode = static_cast<int>(appState.window.vsync);
   if (ImGui::Combo("VSync Mode", &currentVsyncMode, vsyncModes,
                    IM_ARRAYSIZE(vsyncModes))) {
     eventBus.emit(SetVsyncModeEvent{static_cast<bool>(currentVsyncMode)});
@@ -98,7 +99,7 @@ void GuiManager::showStatsWindow() {
 
   // Fullscreen mode selector
   const char *screenModes[] = {"Windowed", "Fullscreen"};
-  int currentScreenMode = static_cast<int>(m_windowFullscreen);
+  int currentScreenMode = static_cast<int>(appState.window.fullscreen);
   if (ImGui::Combo("Display Mode", &currentScreenMode, screenModes,
                    IM_ARRAYSIZE(screenModes))) {
     eventBus.emit(SetFullscreenModeEvent{static_cast<bool>(currentScreenMode)});
@@ -129,23 +130,9 @@ void GuiManager::showShortcutsWindow() {
 }
 
 void GuiManager::setupEventSubscriptions() {
-  eventBus.on<GuiVisibilityChanged>(
-      [this](const auto &ev) { m_guiVisible = ev.visible; });
-
-  eventBus.on<MouseVisibilityChanged>(
-      [this](const auto &ev) { m_mouseVisible = ev.visible; });
 
   eventBus.on<MouseSensitivityChanged>(
       [this](const auto &ev) { m_mouseSensitivity = ev.sensitivity; });
-
-  eventBus.on<SimulationPausedChanged>(
-      [this](const auto &ev) { m_simulationPaused = ev.paused; });
-
-  eventBus.on<WindowFullscreenChanged>(
-      [this](const auto &ev) { m_windowFullscreen = ev.fullscreen; });
-
-  eventBus.on<VsyncModeChanged>(
-      [this](const auto &ev) { m_vsyncMode = ev.vsync; });
 
   eventBus.on<WindowResizeEvent>([this](const auto &ev) {
     m_width = ev.width;

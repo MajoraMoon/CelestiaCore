@@ -6,9 +6,8 @@
 
 namespace Celestia {
 
-InputManager::InputManager(EventBus &eventBus) : eventBus(eventBus) {
-  setupEventSubscriptions();
-}
+InputManager::InputManager(EventBus &eventBus, AppState &appState)
+    : eventBus(eventBus), appState(appState) {}
 
 void InputManager::processEvent(const SDL_Event &event) {
 
@@ -23,10 +22,10 @@ void InputManager::processEvent(const SDL_Event &event) {
     case SDLK_ESCAPE:
 
       // if window in fullscreen then exit fullscreen
-      if (m_windowFullscreen) {
+      if (appState.window.fullscreen) {
 
-        eventBus.emit(
-            SetFullscreenModeEvent{static_cast<bool>(!m_windowFullscreen)});
+        eventBus.emit(SetFullscreenModeEvent{
+            static_cast<bool>(!appState.window.fullscreen)});
       }
 
       break;
@@ -46,7 +45,7 @@ void InputManager::processEvent(const SDL_Event &event) {
     case SDLK_F:
 
       // safety check, only can maximize window when not in fullscreen mode.
-      if (!m_windowFullscreen) {
+      if (!appState.window.fullscreen) {
         eventBus.emit(ToggleWindowMaximizedEvent{});
       }
 
@@ -91,11 +90,6 @@ void InputManager::processEvent(const SDL_Event &event) {
   if (event.type == SDL_EVENT_WINDOW_RESIZED) {
     eventBus.emit(WindowResizeEvent(event.window.data1, event.window.data2));
   }
-}
-
-void InputManager::setupEventSubscriptions() {
-  eventBus.on<WindowFullscreenChanged>(
-      [this](const auto &ev) { m_windowFullscreen = ev.fullscreen; });
 }
 
 } // namespace Celestia

@@ -27,12 +27,12 @@
  *
  */
 
+#include "EventSystem.h"
 #include "FrameTimer.h"
 #include "GuiManager.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "WindowSDLGL.h"
-#include "EventSystem.h"
 
 namespace Celestia {
 
@@ -57,8 +57,6 @@ private:
   Renderer renderer;
   Scene scene;
   GuiManager guiManager;
-
-  void setupEventSubscriptions();
 
   bool m_quit = false;
 };

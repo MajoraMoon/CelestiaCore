@@ -15,7 +15,8 @@ struct AppState;
  * and core lifecycle flags. Managed exclusively through EventBus notifications
  *
  * @note MOST state modification should happen through EventBus
- * notifications. (There are exceptions, e.g. start-resolution)
+ * notifications. This is also a single source of truth Struct. That means, all
+ * classes should accept the values from here.
  */
 struct AppState {
 

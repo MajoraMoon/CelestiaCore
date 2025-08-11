@@ -36,12 +36,6 @@ private:
   unsigned int m_width;
   unsigned int m_height;
 
-  bool m_guiVisible;
-  bool m_mouseVisible;
-  bool m_simulationPaused;
-  bool m_windowFullscreen;
-  bool m_vsyncMode;
-
   float m_mouseSensitivity;
 
   float m_deltaTime;
