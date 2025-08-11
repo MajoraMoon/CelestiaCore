@@ -6,12 +6,26 @@
 - **A compiler** (e.g. `gcc`)
 - **Make** or **Ninja**
 
-### Notes:
-All required libraries are included in the `lib/` folder. No external dependencies are needed as they will be compiled with the project. I don't really like external dependencies, sometimes they are a pain to manage on some distros or operating Systems.
-(Tested the compilation on an arch based Linux distribution with gcc/g++ and on Windows with MingW & MSYS2 )
 
----
+### Notes
 
+All required libraries are included in the `lib/` folder.  
+No external dependencies are needed, they will be compiled together with the project.  
+I prefer this approach because external dependencies can sometimes be a pain to manage on certain distributions or operating systems.
+
+The build has been tested on:
+- **Linux** (Arch-based) using `gcc` / `g++`
+- **Windows** with MinGW & MSYS2
+
+#### MSYS2 Requirements
+Speaking of no external dependencies... If compiling with **MSYS2**, these packages are probably needed.  
+Without them, the compiler may try to build a Linux (X11/Wayland) version instead of a Windows one:
+
+```sh
+pacman -S --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+```
+
+Not the biggest fan of Windows
 ## Steps
 
 1. **Clone the repository:**
