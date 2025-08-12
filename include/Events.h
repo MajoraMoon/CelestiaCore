@@ -18,7 +18,7 @@ namespace Celestia {
  * @param pressed True if key was pressed, false if released
  * @note Published by InputManager during event processing loop
  */
-struct KeyEvent : Event {
+struct KeyEvent {
   SDL_Scancode scancode; // Platform-independent key identifier
   bool pressed;          // Key state
 
@@ -33,7 +33,7 @@ struct KeyEvent : Event {
  * @param yrel Vertical movement since last frame
  * @note Published by InputManager after mouse motion detection
  */
-struct MouseMoveEvent : Event {
+struct MouseMoveEvent {
   float xrel;
   float yrel;
 
@@ -46,7 +46,7 @@ struct MouseMoveEvent : Event {
  * @param yoffset Vertical scroll offset (positive = up, negative = down)
  * @note Published by InputManager for precise scroll wheel tracking
  */
-struct MouseScrollEvent : Event {
+struct MouseScrollEvent {
   float yoffset;
   explicit MouseScrollEvent(float y) : yoffset(y) {}
 };
@@ -62,7 +62,7 @@ struct MouseScrollEvent : Event {
  * @param paused Whether simulation updates are suspended
  * @note Published by FrameTimer at start of each frame
  */
-struct FrameUpdateEvent : Event {
+struct FrameUpdateEvent {
   float deltaTime;           // Real-time frame duration
   float lastTime;            // Current time in seconds
   float simulationTime;      // scaled simulation clock
@@ -86,23 +86,23 @@ struct FrameUpdateEvent : Event {
 
 /// @brief Toggles mouse cursor visibility (M key)
 /// @note Published by InputManager, handled by StateManager
-struct ToggleMouseVisibilityEvent : Event {};
+struct ToggleMouseVisibilityEvent {};
 
 /// @brief Toggles GUI panel visibility (F1 key)
 /// @note Published by InputManager, handled by GuiManager
-struct ToggleGuiVisibilityEvent : Event {};
+struct ToggleGuiVisibilityEvent {};
 
 /// @brief Pauses/unpauses simulation (P key)
 /// @note Published by InputManager, handled by FrameTimer
-struct TogglePauseEvent : Event {};
+struct TogglePauseEvent {};
 
 /// @brief Toggles window between normal/maximized states (F key)
 /// @note Published by InputManager, handled by WindowSDLGL
-struct ToggleWindowMaximizedEvent : Event {};
+struct ToggleWindowMaximizedEvent {};
 
 /// @brief Requests application termination (CTRL+SHIFT+Q)
 /// @note Published by InputManager, handled by CelestiaCore
-struct QuitEvent : Event {};
+struct QuitEvent {};
 
 /**
  * @struct WindowResizeEvent
@@ -111,7 +111,7 @@ struct QuitEvent : Event {};
  * @param height New window height in pixels
  * @note Published by WindowSDLGL after resize operations
  */
-struct WindowResizeEvent : Event {
+struct WindowResizeEvent {
   // the initial states of values are not set in the AppState but in the private
   // variable in the windowSDLGL class (Because of OpenGL idk honestly)
   uint32_t width;  // Current viewport width
@@ -122,7 +122,7 @@ struct WindowResizeEvent : Event {
 /// @brief Sets mouse sensitivity from GUI control
 /// @param sensitivity New sensitivity value (normalized 0.0-1.0)
 /// @note Published by GuiManager, handled by CameraSystem
-struct SetMouseSensitivityEvent : Event {
+struct SetMouseSensitivityEvent {
   float sensitivity;
   SetMouseSensitivityEvent(float s) : sensitivity(s) {}
 };
@@ -130,7 +130,7 @@ struct SetMouseSensitivityEvent : Event {
 /// @brief Changes window fullscreen state
 /// @param fullscreen Requested fullscreen mode
 /// @note Published by GuiManager & InputManager, handled by WindowSDLGL
-struct SetFullscreenModeEvent : Event {
+struct SetFullscreenModeEvent {
   bool fullscreen;
   SetFullscreenModeEvent(bool f) : fullscreen(f) {}
 };
@@ -138,7 +138,7 @@ struct SetFullscreenModeEvent : Event {
 /// @brief Controls vertical synchronization
 /// @param vsync True to enable VSync, false to disable
 /// @note Published by GuiManager, handled by WindowSDLGL
-struct SetVsyncModeEvent : Event {
+struct SetVsyncModeEvent {
   bool vsync;
   SetVsyncModeEvent(bool v) : vsync(v) {}
 };
@@ -153,42 +153,42 @@ struct SetVsyncModeEvent : Event {
 
 /// @brief Confirms mouse visibility state change
 /// @note Published by StateManager after processing ToggleMouseVisibilityEvent
-struct MouseVisibilityChanged : Event {
+struct MouseVisibilityChanged {
   bool visible;
   MouseVisibilityChanged(bool v) : visible(v) {}
 };
 
 /// @brief Confirms GUI visibility state change
 /// @note Published by StateManager after processing ToggleGuiVisibilityEvent
-struct GuiVisibilityChanged : Event {
+struct GuiVisibilityChanged {
   bool visible;
   GuiVisibilityChanged(bool v) : visible(v) {}
 };
 
 /// @brief Confirms simulation pause state change
 /// @note Published by StateManager after processing TogglePauseEvent
-struct SimulationPausedChanged : Event {
+struct SimulationPausedChanged {
   bool paused;
   SimulationPausedChanged(bool p) : paused(p) {}
 };
 
 /// @brief Confirms window maximize state change
 /// @note Published by StateManager after processing ToggleWindowMaximizedEvent
-struct WindowMaximizedChanged : Event {
+struct WindowMaximizedChanged {
   bool maximized;
   WindowMaximizedChanged(bool m) : maximized(m) {}
 };
 
 /// @brief Confirms mouse sensitivity update
 /// @note Published by StateManager after processing SetMouseSensitivityEvent
-struct MouseSensitivityChanged : Event {
+struct MouseSensitivityChanged {
   float sensitivity;
   MouseSensitivityChanged(float s) : sensitivity(s) {}
 };
 
 /// @brief Signals application shutdown sequence start
 /// @note Published by StateManager after processing QuitEvent
-struct CelestiaCoreQuitChanged : Event {
+struct CelestiaCoreQuitChanged {
   bool quit;
   CelestiaCoreQuitChanged(bool q) : quit(q) {}
 };
@@ -196,14 +196,14 @@ struct CelestiaCoreQuitChanged : Event {
 /// @brief Confirms fullscreen mode change
 /// @note Published by WindowSystem after display mode transition
 
-struct WindowFullscreenChanged : Event {
+struct WindowFullscreenChanged {
   bool fullscreen;
   WindowFullscreenChanged(bool f) : fullscreen(f) {}
 };
 
 /// @brief Confirms VSync state change
 /// @note Published by RenderSystem after swap interval adjustment
-struct VsyncModeChanged : Event {
+struct VsyncModeChanged {
   bool vsync;
   VsyncModeChanged(bool v) : vsync(v) {}
 };
