@@ -3,7 +3,8 @@
 
 namespace Celestia {
 
-// More comments than code in this class
+// More comments than code in this class, but I also wanna understand the code
+// in the future without thinking too much about it
 
 /**
  * @class EventBus
@@ -36,7 +37,18 @@ class EventBus {
    * and everyone registered there gets a copy
    */
 
+  // Creating an HandlerList, that means it holds all the callable functions
+  // which are subscribed with the ".on" function (In that case these will be
+  // lamdba functions).
+  // std::function<> can hold any callable datatype like normal functions,
+  // lamdba's etc... In that case it holds a void pointer, so the datatype is
+  // not defined yet, all stored Handlers will be threated the same. This is an
+  // implementation of the "Type Erasure" pattern.
   using HandlerList = std::vector<std::function<void(const void *)>>;
+
+  // This is a hashmap, every event gets an index which can be hashed and a
+  // HandlerList. Basically an event points to the lambda functions which are
+  // subscribed to this event
   std::unordered_map<std::type_index, HandlerList> subscribers;
 
 public:
