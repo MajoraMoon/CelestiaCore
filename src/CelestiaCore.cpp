@@ -8,7 +8,7 @@ namespace Celestia {
 
 CelestiaCore::CelestiaCore()
     : stateManager(eventBus, appState), window("CelestiaCore", "0.4", eventBus),
-      frameTimer(eventBus), inputManger(eventBus, appState),
+      frameTimer(eventBus), inputManager(eventBus, appState),
       renderer(window, eventBus, scene), scene(eventBus, frameTimer),
       guiManager(window, eventBus, appState) {
 
@@ -25,7 +25,7 @@ void CelestiaCore::run() {
     frameTimer.update();
 
     while (SDL_PollEvent(&event)) {
-      inputManger.processEvent(event);
+      inputManager.processEvent(event);
 
       guiManager.processGUIEvent(&event);
     }

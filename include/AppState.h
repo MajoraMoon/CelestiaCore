@@ -29,17 +29,15 @@ struct AppState {
   } simulation;
 
   struct Window {
-    bool mouseVisible = false; // Mouse cursor visibility state
-    bool maximized = false;    // Window maximized state
-    bool fullscreen = false;   // Fullscreen mode state
-    bool vsync = false;        // Vertical synchronization state (aka Vsync)
+    bool mouseVisible = false;
+    bool maximized = false;
+    bool fullscreen = false;
+    bool vsync = true;
 
   } window;
 
   struct CelestiaCore {
-    // no default initialization needed because when the main loop is not
-    // looping anymore the simulation closes
-    bool quit; // Application termination flag
+    bool quit = false; // Application termination flag
   } celestiaCore;
 
   struct Camera {

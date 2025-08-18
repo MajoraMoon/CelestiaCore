@@ -53,7 +53,7 @@ public:
 private:
   WindowSDLGL window;
   FrameTimer frameTimer;
-  InputManager inputManger;
+  InputManager inputManager;
   Renderer renderer;
   Scene scene;
   GuiManager guiManager;
