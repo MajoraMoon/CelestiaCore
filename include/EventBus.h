@@ -37,26 +37,49 @@ class EventBus {
    * and everyone registered there gets a copy
    */
 
-  // Creating an HandlerList, that means it holds all the callable functions
-  // which are subscribed with the ".on" function (In that case these will be
-  // lamdba functions).
-  // std::function<> can hold any callable datatype like normal functions,
-  // lamdba's etc... In that case it holds a void pointer, so the datatype is
-  // not defined yet, all stored Handlers will be threated the same. This is an
-  // implementation of the "Type Erasure" pattern.
+  /**
+   * Creating an HandlerList, that means it holds all the callable functions
+   * which are subscribed with the ".on" function
+   * (In that case these will be lamdba functions).
+   * std::function<> can hold any callable datatype like normal functions,
+   * lamdba's etc... In that case it holds a void pointer, so the datatype is
+   * not defined yet, all stored Handlers will be threated the same. This is an
+   * implementation of the "Type Erasure" pattern.
+   */
   using HandlerList = std::vector<std::function<void(const void *)>>;
 
-  // This is a hashmap, every event gets an index which can be hashed and a
-  // HandlerList. Basically an event points to the lambda functions which are
-  // subscribed to this event
+  /**
+   * This is a hashmap, every event gets an index which can be hashed and a
+   * HandlerList. Basically an event points to the lambda functions which are
+   * subscribed to this event
+   */
   std::unordered_map<std::type_index, HandlerList> subscribers;
 
 public:
   /**
+   * The EventBus stores user-provided handlers as lambdas.
+   *
+   * on<TEvent>(handler) creates a wrapper lambda:
+   *   auto wrapper = [h = std::forward<THandler>(handler)](const void *event) {
+   *     h(*static_cast<const TEvent *>(event));
+   *   };
+   *
+   * `h` is a variable inside the wrapper that holds the original callable
+   * (lambda / function pointer / functor). `std::forward` makes sure
+   * temporaries are moved and named handlers are copied. The wrapper uses
+   * the uniform signature `void(const void*)`.
+   *
+   * When invoked (emit), the wrapper casts the `const void*` back to
+   * `const TEvent*` and calls `h` with the resulting `const TEvent&`.
+   * The wrapper is stored as a std::function in the subscribers map
+   * under the key `typeid(TEvent)`.
+   */
+
+  /**
    * @brief Subscribe to an event type
    * @tparam TEvent The type of event to listen for (e.g., KeyEvent)
    * @tparam THandler The callback function type
-   * @param handler The function to call when event happens
+   * @param handler The code to call when event happens
    *
    * Example usage:
    * @code
@@ -86,10 +109,11 @@ public:
    *
    * This would notify everyone who subscribed to QuitEvent events.
    */
-
   template <typename TEvent> void emit(const TEvent &event) {
+    // ".find" function returns an "end iterator" if the Event was not find.
     if (auto it = subscribers.find(typeid(TEvent)); it != subscribers.end()) {
       for (auto &handler : it->second) {
+        // casting to a uniformal "const void *". The ".on" function awaits it
         handler(static_cast<const void *>(&event));
       }
     }
