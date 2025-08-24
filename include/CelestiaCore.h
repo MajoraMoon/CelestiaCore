@@ -43,7 +43,6 @@ class CelestiaCore {
   SDL_Event event;
   EventBus eventBus;
   AppState appState;
-  StateManager stateManager;
 
 public:
   CelestiaCore();
@@ -57,8 +56,6 @@ private:
   Renderer renderer;
   Scene scene;
   GuiManager guiManager;
-
-  bool m_quit = false;
 };
 
 } // namespace Celestia

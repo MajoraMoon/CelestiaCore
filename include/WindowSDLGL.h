@@ -3,6 +3,7 @@
 namespace Celestia {
 
 class EventBus;
+class AppState;
 
 /**
  * @class WindowSDLGL
@@ -18,10 +19,8 @@ class WindowSDLGL {
 
 public:
   WindowSDLGL(const std::string &title, const std::string &version,
-              EventBus &eventBus);
+              EventBus &eventBus, AppState &appState);
   ~WindowSDLGL();
-
-  void publishCurrentWindowSize();
 
   SDL_Window *getSDLGLWindow() const { return m_window; }
   SDL_GLContext getGLContext() const { return m_glContext; }
@@ -31,6 +30,7 @@ public:
 
 private:
   EventBus &eventBus;
+  AppState &appState;
   SDL_Window *m_window = nullptr;
   SDL_GLContext m_glContext = nullptr;
 
@@ -64,12 +64,6 @@ private:
   void handleMaximizeWindow();
   void handleFullscreenMode();
   void handleVsyncMode();
-
-  // values are assigned from the EventBus (AppState)
-  bool m_mouseVisible;
-  bool m_windowIsMaximized;
-  bool m_windowFullscreen;
-  bool m_vsyncMode;
 
   // start resolution initialized here, not in the AppState
   // Although it is set in the class creation, it throws errors

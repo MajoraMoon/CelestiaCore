@@ -33,11 +33,6 @@ private:
 
   void setupEventSubscriptions();
 
-  unsigned int m_width;
-  unsigned int m_height;
-
-  float m_mouseSensitivity;
-
   float m_deltaTime;
   float m_currentTime;
   float m_simulationTime;

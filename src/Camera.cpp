@@ -34,11 +34,12 @@ const float SPEED = 4.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-Camera::Camera(EventBus &eventBus, CameraInputConfig inputConfig,
-               glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+Camera::Camera(EventBus &eventBus, AppState &appState,
+               CameraInputConfig inputConfig, glm::vec3 position, glm::vec3 up,
+               float yaw, float pitch)
     : position(position), worldUp(up), movementSpeed(SPEED),
       mouseSensitivity(SENSITIVITY), zoom(ZOOM), eventBus(eventBus),
-      inputConfig(inputConfig), m_yaw(yaw), m_pitch(pitch) {
+      appState(appState), inputConfig(inputConfig), m_yaw(yaw), m_pitch(pitch) {
   setupEventSubscriptions();
 
   front = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -49,7 +50,7 @@ void Camera::processMovement(float deltaTime) {
 
   // This check is not really necessary, but an extra safety check for not
   // processing any Movement
-  if (m_mouseVisible)
+  if (appState.window.mouseVisible)
     return;
 
   float velocity = movementSpeed * deltaTime;
@@ -76,8 +77,8 @@ void Camera::applyMovement(glm::vec3 direction, float velocity) {
 
 void Camera::handleMouseMovement(float xoffset, float yoffset,
                                  bool constrainPitch) {
-  xoffset *= mouseSensitivity;
-  yoffset *= mouseSensitivity;
+  xoffset *= appState.camera.mouseSensitivity;
+  yoffset *= appState.camera.mouseSensitivity;
 
   m_yaw += xoffset;
   m_pitch -= yoffset;
@@ -114,7 +115,7 @@ void Camera::setupEventSubscriptions() {
 
   // Keyboard input
   eventBus.on<KeyEvent>([this](const auto &ev) {
-    if (!m_mouseVisible) {
+    if (!appState.window.mouseVisible) {
 
       // pressing w (trying to work with more structs)
       inputState.forward = (ev.scancode == inputConfig.moveForward)
@@ -147,31 +148,25 @@ void Camera::setupEventSubscriptions() {
   });
 
   eventBus.on<MouseMoveEvent>([this](const auto &ev) {
-    if (!m_mouseVisible) {
+    if (!appState.window.mouseVisible) {
       handleMouseMovement(ev.xrel, ev.yrel);
     }
   });
 
-  // Mouse visibility for deactivating movement
-  eventBus.on<MouseVisibilityChanged>([this](const auto &ev) {
-    m_mouseVisible = ev.visible;
-
-    // Reset input state when mouse becomes visible
-    // Important for stopping any old movement which was done before the
-    // mouse was visible
-    if (m_mouseVisible) {
-      inputState = {};
-    }
-  });
+  eventBus.on<ToggleMouseVisibilityEvent>(
+      [this](const auto &) { // Reset input state when mouse becomes visible
+        // Important for stopping any old movement which was done before the
+        // mouse was visible
+        if (appState.window.mouseVisible) {
+          inputState = {};
+        }
+      });
 
   eventBus.on<MouseScrollEvent>([this](const auto &ev) {
-    if (!m_mouseVisible) {
+    if (!appState.window.mouseVisible) {
       zoom -= ev.yoffset;
       zoom = glm::clamp(zoom, 1.0f, 45.0f);
     }
   });
-
-  eventBus.on<MouseSensitivityChanged>(
-      [this](const auto &ev) { mouseSensitivity = ev.sensitivity; });
 }
 } // namespace Celestia

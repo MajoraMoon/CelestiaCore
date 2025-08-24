@@ -13,6 +13,7 @@ namespace Celestia {
 
 // forward declarations
 class EventBus;
+class AppState;
 
 struct CameraInputConfig {
   SDL_Scancode moveForward = SDL_SCANCODE_W;
@@ -26,7 +27,8 @@ struct CameraInputConfig {
 
 class Camera {
 public:
-  Camera(EventBus &eventBus, CameraInputConfig inputConfig = {},
+  Camera(EventBus &eventBus, AppState &appState,
+         CameraInputConfig inputConfig = {},
          glm::vec3 position = glm::vec3(0.0f),
          glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f,
          float pitch = 0.0f);
@@ -48,6 +50,7 @@ public:
 
 private:
   EventBus &eventBus;
+  AppState &appState;
   CameraInputConfig inputConfig;
 
   struct InputState {
@@ -70,9 +73,6 @@ private:
   // Rotation angles
   float m_yaw;
   float m_pitch;
-
-  // Internal state
-  bool m_mouseVisible;
 };
 
 } // namespace Celestia

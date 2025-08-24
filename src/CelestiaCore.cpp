@@ -7,14 +7,14 @@
 namespace Celestia {
 
 CelestiaCore::CelestiaCore()
-    : stateManager(eventBus, appState), window("CelestiaCore", "0.4", eventBus),
-      frameTimer(eventBus), inputManager(eventBus, appState),
-      renderer(window, eventBus, scene), scene(eventBus, frameTimer),
+    : window("CelestiaCore", "0.4", eventBus, appState),
+      frameTimer(eventBus, appState), inputManager(eventBus, appState),
+      renderer(window, eventBus, scene, appState), scene(eventBus, frameTimer),
       guiManager(window, eventBus, appState) {
 
-  // set up the initial states of the "global" variables for all classes after
-  // their creation set up the right resolution after all classes are created
-  stateManager.publishInitialStates();
+  eventBus.on<QuitEvent>([this](const auto &) {
+    appState.celestiaCore.quit = !appState.celestiaCore.quit;
+  });
 }
 
 void CelestiaCore::run() {

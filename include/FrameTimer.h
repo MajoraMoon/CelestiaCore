@@ -15,11 +15,12 @@ namespace Celestia {
 
 // forward declarations
 class EventBus;
+class AppState;
 
 class FrameTimer {
 
 public:
-  FrameTimer(EventBus &eventBus);
+  FrameTimer(EventBus &eventBus, AppState &appState);
   void update();
 
   float getSimulationDeltaTime() { return m_simulationDeltaTime; }
@@ -27,6 +28,7 @@ public:
 
 private:
   EventBus &eventBus;
+  AppState &appState;
 
   void setupEventSubscriptions();
 
@@ -39,8 +41,6 @@ private:
   float m_stableFPS;
   float m_timeAccumulator;
   int m_frameCount;
-
-  bool m_simulationPaused;
 };
 
 } // namespace Celestia

@@ -19,11 +19,13 @@ namespace Celestia {
 class WindowSDLGL;
 class EventBus;
 class Scene;
+class AppState;
 
 class Renderer {
 
 public:
-  Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene);
+  Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene,
+           AppState &appState);
   ~Renderer();
   void renderFrame();
 
@@ -31,6 +33,7 @@ private:
   WindowSDLGL &window;
   EventBus &eventBus;
   Scene &scene;
+  AppState &appState;
 
   Camera camera;
   Shader shader;

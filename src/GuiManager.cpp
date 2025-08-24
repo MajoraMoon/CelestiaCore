@@ -85,7 +85,7 @@ void GuiManager::showStatsWindow() {
   ImGui::Text("Simulation Runtime (seconds): %.2f", m_simulationTime);
   ImGui::Text("FPS (average): %.3f", m_stableFPS);
   ImGui::Spacing();
-  ImGui::Text("Resolution: %ix%i", m_width, m_height);
+  ImGui::Text("Resolution: %ix%i", window.getWidth(), window.getHeight());
   ImGui::Text("Simulation paused: %s",
               appState.simulation.paused ? "True" : "False");
 
@@ -106,9 +106,10 @@ void GuiManager::showStatsWindow() {
   }
 
   // mouse sensitivity slider
-  if (ImGui::SliderFloat("Mouse Sensitivity", &m_mouseSensitivity, 0.001f, 1.0f,
+  float sensitivity = appState.camera.mouseSensitivity;
+  if (ImGui::SliderFloat("Mouse Sensitivity", &sensitivity, 0.001f, 1.0f,
                          "%.3f")) {
-    eventBus.emit(SetMouseSensitivityEvent{m_mouseSensitivity});
+    eventBus.emit(SetMouseSensitivityEvent{sensitivity});
   }
 
   if (ImGui::Button("Close CelestiaCore", ImVec2(-1, 0))) {
@@ -130,14 +131,6 @@ void GuiManager::showShortcutsWindow() {
 }
 
 void GuiManager::setupEventSubscriptions() {
-
-  eventBus.on<MouseSensitivityChanged>(
-      [this](const auto &ev) { m_mouseSensitivity = ev.sensitivity; });
-
-  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
-    m_width = ev.width;
-    m_height = ev.height;
-  });
 
   eventBus.on<FrameUpdateEvent>([this](const auto &ev) {
     m_currentTime = ev.lastTime;

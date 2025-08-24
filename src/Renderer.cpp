@@ -8,9 +8,10 @@
 
 namespace Celestia {
 
-Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene)
-    : window(window), eventBus(eventBus), scene(scene),
-      camera(eventBus, {}, glm::vec3(0.0f, 0.0f, 6.0f)),
+Renderer::Renderer(WindowSDLGL &window, EventBus &eventBus, Scene &scene,
+                   AppState &appState)
+    : window(window), eventBus(eventBus), scene(scene), appState(appState),
+      camera(eventBus, appState, {}, glm::vec3(0.0f, 0.0f, 6.0f)),
       shader("../shader/vertexShader.vert", "../shader/fragmentShader.frag"),
       cubeMesh({
 

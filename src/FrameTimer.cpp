@@ -6,14 +6,14 @@
 
 namespace Celestia {
 
-FrameTimer::FrameTimer(EventBus &eventBus) : eventBus(eventBus) {
+FrameTimer::FrameTimer(EventBus &eventBus, AppState &appState)
+    : eventBus(eventBus), appState(appState) {
   setupEventSubscriptions();
 
   m_lastTime = SDL_GetTicks() / 1000.0f;
   m_deltaTime = 0.0f;
   m_simulationTime = 0.0f;
   m_simulationDeltaTime = 0.0f;
-  m_simulationPaused = false;
 
   m_fps = 0.0f;
   m_stableFPS = 0.0f;
@@ -26,7 +26,7 @@ void FrameTimer::update() {
   m_deltaTime = currentTime - m_lastTime;
   m_lastTime = currentTime;
 
-  if (!m_simulationPaused) {
+  if (!appState.simulation.paused) {
     m_simulationDeltaTime = m_deltaTime;
     m_simulationTime += m_simulationDeltaTime;
   } else {
@@ -53,13 +53,14 @@ void FrameTimer::update() {
   // publish events from EventTimer here, because they are not part of any
   // SDL_EVENTS. SDL_EVENTS, so keyboard and mouse events
   eventBus.emit(FrameUpdateEvent(m_deltaTime, m_lastTime, m_simulationTime,
-                                 m_simulationDeltaTime, m_stableFPS,
-                                 m_simulationPaused));
+                                 m_simulationDeltaTime, m_stableFPS));
 }
 
 void FrameTimer::setupEventSubscriptions() {
-  eventBus.on<SimulationPausedChanged>(
-      [this](const auto &ev) { m_simulationPaused = ev.paused; });
+
+  eventBus.on<TogglePauseEvent>([this](const auto &) {
+    appState.simulation.paused = !appState.simulation.paused;
+  });
 }
 
 } // namespace Celestia

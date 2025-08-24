@@ -68,12 +68,11 @@ struct FrameUpdateEvent {
   float simulationTime;      // scaled simulation clock
   float simulationDeltaTime; // scaled simulation step
   float stableFPS;           // Filtered FPS measurement
-  bool paused;               // Simulation pause state
 
   FrameUpdateEvent(float delta, float last, float simTime, float simDelta,
-                   float fps, bool paused)
+                   float fps)
       : deltaTime(delta), lastTime(last), simulationTime(simTime),
-        simulationDeltaTime(simDelta), stableFPS(fps), paused(paused) {}
+        simulationDeltaTime(simDelta), stableFPS(fps) {}
 };
 
 //------------------------------------------------------------------------------
