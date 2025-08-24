@@ -1,4 +1,4 @@
-// clang-format off
+/* // clang-format off
 #include "pch.h"
 #include "EventSystem.h"
 // clang-format on
@@ -91,3 +91,4 @@ void StateManager::publishInitialStates() {
 }
 
 } // namespace Celestia
+ */

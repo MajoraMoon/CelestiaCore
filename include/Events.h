@@ -149,6 +149,7 @@ struct SetVsyncModeEvent {
 //
 //------------------------------------------------------------------------------
 
+/*
 // Broadcast state changes after successful modifications
 
 /// @brief Confirms mouse visibility state change
@@ -207,5 +208,5 @@ struct VsyncModeChanged {
   bool vsync;
   VsyncModeChanged(bool v) : vsync(v) {}
 };
-
+ */
 } // namespace Celestia

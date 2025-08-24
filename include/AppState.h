@@ -45,7 +45,7 @@ struct AppState {
   } camera;
 };
 
-class StateManager {
+/* class StateManager {
 
 public:
   StateManager(EventBus &eventBus, AppState &state);
@@ -57,6 +57,6 @@ private:
   AppState &state;
 
   void setupSubscriptions();
-};
+}; */
 
 } // namespace Celestia
