@@ -94,6 +94,11 @@ void WindowSDLGL::initializeState() {
   m_prevWidth = m_width;
   m_prevHeight = m_height;
   m_videoDriver = SDL_GetCurrentVideoDriver();
+
+  handleMouseVisibity();
+  handleFullscreenMode();
+  handleVsyncMode();
+  handleMaximizeWindow();
 }
 
 //------------------------------------------------------------------------------

@@ -29,10 +29,10 @@ struct AppState {
   } simulation;
 
   struct Window {
-    bool mouseVisible = false;
-    bool maximized = false;
+    bool mouseVisible = true;
+    bool maximized = true;
     bool fullscreen = false;
-    bool vsync = true;
+    bool vsync = false;
 
   } window;
 
@@ -44,19 +44,5 @@ struct AppState {
     float mouseSensitivity = 0.150f; // Camera control sensitivity
   } camera;
 };
-
-/* class StateManager {
-
-public:
-  StateManager(EventBus &eventBus, AppState &state);
-
-  void publishInitialStates();
-
-private:
-  EventBus &eventBus;
-  AppState &state;
-
-  void setupSubscriptions();
-}; */
 
 } // namespace Celestia

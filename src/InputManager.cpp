@@ -25,7 +25,7 @@ void InputManager::processEvent(const SDL_Event &event) {
       if (appState.window.fullscreen) {
 
         eventBus.emit(SetFullscreenModeEvent{
-            static_cast<bool>(!appState.window.fullscreen)});
+            static_cast<bool>(appState.window.fullscreen)});
       }
 
       break;
