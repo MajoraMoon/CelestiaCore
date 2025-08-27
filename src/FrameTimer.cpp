@@ -56,11 +56,4 @@ void FrameTimer::update() {
                                  m_simulationDeltaTime, m_stableFPS));
 }
 
-void FrameTimer::setupEventSubscriptions() {
-
-  eventBus.on<TogglePauseEvent>([this](const auto &) {
-    appState.simulation.paused = !appState.simulation.paused;
-  });
-}
-
 } // namespace Celestia

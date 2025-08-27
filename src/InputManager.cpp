@@ -23,22 +23,19 @@ void InputManager::processEvent(const SDL_Event &event) {
 
       // if window in fullscreen then exit fullscreen
       if (appState.window.fullscreen) {
-
-        eventBus.emit(SetFullscreenModeEvent{
-            static_cast<bool>(appState.window.fullscreen)});
+        eventBus.emit(SetFullscreenModeEvent(!appState.window.fullscreen));
       }
 
       break;
 
     // press F1 to show/hide the gui windows
     case SDLK_F1:
-      eventBus.emit(ToggleGuiVisibilityEvent{});
+      eventBus.emit(SetGuiVisibilityEvent(!appState.gui.visibility));
       break;
 
       // press m to show/hide the mouse
     case SDLK_M:
-      eventBus.emit(ToggleMouseVisibilityEvent{});
-
+      eventBus.emit(SetMouseVisibilityEvent(!appState.window.mouseVisibility));
       break;
 
     // press f to maximize the window
@@ -46,14 +43,13 @@ void InputManager::processEvent(const SDL_Event &event) {
 
       // safety check, only can maximize window when not in fullscreen mode.
       if (!appState.window.fullscreen) {
-        eventBus.emit(ToggleWindowMaximizedEvent{});
+        eventBus.emit(SetWindowMaximizedEvent(!appState.window.maximized));
       }
-
       break;
 
     // press p to pause/unpause the simulation
     case SDLK_P:
-      eventBus.emit(TogglePauseEvent{});
+      eventBus.emit(SetPauseEvent(!appState.simulation.paused));
       break;
 
     // press q+ctrl+shift to close the simulation

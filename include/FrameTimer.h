@@ -30,8 +30,6 @@ private:
   EventBus &eventBus;
   AppState &appState;
 
-  void setupEventSubscriptions();
-
   float m_deltaTime;
   float m_lastTime;
   float m_simulationTime;

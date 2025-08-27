@@ -115,31 +115,22 @@ void WindowSDLGL::setupEventSubscriptions() {
     handleWindowResize(m_width, m_height);
   });
 
-  eventBus.on<ToggleMouseVisibilityEvent>([this](const auto &) {
-    appState.window.mouseVisible = !appState.window.mouseVisible;
-    handleMouseVisibity();
-  });
+  eventBus.on<SetMouseVisibilityEvent>(
+      [this](const auto &) { handleMouseVisibity(); });
 
-  eventBus.on<ToggleWindowMaximizedEvent>([this](const auto &ev) {
-    appState.window.maximized = !appState.window.maximized;
-    handleMaximizeWindow();
-  });
+  eventBus.on<SetWindowMaximizedEvent>(
+      [this](const auto &ev) { handleMaximizeWindow(); });
 
-  eventBus.on<SetFullscreenModeEvent>([this](const auto &) {
-    appState.window.fullscreen = !appState.window.fullscreen;
-    handleFullscreenMode();
-  });
+  eventBus.on<SetFullscreenModeEvent>(
+      [this](const auto &) { handleFullscreenMode(); });
 
-  eventBus.on<SetVsyncModeEvent>([this](const auto &) {
-    appState.window.vsync = !appState.window.vsync;
-    handleVsyncMode();
-  });
+  eventBus.on<SetVsyncModeEvent>([this](const auto &) { handleVsyncMode(); });
 }
 
 void WindowSDLGL::handleMouseVisibity() {
   // invert  boolean values.
   // mouseEvent says: mouse not visible? then false. mouse visible: then true.
-  bool relativeMode = !appState.window.mouseVisible;
+  bool relativeMode = !appState.window.mouseVisibility;
 
   if (!SDL_SetWindowRelativeMouseMode(m_window, relativeMode)) {
     std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()

@@ -50,7 +50,7 @@ void Camera::processMovement(float deltaTime) {
 
   // This check is not really necessary, but an extra safety check for not
   // processing any Movement
-  if (appState.window.mouseVisible)
+  if (appState.window.mouseVisibility)
     return;
 
   float velocity = movementSpeed * deltaTime;
@@ -115,7 +115,7 @@ void Camera::setupEventSubscriptions() {
 
   // Keyboard input
   eventBus.on<KeyEvent>([this](const auto &ev) {
-    if (!appState.window.mouseVisible) {
+    if (!appState.window.mouseVisibility) {
 
       // pressing w (trying to work with more structs)
       inputState.forward = (ev.scancode == inputConfig.moveForward)
@@ -148,22 +148,22 @@ void Camera::setupEventSubscriptions() {
   });
 
   eventBus.on<MouseMoveEvent>([this](const auto &ev) {
-    if (!appState.window.mouseVisible) {
+    if (!appState.window.mouseVisibility) {
       handleMouseMovement(ev.xrel, ev.yrel);
     }
   });
 
-  eventBus.on<ToggleMouseVisibilityEvent>(
+  eventBus.on<SetMouseVisibilityEvent>(
       [this](const auto &) { // Reset input state when mouse becomes visible
         // Important for stopping any old movement which was done before the
         // mouse was visible
-        if (appState.window.mouseVisible) {
+        if (appState.window.mouseVisibility) {
           inputState = {};
         }
       });
 
   eventBus.on<MouseScrollEvent>([this](const auto &ev) {
-    if (!appState.window.mouseVisible) {
+    if (!appState.window.mouseVisibility) {
       zoom -= ev.yoffset;
       zoom = glm::clamp(zoom, 1.0f, 45.0f);
     }

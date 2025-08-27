@@ -41,7 +41,7 @@ GuiManager::~GuiManager() {
 
 void GuiManager::processGUIEvent(const SDL_Event *event) {
 
-  if (appState.window.mouseVisible) {
+  if (appState.window.mouseVisibility) {
     ImGui_ImplSDL3_ProcessEvent(event);
   }
 }
@@ -54,7 +54,7 @@ void GuiManager::render() {
 
   // dear ImGui needs to end the rendering even if nothing is displayed. So only
   // if Visibility is toggled on, the private functions from imgui are shown
-  if (appState.gui.visible) {
+  if (appState.gui.visibility) {
     showShortcutsWindow();
     showStatsWindow();
   }

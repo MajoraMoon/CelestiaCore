@@ -16,7 +16,7 @@ namespace Celestia {
  * @brief Signals a keyboard key state change
  * @param scancode SDL_SCANCODE value of the affected key
  * @param pressed True if key was pressed, false if released
- * @note Published by InputManager during event processing loop
+ * @note emitted by InputManager during event processing loop
  */
 struct KeyEvent {
   SDL_Scancode scancode; // Platform-independent key identifier
@@ -31,7 +31,7 @@ struct KeyEvent {
  * @brief Reports relative mouse movement in pixels
  * @param xrel Horizontal movement since last frame
  * @param yrel Vertical movement since last frame
- * @note Published by InputManager after mouse motion detection
+ * @note emitted by InputManager after mouse motion detection
  */
 struct MouseMoveEvent {
   float xrel;
@@ -44,7 +44,7 @@ struct MouseMoveEvent {
  * @struct MouseScrollEvent
  * @brief Reports vertical mouse wheel movement
  * @param yoffset Vertical scroll offset (positive = up, negative = down)
- * @note Published by InputManager for precise scroll wheel tracking
+ * @note emitted by InputManager for precise scroll wheel tracking
  */
 struct MouseScrollEvent {
   float yoffset;
@@ -60,7 +60,7 @@ struct MouseScrollEvent {
  * @param simulationDeltaTime Scaled time since last simulation update
  * @param stableFPS Smoothed frames per second average
  * @param paused Whether simulation updates are suspended
- * @note Published by FrameTimer at start of each frame
+ * @note emitted by FrameTimer at start of each frame
  */
 struct FrameUpdateEvent {
   float deltaTime;           // Real-time frame duration
@@ -81,26 +81,9 @@ struct FrameUpdateEvent {
 //
 //------------------------------------------------------------------------------
 
-// Intent events requesting application state changes
-
-/// @brief Toggles mouse cursor visibility (M key)
-/// @note Published by InputManager, handled by StateManager
-struct ToggleMouseVisibilityEvent {};
-
-/// @brief Toggles GUI panel visibility (F1 key)
-/// @note Published by InputManager, handled by GuiManager
-struct ToggleGuiVisibilityEvent {};
-
-/// @brief Pauses/unpauses simulation (P key)
-/// @note Published by InputManager, handled by FrameTimer
-struct TogglePauseEvent {};
-
-/// @brief Toggles window between normal/maximized states (F key)
-/// @note Published by InputManager, handled by WindowSDLGL
-struct ToggleWindowMaximizedEvent {};
-
-/// @brief Requests application termination (CTRL+SHIFT+Q)
-/// @note Published by InputManager, handled by CelestiaCore
+/// @brief Requests application termination (CTRL+SHIFT+Q) (or ALT+F4 if
+/// implemented by the Enviroment)
+/// @note emitted by InputManager
 struct QuitEvent {};
 
 /**
@@ -108,7 +91,7 @@ struct QuitEvent {};
  * @brief Signals viewport dimension changes
  * @param width New window width in pixels
  * @param height New window height in pixels
- * @note Published by WindowSDLGL after resize operations
+ * @note emitted by WindowSDLGL after resize operations
  */
 struct WindowResizeEvent {
   // the initial states of values are not set in the AppState but in the private
@@ -118,9 +101,37 @@ struct WindowResizeEvent {
   WindowResizeEvent(uint32_t w, uint32_t h) : width(w), height(h) {}
 };
 
+/// @brief Toggles mouse cursor visibility (M key)
+/// @note emitted by InputManager
+struct SetMouseVisibilityEvent {
+  bool visible;
+  SetMouseVisibilityEvent(bool v) : visible(v) {};
+};
+
+/// @brief Toggles GUI panel visibility (F1 key)
+/// @note emitted by InputManager
+struct SetGuiVisibilityEvent {
+  bool visible;
+  SetGuiVisibilityEvent(bool v) : visible(v) {};
+};
+
+/// @brief Pauses/unpauses simulation (P key)
+/// @note emitted by InputManager
+struct SetPauseEvent {
+  bool paused;
+  SetPauseEvent(bool p) : paused(p) {};
+};
+
+/// @brief Toggles window between normal/maximized states (F key)
+/// @note emitted by InputManager
+struct SetWindowMaximizedEvent {
+  bool maximized;
+  SetWindowMaximizedEvent(bool m) : maximized(m) {};
+};
+
 /// @brief Sets mouse sensitivity from GUI control
 /// @param sensitivity New sensitivity value (normalized 0.0-1.0)
-/// @note Published by GuiManager, handled by CameraSystem
+/// @note emitted by GuiManager
 struct SetMouseSensitivityEvent {
   float sensitivity;
   SetMouseSensitivityEvent(float s) : sensitivity(s) {}
@@ -128,7 +139,7 @@ struct SetMouseSensitivityEvent {
 
 /// @brief Changes window fullscreen state
 /// @param fullscreen Requested fullscreen mode
-/// @note Published by GuiManager & InputManager, handled by WindowSDLGL
+/// @note emitted by GuiManager
 struct SetFullscreenModeEvent {
   bool fullscreen;
   SetFullscreenModeEvent(bool f) : fullscreen(f) {}
@@ -136,7 +147,7 @@ struct SetFullscreenModeEvent {
 
 /// @brief Controls vertical synchronization
 /// @param vsync True to enable VSync, false to disable
-/// @note Published by GuiManager, handled by WindowSDLGL
+/// @note emitted by GuiManager
 struct SetVsyncModeEvent {
   bool vsync;
   SetVsyncModeEvent(bool v) : vsync(v) {}

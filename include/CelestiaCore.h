@@ -56,6 +56,8 @@ private:
   Renderer renderer;
   Scene scene;
   GuiManager guiManager;
+
+  void setupStateChangesSubscriptions();
 };
 
 } // namespace Celestia

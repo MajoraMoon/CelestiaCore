@@ -21,7 +21,7 @@ struct AppState;
 struct AppState {
 
   struct Gui {
-    bool visible = true; // Global GUI visibility state
+    bool visibility = true; // Global GUI visibility state
   } gui;
 
   struct Simulation {
@@ -29,7 +29,7 @@ struct AppState {
   } simulation;
 
   struct Window {
-    bool mouseVisible = true;
+    bool mouseVisibility = true;
     bool maximized = true;
     bool fullscreen = false;
     bool vsync = false;
