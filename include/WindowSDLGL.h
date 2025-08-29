@@ -59,11 +59,11 @@ private:
   //
   //------------------------------------------------------------------------------
   void setupEventSubscriptions();
-  void handleMouseVisibity();
+  void handleMouseVisibity(bool visible);
   void handleWindowResize(unsigned int width, unsigned int height);
-  void handleMaximizeWindow();
-  void handleFullscreenMode();
-  void handleVsyncMode();
+  void handleMaximizeWindow(bool maximized);
+  void handleFullscreenMode(bool fullscreen);
+  void handleVsyncMode(bool vsync);
 
   // start resolution initialized here, not in the AppState
   // Although it is set in the class creation, it throws errors

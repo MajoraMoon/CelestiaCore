@@ -30,14 +30,15 @@ struct AppState {
 
   struct Window {
     bool mouseVisibility = true;
-    bool maximized = true;
+    bool maximized = false;
     bool fullscreen = false;
+    // Activating Vsync from the beginning does not work for some reason.
     bool vsync = false;
 
   } window;
 
   struct CelestiaCore {
-    bool quit = false; // Application termination flag
+    bool quit = false;
   } celestiaCore;
 
   struct Camera {

@@ -47,13 +47,23 @@ void CelestiaCore::setupStateChangesSubscriptions() {
       [this](const auto &ev) { appState.window.mouseVisibility = ev.visible; });
 
   eventBus.on<SetGuiVisibilityEvent>(
-      [this](const auto &ev) { appState.gui.visible = ev.visible; });
+      [this](const auto &ev) { appState.gui.visibility = ev.visible; });
 
   eventBus.on<SetPauseEvent>(
       [this](const auto &ev) { appState.simulation.paused = ev.paused; });
 
   eventBus.on<SetWindowMaximizedEvent>(
       [this](const auto &ev) { appState.window.maximized = ev.maximized; });
+
+  eventBus.on<SetFullscreenModeEvent>(
+      [this](const auto &ev) { appState.window.fullscreen = ev.fullscreen; });
+
+  eventBus.on<SetVsyncModeEvent>(
+      [this](const auto &ev) { appState.window.vsync = ev.vsync; });
+
+  eventBus.on<SetMouseSensitivityEvent>([this](const auto &ev) {
+    appState.camera.mouseSensitivity = ev.sensitivity;
+  });
 }
 
 } // namespace Celestia

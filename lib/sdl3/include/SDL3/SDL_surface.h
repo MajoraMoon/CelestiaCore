@@ -83,9 +83,8 @@ typedef Uint32 SDL_SurfaceFlags;
 typedef enum SDL_ScaleMode
 {
     SDL_SCALEMODE_INVALID = -1,
-    SDL_SCALEMODE_NEAREST,  /**< nearest pixel sampling */
-    SDL_SCALEMODE_LINEAR,   /**< linear filtering */
-    SDL_SCALEMODE_PIXELART  /**< nearest pixel sampling with improved scaling for pixel art */
+    SDL_SCALEMODE_NEAREST, /**< nearest pixel sampling */
+    SDL_SCALEMODE_LINEAR   /**< linear filtering */
 } SDL_ScaleMode;
 
 /**
@@ -1136,9 +1135,6 @@ extern SDL_DECLSPEC bool SDLCALL SDL_FillSurfaceRects(SDL_Surface *dst, const SD
  * If either `srcrect` or `dstrect` are NULL, the entire surface (`src` or
  * `dst`) is copied while ensuring clipping to `dst->clip_rect`.
  *
- * The final blit rectangles are saved in `srcrect` and `dstrect` after all
- * clipping is performed.
- *
  * The blit function should not be called on a locked surface.
  *
  * The blit semantics for surfaces with and without blending and colorkey are
@@ -1283,10 +1279,11 @@ extern SDL_DECLSPEC bool SDLCALL SDL_BlitSurfaceUncheckedScaled(SDL_Surface *src
  *
  * \param src the SDL_Surface structure to be copied from.
  * \param srcrect the SDL_Rect structure representing the rectangle to be
- *                copied, may not be NULL.
+ *                copied, or NULL to copy the entire surface.
  * \param dst the SDL_Surface structure that is the blit target.
  * \param dstrect the SDL_Rect structure representing the target rectangle in
- *                the destination surface, may not be NULL.
+ *                the destination surface, or NULL to fill the entire
+ *                destination surface.
  * \param scaleMode the SDL_ScaleMode to be used.
  * \returns true on success or false on failure; call SDL_GetError() for more
  *          information.

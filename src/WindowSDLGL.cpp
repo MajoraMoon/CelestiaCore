@@ -11,7 +11,7 @@ WindowSDLGL::WindowSDLGL(const std::string &title, const std::string &version,
     : eventBus(eventBus), appState(appState), m_title(title),
       m_version(version) {
 
-  // Order here is important!
+  // Note: Do not fuck with this Order here, it is important
   setupEventSubscriptions();
   initializeSDL();
   createWindow();
@@ -95,42 +95,16 @@ void WindowSDLGL::initializeState() {
   m_prevHeight = m_height;
   m_videoDriver = SDL_GetCurrentVideoDriver();
 
-  handleMouseVisibity();
-  handleFullscreenMode();
-  handleVsyncMode();
-  handleMaximizeWindow();
+  handleMaximizeWindow(appState.window.maximized);
+  handleMouseVisibity(appState.window.mouseVisibility);
+  handleFullscreenMode(appState.window.fullscreen);
+  handleVsyncMode(appState.window.vsync);
 }
 
-//------------------------------------------------------------------------------
-//
-// Event Subscription Setup
-//
-//------------------------------------------------------------------------------
-
-void WindowSDLGL::setupEventSubscriptions() {
-  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
-    m_width = ev.width;
-    m_height = ev.height;
-
-    handleWindowResize(m_width, m_height);
-  });
-
-  eventBus.on<SetMouseVisibilityEvent>(
-      [this](const auto &) { handleMouseVisibity(); });
-
-  eventBus.on<SetWindowMaximizedEvent>(
-      [this](const auto &ev) { handleMaximizeWindow(); });
-
-  eventBus.on<SetFullscreenModeEvent>(
-      [this](const auto &) { handleFullscreenMode(); });
-
-  eventBus.on<SetVsyncModeEvent>([this](const auto &) { handleVsyncMode(); });
-}
-
-void WindowSDLGL::handleMouseVisibity() {
+void WindowSDLGL::handleMouseVisibity(bool visible) {
   // invert  boolean values.
   // mouseEvent says: mouse not visible? then false. mouse visible: then true.
-  bool relativeMode = !appState.window.mouseVisibility;
+  bool relativeMode = !visible;
 
   if (!SDL_SetWindowRelativeMouseMode(m_window, relativeMode)) {
     std::cerr << "Unable to set Mouse to relative Mode: " << SDL_GetError()
@@ -150,45 +124,24 @@ void WindowSDLGL::handleWindowResize(unsigned int width, unsigned int height) {
   glViewport(0, 0, width, height);
 }
 
-void WindowSDLGL::handleMaximizeWindow() {
-  // invert  boolean values again
-  bool shouldRestore = !appState.window.maximized;
-
-  if (shouldRestore) {
-    // Restore window before resizing
+void WindowSDLGL::handleMaximizeWindow(bool maximized) {
+  if (maximized) {
+    if (!SDL_MaximizeWindow(m_window)) {
+      std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
+    }
+  } else {
     if (!SDL_RestoreWindow(m_window)) {
       std::cerr << "Could not restore window properties: " << SDL_GetError()
                 << std::endl;
     }
-
-    SDL_DisplayID displayID = SDL_GetDisplayForWindow(m_window);
-    SDL_Rect usableBounds;
-    if (!SDL_GetDisplayUsableBounds(displayID, &usableBounds)) {
-      std::cerr << "Could not detect usable desktop area: " << SDL_GetError()
-                << std::endl;
-    } else {
-      int newWidth = usableBounds.w / 2;
-      int newHeight = usableBounds.h / 2;
-
-      SDL_SetWindowSize(m_window, newWidth, newHeight);
-
-      int posX = usableBounds.x + (usableBounds.w - newWidth) / 2;
-      int posY = usableBounds.y + (usableBounds.h - newHeight) / 2;
-      SDL_SetWindowPosition(m_window, posX, posY);
-    }
-  } else {
-    if (!SDL_MaximizeWindow(m_window)) {
-      std::cerr << "Unable to maximize window: " << SDL_GetError() << std::endl;
-    }
   }
 }
 
-void WindowSDLGL::handleFullscreenMode() {
-  bool setFullscreenMode = appState.window.fullscreen;
+void WindowSDLGL::handleFullscreenMode(bool fullscreen) {
   bool isWayland = (m_videoDriver == "wayland");
 
   // set to fullscreen mode
-  if (setFullscreenMode) {
+  if (fullscreen) {
 
     SDL_GetWindowSize(m_window, &m_prevWidth, &m_prevHeight);
     if (!isWayland) {
@@ -213,14 +166,34 @@ void WindowSDLGL::handleFullscreenMode() {
   eventBus.emit(WindowResizeEvent(m_width, m_height));
 }
 
-void WindowSDLGL::handleVsyncMode() {
-  bool setVsnycMode = appState.window.vsync;
-
-  if (setVsnycMode) {
+void WindowSDLGL::handleVsyncMode(bool vsync) {
+  if (vsync) {
+    std::cout << vsync << std::endl;
     SDL_GL_SetSwapInterval(1);
   } else {
     SDL_GL_SetSwapInterval(0);
   }
+}
+
+void WindowSDLGL::setupEventSubscriptions() {
+  eventBus.on<WindowResizeEvent>([this](const auto &ev) {
+    m_width = ev.width;
+    m_height = ev.height;
+
+    handleWindowResize(m_width, m_height);
+  });
+
+  eventBus.on<SetMouseVisibilityEvent>(
+      [this](const auto &ev) { handleMouseVisibity(ev.visible); });
+
+  eventBus.on<SetWindowMaximizedEvent>(
+      [this](const auto &ev) { handleMaximizeWindow(ev.maximized); });
+
+  eventBus.on<SetFullscreenModeEvent>(
+      [this](const auto &ev) { handleFullscreenMode(ev.fullscreen); });
+
+  eventBus.on<SetVsyncModeEvent>(
+      [this](const auto &ev) { handleVsyncMode(ev.vsync); });
 }
 
 } // namespace Celestia

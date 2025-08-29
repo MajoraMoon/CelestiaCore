@@ -25,7 +25,6 @@ void InputManager::processEvent(const SDL_Event &event) {
       if (appState.window.fullscreen) {
         eventBus.emit(SetFullscreenModeEvent(!appState.window.fullscreen));
       }
-
       break;
 
     // press F1 to show/hide the gui windows
@@ -40,11 +39,7 @@ void InputManager::processEvent(const SDL_Event &event) {
 
     // press f to maximize the window
     case SDLK_F:
-
-      // safety check, only can maximize window when not in fullscreen mode.
-      if (!appState.window.fullscreen) {
-        eventBus.emit(SetWindowMaximizedEvent(!appState.window.maximized));
-      }
+      eventBus.emit(SetWindowMaximizedEvent(!appState.window.maximized));
       break;
 
     // press p to pause/unpause the simulation

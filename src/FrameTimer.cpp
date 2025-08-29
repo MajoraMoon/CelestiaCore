@@ -8,7 +8,6 @@ namespace Celestia {
 
 FrameTimer::FrameTimer(EventBus &eventBus, AppState &appState)
     : eventBus(eventBus), appState(appState) {
-  setupEventSubscriptions();
 
   m_lastTime = SDL_GetTicks() / 1000.0f;
   m_deltaTime = 0.0f;
