@@ -49,7 +49,8 @@ private:
   void initializeGlad();
 
   /**
-   * @brief Sets some initial values afte being called in the constructor
+   * @brief Sets some initial values afte being called in the constructor. Also
+   * setting up the needed functions with AppState values
    */
   void initializeState();
 
@@ -64,6 +65,7 @@ private:
   void handleMaximizeWindow(bool maximized);
   void handleFullscreenMode(bool fullscreen);
   void handleVsyncMode(bool vsync);
+  void centerWindow();
 
   // start resolution initialized here, not in the AppState
   // Although it is set in the class creation, it throws errors
