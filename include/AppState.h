@@ -29,7 +29,7 @@ struct AppState {
   } simulation;
 
   struct Window {
-    bool mouseVisibility = true;
+    bool mouseVisibility = false;
     bool maximized = false;
     bool fullscreen = false;
     // Activating Vsync from the beginning does not work for some reason.
