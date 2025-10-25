@@ -15,6 +15,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# setting for Clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # -----------------------------------------
 # Compiler & Linker Flags
 # -----------------------------------------
@@ -25,7 +28,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -march=native
         -Wall
     )
-    
+
     # Remove unused sections from final binary
     add_link_options(-Wl,--gc-sections)
 
@@ -62,17 +65,17 @@ set(SDL_EXAMPLES OFF CACHE BOOL "Disable SDL examples" FORCE)
 add_subdirectory(lib/sdl3 EXCLUDE_FROM_ALL)
 add_subdirectory(lib/sdl3_image EXCLUDE_FROM_ALL)
 
-# that's some random sdl compiling error fix. 
+# that's some random sdl compiling error fix.
 # It tries to compile two identical files "SDL_windowsgameinput".
-# one is a c++ file the other a c file. 
+# one is a c++ file the other a c file.
 # I'll remove the .cpp file here because SDL3 is written in C.
 # No idea if it's fixed yet, will test it if compiling on windows later.
 if(WIN32)
 
-  get_target_property(SDL3_SOURCES SDL3-shared SOURCES)
-  # Remove the .cpp file causing duplicates
-  list(FILTER SDL3_SOURCES EXCLUDE REGEX ".*SDL_windowsgameinput\\.cpp$")
-  set_target_properties(SDL3-shared PROPERTIES SOURCES "${SDL3_SOURCES}")
+    get_target_property(SDL3_SOURCES SDL3-shared SOURCES)
+    # Remove the .cpp file causing duplicates
+    list(FILTER SDL3_SOURCES EXCLUDE REGEX ".*SDL_windowsgameinput\\.cpp$")
+    set_target_properties(SDL3-shared PROPERTIES SOURCES "${SDL3_SOURCES}")
 endif()
 
 # -----------------------------------------
@@ -83,25 +86,25 @@ set(GLAD_SRC ${CMAKE_SOURCE_DIR}/lib/glad/src/glad.c)
 set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 
 # ImGui: gather sources and exclude demo
- file(GLOB IMGUI_SOURCES 
+file(GLOB IMGUI_SOURCES
      ${CMAKE_SOURCE_DIR}/lib/imgui/*.cpp
      ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_sdl3.cpp
      ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
  )
 
- # imgui demo does not need to be compiled with the project itself
- list(REMOVE_ITEM IMGUI_SOURCES 
+# imgui demo does not need to be compiled with the project itself
+list(REMOVE_ITEM IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_demo.cpp
 )
 
 
- add_library(imgui STATIC ${IMGUI_SOURCES})
- target_include_directories(imgui PUBLIC
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PUBLIC
      ${CMAKE_SOURCE_DIR}/lib/imgui
      ${CMAKE_SOURCE_DIR}/lib/imgui/backends
  )
 
- target_link_libraries(imgui PUBLIC SDL3::SDL3)
+target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
 # -----------------------------------------
 # Project Source Files & Executable
@@ -109,16 +112,16 @@ set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 # compile all .cpp files in the src folder
 # (Not a good practice, but I won't compile source files which I won't use, until now.)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
- add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC})
+add_executable(CelestiaCore ${SOURCES} ${GLAD_SRC})
 
 # Precompiled headers
-target_precompile_headers(CelestiaCore PRIVATE 
+target_precompile_headers(CelestiaCore PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_SOURCE_DIR}/include/pch.h>
 )
 
 
 # Include directories for project and external headers
-target_include_directories(CelestiaCore PRIVATE 
+target_include_directories(CelestiaCore PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/glad/include
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/lib/imgui
@@ -127,7 +130,7 @@ target_include_directories(CelestiaCore PRIVATE
 )
 
 # Link libraries to the main executable
-target_link_libraries(CelestiaCore PRIVATE 
+target_link_libraries(CelestiaCore PRIVATE
     imgui
     SDL3::SDL3
     SDL3_image::SDL3_image
@@ -155,7 +158,7 @@ elseif(UNIX)
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:SDL3_image::SDL3_image> ${LIB_DEST}
         COMMENT "Copying shared libraries to libs directory"
     )
-   
+
     # Use RPATH so the loader finds libs in &ORIGIN/libs at runtime
     set_target_properties(CelestiaCore PROPERTIES
         INSTALL_RPATH "$ORIGIN/libs"
@@ -163,4 +166,3 @@ elseif(UNIX)
     )
 
 endif()
-
