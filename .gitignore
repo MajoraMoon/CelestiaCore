@@ -8,5 +8,7 @@ build/
 
 /bin/libs/
 
+.cache/
+
 .clang-format
 .clangd
